@@ -3775,7 +3775,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(moreQuietStatusEl) moreQuietStatusEl.textContent = quietHours.enabled ? (quietHours.start+'–'+quietHours.end) : t('quiet.off');
 
     /* ---- hero progress ring: today's focus + up next tasks ---- */
-    var mineForHero = getMyTasks();
+    var mineForHero = getMyTasks(true);
     var todayTasks = mineForHero.filter(function(m){ return m.task.zone==='focus' || m.task.zone==='upnext'; });
     var doneToday = todayTasks.filter(function(m){ return m.task.status==='done'; }).length;
     var totalToday = todayTasks.length;
@@ -8122,10 +8122,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   /* ---------- my tasks / today <-> projects bridge ---------- */
   var ME = 'Gilang';
-  function getMyTasks(){
+  function getMyTasks(includePersonal){
     var results = [];
     projects.forEach(function(p){
-      if(p.division==='personal') return;
+      if(p.division==='personal' && !includePersonal) return;
       if(p.inactive) return;
       p.phases.forEach(function(ph){
         ph.tasks.forEach(function(tk){
@@ -8138,10 +8138,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       });
     });
     generalTasks.forEach(function(g){
-      if(g.division==='personal') return;
+      if(g.division==='personal' && !includePersonal) return;
       if(!g.zone) g.zone = 'later';
       if(g.pic===ME){
-        results.push({ task:g, groupKey:'gen-'+g.division, groupTitle:divisions[g.division].name+' · '+t('divtab.general'), role:'pic', isGeneral:true, divisionKey:g.division });
+        var groupTitle = g.division==='personal' ? t('divtab.general') : divisions[g.division].name+' · '+t('divtab.general');
+        results.push({ task:g, groupKey:'gen-'+g.division, groupTitle:groupTitle, role:'pic', isGeneral:true, divisionKey:g.division });
       }
     });
     return results;
@@ -8170,7 +8171,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     return sorted;
   }
   function moveMyTask(taskId, dir){
-    var mine = getMyTasks();
+    var mine = getMyTasks(true);
     var idx = mine.findIndex(function(m){ return m.task.id===taskId; });
     if(idx<0) return;
     var zone = mine[idx].task.zone;
@@ -8453,7 +8454,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   var upnextSortable = null;
   function renderUpNextScreen(){
-    var mine = getMyTasks().filter(function(m){ return m.task.zone==='upnext'; });
+    var mine = getMyTasks(true).filter(function(m){ return m.task.zone==='upnext'; });
     mine = sortTaskList(mine, upnextSortMode);
     var reorderable = upnextSortMode==='default';
     document.getElementById('upnextSub').textContent = t('upnext.subCount').replace('{n}', mine.length);
@@ -8491,7 +8492,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   var focusZoneSortable = null;
   function renderFocusZoneScreen(){
-    var mine = getMyTasks().filter(function(m){ return m.task.zone==='focus'; });
+    var mine = getMyTasks(true).filter(function(m){ return m.task.zone==='focus'; });
     mine = sortTaskList(mine, focusZoneSortMode);
     var reorderable = focusZoneSortMode==='default';
     document.getElementById('focusZoneSub').textContent = t('focuszone.subCount').replace('{n}', mine.length);
@@ -8539,7 +8540,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(tab==='existing') renderAddFocusExistingList();
   }
   function renderAddFocusExistingList(){
-    var mine = getMyTasks().filter(function(m){ return m.task.zone!=='focus' && m.task.status!=='done'; });
+    var mine = getMyTasks(true).filter(function(m){ return m.task.zone!=='focus' && m.task.status!=='done'; });
     addFocusCandidateCache = mine;
     var html = mine.map(function(m, idx){
       return '<div class="list-row" style="cursor:pointer;" onclick="pickExistingTaskAsFocus('+idx+')">' +
@@ -8899,7 +8900,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   /* ---------- Dependencies ---------- */
   function getDependenciesList(){
-    var mine = getMyTasks().filter(function(m){ return (m.task.zone==='focus' || m.task.zone==='upnext') && m.task.status!=='done'; });
+    var mine = getMyTasks(true).filter(function(m){ return (m.task.zone==='focus' || m.task.zone==='upnext') && m.task.status!=='done'; });
     var list = [];
     mine.forEach(function(m){
       if(m.isGeneral) return;
@@ -8931,7 +8932,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var missedTasksCache = [];
   function getMissedTasks(){
     var today = todayISO();
-    return getMyTasks().filter(function(m){ return m.task.deadline && m.task.deadline<today && m.task.status!=='done'; });
+    return getMyTasks(true).filter(function(m){ return m.task.deadline && m.task.deadline<today && m.task.status!=='done'; });
   }
   function handleMentionInput(textareaId){
     var ta = document.getElementById(textareaId);
@@ -9119,7 +9120,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function getNotStartedTasks(){
     var today = todayISO();
-    return getMyTasks().filter(function(m){
+    return getMyTasks(true).filter(function(m){
       var tk = m.task;
       if(tk.status!=='todo') return false;
       if(tk.zone==='focus' || tk.zone==='upnext') return false;
@@ -9285,7 +9286,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   var todayTaskSortable = null;
   function renderTodayFromProjects(){
-    var mine = getMyTasks();
+    var mine = getMyTasks(true);
     var zoneOrder = {focus:0, upnext:1, later:2};
     mine.sort(function(a,b){
       var zd = (zoneOrder[a.task.zone]||2)-(zoneOrder[b.task.zone]||2);
@@ -9295,7 +9296,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var upnextCount = mine.filter(function(m){ return m.task.zone==='upnext' && m.task.status!=='done'; }).length;
     document.getElementById('todayFocusCount').textContent = t('block.focus.sub').replace('{n}', focusCount);
     document.getElementById('todayUpnextCount').textContent = t('block.next.sub').replace('{n}', upnextCount);
-    document.getElementById('myTasksCount').textContent = mine.length;
+    document.getElementById('myTasksCount').textContent = getMyTasks().length;
     var personalProjN = projects.filter(function(p){ return p.division==='personal'; }).length;
     document.getElementById('personalProjCount').textContent = personalProjN;
 
@@ -9339,7 +9340,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         onEnd: function(){
           ['focus','upnext'].forEach(function(zone){
             var ids = Array.prototype.map.call(document.querySelectorAll('#todayTaskList .list-row[data-zone="'+zone+'"]'), function(el){ return el.dataset.taskId; });
-            var zoneTasks = getMyTasks().filter(function(m){ return m.task.zone===zone; });
+            var zoneTasks = getMyTasks(true).filter(function(m){ return m.task.zone===zone; });
             ids.forEach(function(id, idx){
               var m = zoneTasks.find(function(x){ return x.task.id===id; });
               if(m) m.task.focusOrder = idx;
