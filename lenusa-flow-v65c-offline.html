@@ -7246,15 +7246,27 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       }
     });
   }
-  function onAvatarFileChange(e){
+  async function onAvatarFileChange(e){
     var file = e.target.files[0];
     if(!file) return;
     var reader = new FileReader();
     reader.onload = function(ev){
-      userProfile.avatarPhoto = ev.target.result;
+      userProfile.avatarPhoto = ev.target.result; // instant local preview while the real upload runs
       updateAvatarDisplay();
     };
     reader.readAsDataURL(file);
+
+    if(window.LovaDB){
+      var result = await LovaDB.uploadAvatar(file);
+      if(result.error){
+        showToast(t('account.avatarUploadFailed'));
+        return;
+      }
+      userProfile.avatarPhoto = result.url; // swap preview for the persisted URL
+      updateAvatarDisplay();
+      if(TEAM_PROFILES[CURRENT_USER_NAME]) TEAM_PROFILES[CURRENT_USER_NAME].avatarPhoto = result.url;
+      showToast(t('account.avatarUploaded'));
+    }
   }
   function saveAccountProfile(){
     var oldName = userProfile.name;
@@ -7532,8 +7544,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var flags = teamAttentionFlags(info);
       var attentionFlag = (flags.mood ? '<i class="ti ti-mood-sad team-attention-flag mood" title="'+t('team.needsAttentionMood')+'"></i>' : '') +
         (flags.burnout ? '<i class="ti ti-flame team-attention-flag burnout" title="'+t('team.needsAttentionBurnout')+'"></i>' : '');
+      var avatarStyle = info.avatarPhoto ? ' style="background-image:url('+info.avatarPhoto+');background-size:cover;background-position:center;"' : '';
       return '<div class="team-member-row" onclick="openTeamMember(\''+name+'\')">' +
-        '<div class="avatar team-member-avatar">'+initials(name)+'</div>' +
+        '<div class="avatar team-member-avatar"'+avatarStyle+'>'+(info.avatarPhoto?'':initials(name))+'</div>' +
         '<div class="team-member-body"><div class="team-member-name">'+(name===CURRENT_USER_NAME?userProfile.name:name)+' '+attentionFlag+'</div><div class="team-member-role">'+info.role+' · '+divName+'</div></div>' +
         '<div class="team-row-mood-icon" style="color:'+m.color+';" title="'+m.label+'"><i class="ti '+m.icon+'"></i></div>' +
         '<div class="team-cap-dot" style="background:'+color+';" title="'+pct+'%"></div>' +
@@ -7572,8 +7585,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function openTeamMember(name){
     var info = getTeamMemberInfo(name);
     var avEl = document.getElementById('tmAvatar');
-    if(name===CURRENT_USER_NAME && userProfile.avatarPhoto){
-      avEl.style.backgroundImage = 'url('+userProfile.avatarPhoto+')'; avEl.style.backgroundSize='cover'; avEl.style.backgroundPosition='center'; avEl.textContent='';
+    if(info.avatarPhoto){
+      avEl.style.backgroundImage = 'url('+info.avatarPhoto+')'; avEl.style.backgroundSize='cover'; avEl.style.backgroundPosition='center'; avEl.textContent='';
     } else {
       avEl.style.backgroundImage=''; avEl.textContent = initials(name);
     }
@@ -9710,6 +9723,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "account.favColor": {id:"Warna Favorit", en:"Favorite color"},
     "account.loveLang": {id:"Love Language", en:"Love language"}, "account.attachStyle": {id:"Attachment Style", en:"Attachment style"},
     "account.testBtn": {id:"Tes", en:"Test"}, "account.save": {id:"Simpan Perubahan", en:"Save changes"}, "account.saved": {id:"Perubahan tersimpan", en:"Changes saved"},
+    "account.avatarUploaded": {id:"Foto profil diperbarui", en:"Profile photo updated"},
+    "account.avatarUploadFailed": {id:"Gagal mengunggah foto, coba lagi", en:"Failed to upload photo, try again"},
     "account.loveLangReceiving": {id:"Love Language — Menerima", en:"Love language — receiving"},
     "account.loveLangGiving": {id:"Love Language — Memberi", en:"Love language — giving"},
     "account.testLoveLang": {id:"Tes Love Language (12 pertanyaan)", en:"Take love language test (12 questions)"},
@@ -10538,8 +10553,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(typeof refreshDivisionBadges === 'function') refreshDivisionBadges();
     if(typeof renderTodayFromProjects === 'function') renderTodayFromProjects();
     if(typeof renderDashGlance === 'function') renderDashGlance();
-    var avatarEls = document.querySelectorAll('#topbarAvatar, #moreListAvatar, #sidebarAvatar');
-    avatarEls.forEach(function(el){ if(typeof initials === 'function') el.textContent = initials(CURRENT_USER_NAME); });
+    if(typeof updateAvatarDisplay === 'function') updateAvatarDisplay();
     var nameEl = document.getElementById('sidebarUserName');
     if(nameEl) nameEl.textContent = CURRENT_USER_NAME;
     var wsEl = document.getElementById('sidebarWorkspaceName');
@@ -10556,7 +10570,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     var [{ data: divisionRows }, { data: profileRows }, { data: orgRow }] = await Promise.all([
       sb.from('divisions').select('*').eq('org_id', myOrgId),
-      sb.from('profiles').select('id,name,role,division_id').eq('org_id', myOrgId),
+      sb.from('profiles').select('id,name,role,job_title,division_id,hobbies,birth_date,favorite_color,love_lang_receiving,love_lang_giving,attach_style,mood_key,burnout_pct,avatar_url').eq('org_id', myOrgId),
       sb.from('organizations').select('name').eq('id', myOrgId).maybeSingle()
     ]);
     myOrgName = orgRow ? orgRow.name : null;
@@ -10583,8 +10597,24 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     userProfile.moodDate = profile.mood_date || null;
     userProfile.burnoutPct = profile.burnout_pct;
     userProfile.burnoutDate = profile.burnout_date || null;
+    userProfile.avatarPhoto = profile.avatar_url || null;
     window.MY_PROFILE_COMPLETED = !!profile.profile_completed_at;
     USERS = (profileRows || []).map(function(p){ return p.name; });
+
+    // real org data replaces the hardcoded single-user demo dict so
+    // teammates show their actual job title/hobbies/mood/avatar instead
+    // of generic placeholder defaults (see getTeamMemberInfo).
+    var newTeamProfiles = {};
+    (profileRows || []).forEach(function(p){
+      newTeamProfiles[p.name] = {
+        role: p.job_title || '', division: divIdToKey[p.division_id] || 'pbd', hobbies: p.hobbies || [],
+        birthDate: p.birth_date || '', favColor: p.favorite_color || '#8A9490',
+        loveLangReceiving: p.love_lang_receiving || '', loveLangGiving: p.love_lang_giving || '',
+        attachStyle: p.attach_style || '', moodKey: p.mood_key || 'calm', burnoutPct: p.burnout_pct,
+        avatarPhoto: p.avatar_url || null
+      };
+    });
+    TEAM_PROFILES = newTeamProfiles;
 
     var newDivisions = {};
     (divisionRows || []).forEach(function(d){
@@ -10695,6 +10725,18 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var { error } = await sb.from('profiles').update({ profile_completed_at: new Date().toISOString() }).eq('id', (await sb.auth.getUser()).data.user.id);
       if(error) console.error('LovaDB.markProfileCompleted', error);
       window.MY_PROFILE_COMPLETED = true;
+    },
+    uploadAvatar: async function(file){
+      var { data: { user } } = await sb.auth.getUser();
+      if(!user) return { error: 'not signed in' };
+      var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+      var path = user.id + '/' + Date.now() + '.' + ext;
+      var { error: uploadError } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+      if(uploadError) { console.error('LovaDB.uploadAvatar', uploadError); return { error: uploadError.message }; }
+      var { data: pub } = sb.storage.from('avatars').getPublicUrl(path);
+      var { error: dbError } = await sb.from('profiles').update({ avatar_url: pub.publicUrl }).eq('id', user.id);
+      if(dbError) { console.error('LovaDB.uploadAvatar', dbError); return { error: dbError.message }; }
+      return { url: pub.publicUrl };
     },
     createJournalEntry: async function(j){
       var meta = {};
