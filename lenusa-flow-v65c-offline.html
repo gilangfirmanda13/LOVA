@@ -108,7 +108,7 @@
   .nav-item.active i{ color:#ffffff; }
 
   .sidebar-foot{ margin-top:auto; }
-  .workspace-pill{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius-md); background:var(--bg); border:1px solid var(--glass-border); }
+  .workspace-pill{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius-md); background:linear-gradient(120deg, var(--teal-tint) 0%, var(--orange-tint) 100%); border:1px solid var(--glass-border); }
   .avatar{ width:30px; height:30px; border-radius:50%; background:var(--accent); color:#ffffff; font-family:var(--font-display); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 
   .notif-bell-wrap{ position:relative; }
@@ -1365,8 +1365,8 @@
         <div class="workspace-pill" onclick="openAccountScreen()" style="cursor:pointer;">
           <div class="avatar" id="sidebarAvatar">G</div>
           <div class="meta">
-            <div class="t">Gilang Wirawan</div>
-            <div class="s">Lenusa · Workspace</div>
+            <div class="t" id="sidebarUserName">Gilang Wirawan</div>
+            <div class="s" id="sidebarWorkspaceName">Lenusa · Workspace</div>
           </div>
         </div>
       </div>
@@ -7227,7 +7227,15 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     reader.readAsDataURL(file);
   }
   function saveAccountProfile(){
+    var oldName = userProfile.name;
     userProfile.name = document.getElementById('accName').value.trim() || userProfile.name;
+    if(userProfile.name !== oldName){
+      CURRENT_USER_NAME = userProfile.name;
+      if(typeof ME !== 'undefined') ME = userProfile.name;
+      var idx = USERS.indexOf(oldName);
+      if(idx>-1) USERS[idx] = userProfile.name;
+      if(window.LovaDB) LovaDB.renameSelf(oldName, userProfile.name);
+    }
     userProfile.role = document.getElementById('accRole').value.trim();
     var _adv=document.getElementById('accDivision'); if(_adv) userProfile.division=_adv.value;
     userProfile.email = document.getElementById('accEmail').value.trim();
@@ -7239,6 +7247,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     userProfile.attachStyle = document.getElementById('accAttachStyle').value;
     document.getElementById('accountHeroName').textContent = userProfile.name;
     document.getElementById('accountHeroRole').textContent = userProfile.role+' · '+(divisions[userProfile.division]?divisions[userProfile.division].name:userProfile.division);
+    var sidebarNameEl = document.getElementById('sidebarUserName');
+    if(sidebarNameEl) sidebarNameEl.textContent = userProfile.name;
     updateAvatarDisplay();
     if(window.LovaDB) LovaDB.updateProfile();
     showToast(t('account.saved'));
@@ -10186,7 +10196,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var SUPABASE_ANON_KEY = 'sb_publishable_WiWoAjmiz9j9pXCahoPCcA_ol1rqNYt';
   var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  var divKeyToId = {}, divIdToKey = {}, nameToId = {}, idToName = {}, myOrgId = null;
+  var divKeyToId = {}, divIdToKey = {}, nameToId = {}, idToName = {}, myOrgId = null, myOrgName = null;
   function nameOf(id){ return id ? (idToName[id] || null) : null; }
   function idOf(name){ return name ? (nameToId[name] || null) : null; }
 
@@ -10400,8 +10410,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(typeof refreshDivisionBadges === 'function') refreshDivisionBadges();
     if(typeof renderTodayFromProjects === 'function') renderTodayFromProjects();
     if(typeof renderDashGlance === 'function') renderDashGlance();
-    var avatarEls = document.querySelectorAll('#topbarAvatar, #moreListAvatar');
+    var avatarEls = document.querySelectorAll('#topbarAvatar, #moreListAvatar, #sidebarAvatar');
     avatarEls.forEach(function(el){ if(typeof initials === 'function') el.textContent = initials(CURRENT_USER_NAME); });
+    var nameEl = document.getElementById('sidebarUserName');
+    if(nameEl) nameEl.textContent = CURRENT_USER_NAME;
+    var wsEl = document.getElementById('sidebarWorkspaceName');
+    if(wsEl) wsEl.textContent = (myOrgName || 'LOVA') + ' · Workspace';
   }
 
   async function boot(){
@@ -10412,10 +10426,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!profile){ window.location.href = 'auth.html'; return; }
     myOrgId = profile.org_id;
 
-    var [{ data: divisionRows }, { data: profileRows }] = await Promise.all([
+    var [{ data: divisionRows }, { data: profileRows }, { data: orgRow }] = await Promise.all([
       sb.from('divisions').select('*').eq('org_id', myOrgId),
-      sb.from('profiles').select('id,name,role,division_id').eq('org_id', myOrgId)
+      sb.from('profiles').select('id,name,role,division_id').eq('org_id', myOrgId),
+      sb.from('organizations').select('name').eq('id', myOrgId).maybeSingle()
     ]);
+    myOrgName = orgRow ? orgRow.name : null;
 
     (divisionRows || []).forEach(function(d){ divKeyToId[d.key] = d.id; divIdToKey[d.id] = d.key; });
     (profileRows || []).forEach(function(p){ idToName[p.id] = p.name; nameToId[p.name] = p.id; });
@@ -10475,6 +10491,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     updateProjectTask: async function(tk){
       var { error } = await sb.from('tasks').update(taskToRow(tk)).eq('id', tk.id);
       if(error) console.error('LovaDB.updateProjectTask', error);
+    },
+    renameSelf: function(oldName, newName){
+      var id = nameToId[oldName];
+      delete nameToId[oldName];
+      if(id){ nameToId[newName] = id; idToName[id] = newName; }
     },
     updateProfile: async function(){
       var row = {
