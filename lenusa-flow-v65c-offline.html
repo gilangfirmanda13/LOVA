@@ -6404,6 +6404,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     renderDecisionQueue();
     refreshDecisionQueueBadge();
     renderDashGlance();
+    newReq.approvers.forEach(function(u){
+      notifyUser(u, t('notif.approvalRequested').replace('{from}', CURRENT_USER_NAME)+': '+newReq.title, '', 'ti-stamp', '#F5A623', "openDecisionQueueScreen(); switchDecisionTab('mine');");
+    });
     showToast(t('decision.submitted'));
   }
   function approveRequest(id){
@@ -10137,6 +10140,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "decision.hoursShort": {id:"jam", en:"hrs"},
     "notif.approved": {id:"Disetujui", en:"Approved"},
     "notif.rejected": {id:"Ditolak", en:"Rejected"},
+    "notif.approvalRequested": {id:"{from} minta persetujuan", en:"{from} requested your approval"},
     "blocker.cardTitle": {id:"Kendala & Blocker", en:"Blockers & issues"},
     "blocker.report": {id:"Lapor", en:"Report"},
     "blocker.modalTitle": {id:"Lapor Kendala", en:"Report a blocker"},
