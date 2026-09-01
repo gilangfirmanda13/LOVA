@@ -10139,6 +10139,29 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function t(key){ var lang = document.documentElement.dataset.lang||'id'; return dict[key] ? dict[key][lang] : key; }
   function statusLabel(s){ return t('status.'+s); }
   function priorityLabel(pr){ return t('priority.'+pr); }
+  function isScreenActive(id){ var el = document.getElementById(id); return !!(el && el.classList.contains('active')); }
+  function refreshVisibleScreens(){
+    // re-runs whichever screen(s) are currently on-screen so they reflect
+    // the latest data/language -- used both by the language switcher and
+    // by the realtime resync handler below.
+    renderTodayFromProjects();
+    renderDashGlance();
+    refreshDivisionBadges();
+    if(isScreenActive('screen-division')) renderProjectList();
+    if(isScreenActive('screen-project')){ renderPhases(); renderInfoTab(projects.find(function(x){ return x.id===currentProject; })); if(isScreenActive('tabpanel-analytics')) renderAnalytics(); }
+    if(isScreenActive('screen-mytasks')) renderMyTasksScreen();
+    if(isScreenActive('screen-events')) renderEventsScreen();
+    if(isScreenActive('screen-event-category')) renderEventCategoryList();
+    if(isScreenActive('screen-calendar')) renderCalendarMonth();
+    if(isScreenActive('screen-division') && isScreenActive('divtabpanel-general')) renderGeneralTaskList();
+    if(isScreenActive('screen-division') && isScreenActive('divtabpanel-ritual')) renderRitualList();
+    if(isScreenActive('screen-kpirollup')) renderKpiRollup();
+    if(isScreenActive('screen-upnext')) renderUpNextScreen();
+    if(isScreenActive('screen-focus-zone')) renderFocusZoneScreen();
+    if(isScreenActive('screen-personaltasks')) renderPersonalTasksScreen();
+    if(isScreenActive('screen-taskdetail')) renderTaskDetail();
+    if(isScreenActive('screen-eventdetail')) renderEventDetail();
+  }
   function applyLang(lang){
     document.documentElement.dataset.lang = lang;
     document.querySelectorAll('[data-i18n]').forEach(function(el){ var k=el.getAttribute('data-i18n'); if(dict[k]) el.textContent=dict[k][lang]; });
@@ -10147,23 +10170,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     updateGreeting();
     updateTodayDateLabel();
     // refresh dynamically-rendered content so status/priority/empty-state text follows the new language too
-    renderTodayFromProjects();
-    renderDashGlance();
-    refreshDivisionBadges();
-    if(document.getElementById('screen-division').classList.contains('active')) renderProjectList();
-    if(document.getElementById('screen-project').classList.contains('active')){ renderPhases(); renderInfoTab(projects.find(function(x){ return x.id===currentProject; })); if(document.getElementById('tabpanel-analytics').classList.contains('active')) renderAnalytics(); }
-    if(document.getElementById('screen-mytasks').classList.contains('active')) renderMyTasksScreen();
-    if(document.getElementById('screen-events').classList.contains('active')) renderEventsScreen();
-    if(document.getElementById('screen-event-category').classList.contains('active')) renderEventCategoryList();
-    if(document.getElementById('screen-calendar').classList.contains('active')) renderCalendarMonth();
-    if(document.getElementById('screen-division').classList.contains('active') && document.getElementById('divtabpanel-general').classList.contains('active')) renderGeneralTaskList();
-    if(document.getElementById('screen-division').classList.contains('active') && document.getElementById('divtabpanel-ritual').classList.contains('active')) renderRitualList();
-    if(document.getElementById('screen-kpirollup').classList.contains('active')) renderKpiRollup();
-    if(document.getElementById('screen-upnext').classList.contains('active')) renderUpNextScreen();
-    if(document.getElementById('screen-focus-zone').classList.contains('active')) renderFocusZoneScreen();
-    if(document.getElementById('screen-personaltasks').classList.contains('active')) renderPersonalTasksScreen();
-    if(document.getElementById('screen-taskdetail').classList.contains('active')) renderTaskDetail();
-    if(document.getElementById('screen-eventdetail').classList.contains('active')) renderEventDetail();
+    refreshVisibleScreens();
   }
   document.getElementById('langToggle').addEventListener('click', function(e){ var opt=e.target.closest('[data-lang-opt]'); if(!opt) return; applyLang(opt.getAttribute('data-lang-opt')); });
   updateFabState();
@@ -10471,12 +10478,65 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       loadApprovals(myOrgId), loadRituals(myOrgId), loadNotebook(myOrgId), loadNotifications(), loadIdeas(myOrgId), loadJournal()
     ]);
     reRenderAfterLoad();
+    subscribeRealtime();
 
     var wantsQuiz = new URLSearchParams(location.search).get('startQuiz') === '1';
     if(wantsQuiz && !window.MY_PROFILE_COMPLETED && typeof startQuiz === 'function'){
       window.onboardingQuizFlow = 'lovelang';
       startQuiz('lovelang');
     }
+  }
+
+  /* ---- live sync: teammates' changes show up without a manual reload ----
+     Postgres Changes are authorized per-connection via each table's own
+     RLS SELECT policy (see migrations 20260901090000/090200), so this
+     only streams rows the signed-in user could already read -- no data
+     crosses org/division boundaries that direct queries wouldn't also
+     allow. Debounced per group so a single write (e.g. a task insert
+     plus its delegation row) doesn't trigger duplicate reloads. */
+  var realtimeChannel = null;
+  function debounced(fn, wait){
+    var timer = null;
+    return function(){ clearTimeout(timer); timer = setTimeout(fn, wait); };
+  }
+  function subscribeRealtime(){
+    if(!myOrgId || realtimeChannel) return;
+
+    var resyncWork = debounced(async function(){
+      await Promise.all([loadProjectsAndTasks(myOrgId), loadGeneralTasks(myOrgId)]);
+      refreshVisibleScreens();
+    }, 400);
+    var resyncEvents = debounced(async function(){ await loadEvents(myOrgId); refreshVisibleScreens(); }, 400);
+    var resyncApprovals = debounced(async function(){ await loadApprovals(myOrgId); refreshVisibleScreens(); if(typeof renderDecisionQueue==='function' && isScreenActive('screen-decisions')) renderDecisionQueue(); if(typeof refreshDecisionQueueBadge==='function') refreshDecisionQueueBadge(); }, 400);
+    var resyncRituals = debounced(async function(){ await loadRituals(myOrgId); refreshVisibleScreens(); }, 400);
+    var resyncNotebook = debounced(async function(){ await loadNotebook(myOrgId); if(typeof renderNotebookScreen==='function' && isScreenActive('screen-notebook')) renderNotebookScreen(); }, 400);
+    var resyncNotifications = debounced(async function(){ await loadNotifications(); if(typeof renderNotifPanel==='function') renderNotifPanel(); }, 300);
+    var resyncIdeas = debounced(async function(){ await loadIdeas(myOrgId); if(typeof renderIdeaList==='function' && isScreenActive('screen-ideas')) renderIdeaList(); }, 400);
+    var resyncJournal = debounced(async function(){ await loadJournal(); if(typeof renderJournalHistory==='function' && isScreenActive('screen-journal')) renderJournalHistory(); }, 400);
+    var resyncProfiles = debounced(async function(){
+      var { data: profileRows } = await sb.from('profiles').select('id,name,role,division_id').eq('org_id', myOrgId);
+      (profileRows || []).forEach(function(p){ idToName[p.id] = p.name; nameToId[p.name] = p.id; });
+      USERS = (profileRows || []).map(function(p){ return p.name; });
+      refreshVisibleScreens();
+    }, 400);
+
+    realtimeChannel = sb.channel('lova-org-'+myOrgId)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, resyncWork)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'phases' }, resyncWork)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, resyncWork)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'task_delegations' }, resyncWork)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'general_tasks' }, resyncWork)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'general_task_delegations' }, resyncWork)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, resyncEvents)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'approval_requests' }, resyncApprovals)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rituals' }, resyncRituals)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ritual_completions' }, resyncRituals)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notebook_entries' }, resyncNotebook)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, resyncNotifications)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ideas' }, resyncIdeas)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'journal_entries' }, resyncJournal)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: 'org_id=eq.'+myOrgId }, resyncProfiles)
+      .subscribe();
   }
 
   window.LovaDB = {
