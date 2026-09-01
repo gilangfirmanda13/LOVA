@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOVA — Masuk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root{
+    --teal:#009F8D; --teal-deep:#00695C; --teal-tint:#E7F5F3;
+    --orange:#F7A433; --orange-deep:#B9761E; --orange-tint:#FDF1DE;
+    --critical:#B4182D; --critical-tint:#FBE4E4;
+    --ink:#26302B; --stone:#8A9490;
+    --bg:#FBFBF8; --surface:#ffffff; --glass-border:rgba(0,0,0,0.06);
+    --shadow:0 10px 30px rgba(38,48,43,0.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#ECEBE6; --stone:#ABB2AC; --bg:#15171A; --surface:#24272C; --glass-border:rgba(255,255,255,0.14); --teal-tint:rgba(0,159,141,0.14); --orange-tint:rgba(247,164,51,0.14); --critical-tint:rgba(180,24,45,0.18); --shadow:0 10px 30px rgba(0,0,0,0.3); }
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+    font-family:'Inter',system-ui,sans-serif; background:
+      radial-gradient(900px 620px at 100% -10%, rgba(0,159,141,0.16), transparent 70%),
+      radial-gradient(760px 560px at 0% 110%, rgba(247,164,51,0.14), transparent 70%), var(--bg);
+    color:var(--ink); }
+  .shell{ width:100%; max-width:420px; }
+  .brand{ display:flex; align-items:center; gap:10px; margin-bottom:28px; justify-content:center; }
+  .brand-mark{ width:38px; height:38px; border-radius:11px; background:linear-gradient(150deg,var(--teal),var(--teal-deep)); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Manrope'; font-weight:800; font-size:16px; }
+  .brand-name{ font-family:'Manrope'; font-weight:800; font-size:19px; letter-spacing:-0.01em; }
+  .card{ background:var(--surface); border:1px solid var(--glass-border); border-radius:22px; padding:32px 28px; box-shadow:var(--shadow); }
+  h1{ font-family:'Manrope'; font-weight:700; font-size:21px; margin:0 0 6px; }
+  .sub{ color:var(--stone); font-size:13.5px; margin:0 0 24px; line-height:1.5; }
+  .tabs{ display:flex; background:var(--bg); border-radius:12px; padding:4px; margin-bottom:22px; }
+  .tab{ flex:1; text-align:center; padding:9px; border-radius:9px; font-size:13.5px; font-weight:600; color:var(--stone); cursor:pointer; user-select:none; }
+  .tab.active{ background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  label{ display:block; font-size:12.5px; font-weight:600; color:var(--stone); margin:0 0 6px; }
+  .row{ margin-bottom:16px; }
+  input, select{ width:100%; padding:11px 13px; border-radius:11px; border:1px solid var(--glass-border); background:var(--bg); color:var(--ink); font-size:14px; font-family:inherit; }
+  input:focus, select:focus{ outline:2px solid var(--teal); outline-offset:1px; }
+  button.primary{ width:100%; padding:13px; border:none; border-radius:12px; background:var(--teal); color:#fff; font-weight:700; font-size:14.5px; cursor:pointer; font-family:'Manrope'; margin-top:6px; }
+  button.primary:hover{ background:var(--teal-deep); }
+  button.primary:disabled{ opacity:0.6; cursor:default; }
+  button.ghost{ width:100%; padding:11px; border:1px solid var(--glass-border); border-radius:12px; background:transparent; color:var(--ink); font-weight:600; font-size:13.5px; cursor:pointer; margin-top:10px; }
+  .msg{ font-size:13px; padding:11px 14px; border-radius:10px; margin-bottom:16px; line-height:1.5; }
+  .msg.error{ background:var(--critical-tint); color:var(--critical); }
+  .msg.info{ background:var(--teal-tint); color:var(--teal-deep); }
+  .invite-badge{ display:flex; align-items:center; gap:10px; background:var(--orange-tint); border-radius:14px; padding:14px 16px; margin-bottom:20px; }
+  .invite-badge .ico{ width:34px; height:34px; border-radius:10px; background:var(--orange); color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .invite-badge b{ display:block; font-size:13.5px; }
+  .invite-badge span{ display:block; font-size:12px; color:var(--stone); margin-top:1px; }
+  .team-row{ display:flex; gap:8px; margin-bottom:10px; }
+  .team-row input{ flex:1.4; } .team-row select{ flex:1; }
+  .team-list{ margin:14px 0; display:flex; flex-direction:column; gap:8px; }
+  .team-chip{ display:flex; align-items:center; justify-content:space-between; background:var(--bg); border-radius:10px; padding:9px 12px; font-size:13px; }
+  .team-chip .link-btn{ font-size:11.5px; color:var(--teal); cursor:pointer; font-weight:600; }
+  .foot-link{ text-align:center; font-size:12.5px; color:var(--stone); margin-top:18px; }
+  .foot-link a{ color:var(--teal); cursor:pointer; font-weight:600; text-decoration:none; }
+  .hidden{ display:none !important; }
+  .spinner{ width:16px; height:16px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; display:inline-block; vertical-align:-3px; margin-right:6px; animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="brand"><div class="brand-mark">L</div><div class="brand-name">LOVA</div></div>
+
+  <div class="card">
+    <div id="msgBox"></div>
+
+    <!-- ===== LOGIN / SIGN UP ===== -->
+    <div id="viewAuth">
+      <div class="tabs">
+        <div class="tab active" id="tabLogin" onclick="switchTab('login')">Masuk</div>
+        <div class="tab" id="tabSignup" onclick="switchTab('signup')">Daftar</div>
+      </div>
+
+      <div id="paneLogin">
+        <h1>Selamat datang kembali</h1>
+        <p class="sub">Masuk ke akun LOVA kamu.</p>
+        <div class="row"><label>Email</label><input type="email" id="loginEmail" placeholder="nama@lenusa.co.id"></div>
+        <div class="row"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <button class="primary" id="loginBtn" onclick="doLogin()">Masuk</button>
+      </div>
+
+      <div id="paneSignup" class="hidden">
+        <h1 id="signupTitle">Buat akun baru</h1>
+        <p class="sub" id="signupSub">Buat akun, lalu siapkan organisasi kamu di LOVA.</p>
+        <div id="inviteBadge" class="hidden"></div>
+        <div class="row"><label>Email</label><input type="email" id="signupEmail" placeholder="nama@lenusa.co.id"></div>
+        <div class="row"><label>Password</label><input type="password" id="signupPassword" placeholder="Minimal 6 karakter"></div>
+        <button class="primary" id="signupBtn" onclick="doSignup()">Daftar</button>
+      </div>
+
+      <div class="foot-link" id="switchHint">Belum punya akun? <a onclick="switchTab('signup')">Daftar di sini</a></div>
+    </div>
+
+    <!-- ===== ONBOARDING: CREATE ORG (BUSINESS OWNER) ===== -->
+    <div id="viewCreateOrg" class="hidden">
+      <h1>Siapkan organisasi kamu</h1>
+      <p class="sub">Kamu akan jadi Business Owner — bisa lihat semua divisi dan atur anggota tim nanti.</p>
+      <div class="row"><label>Nama Organisasi</label><input type="text" id="orgName" placeholder="cth. Lenusa Konsultan Indonesia"></div>
+      <div class="row"><label>Nama Kamu</label><input type="text" id="orgOwnerName" placeholder="cth. Gilang"></div>
+      <button class="primary" id="createOrgBtn" onclick="doCreateOrg()">Buat Organisasi</button>
+    </div>
+
+    <!-- ===== ONBOARDING: ACCEPT INVITE ===== -->
+    <div id="viewAcceptInvite" class="hidden">
+      <h1>Gabung ke tim</h1>
+      <p class="sub">Konfirmasi nama kamu untuk menyelesaikan pendaftaran.</p>
+      <div id="acceptInviteBadge"></div>
+      <div class="row"><label>Nama Kamu</label><input type="text" id="acceptName" placeholder="cth. Rama"></div>
+      <button class="primary" id="acceptInviteBtn" onclick="doAcceptInvite()">Gabung Sekarang</button>
+    </div>
+
+    <!-- ===== ONBOARDING: INVITE TEAM ===== -->
+    <div id="viewInviteTeam" class="hidden">
+      <h1>Undang anggota tim</h1>
+      <p class="sub">Opsional — bisa dilewati dan diundang belakangan lewat menu Team.</p>
+      <div class="team-row">
+        <input type="email" id="inviteEmail" placeholder="email@lenusa.co.id">
+        <select id="inviteRole">
+          <option value="manager">Manager</option>
+          <option value="staff" selected>Staff</option>
+          <option value="finance_admin">Finance Admin</option>
+        </select>
+      </div>
+      <div class="row"><select id="inviteDivision"></select></div>
+      <button class="ghost" onclick="doSendInvite()">+ Tambah Undangan</button>
+      <div class="team-list" id="teamList"></div>
+      <button class="primary" onclick="finishOnboarding()">Lanjut ke LOVA →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://nysgvqcnwgcaimnghcau.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_WiWoAjmiz9j9pXCahoPCcA_ol1rqNYt';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const ROLE_LABEL = { owner:'Business Owner', manager:'Manager', staff:'Staff', finance_admin:'Finance Admin' };
+
+  function showMsg(text, kind){
+    document.getElementById('msgBox').innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
+  }
+  function clearMsg(){ document.getElementById('msgBox').innerHTML = ''; }
+  function showView(id){
+    ['viewAuth','viewCreateOrg','viewAcceptInvite','viewInviteTeam'].forEach(function(v){
+      document.getElementById(v).classList.toggle('hidden', v !== id);
+    });
+  }
+  function setBusy(btnId, busy, label){
+    var btn = document.getElementById(btnId);
+    btn.disabled = busy;
+    btn.innerHTML = busy ? '<span class="spinner"></span>Memproses…' : label;
+  }
+
+  function switchTab(which){
+    document.getElementById('tabLogin').classList.toggle('active', which === 'login');
+    document.getElementById('tabSignup').classList.toggle('active', which === 'signup');
+    document.getElementById('paneLogin').classList.toggle('hidden', which !== 'login');
+    document.getElementById('paneSignup').classList.toggle('hidden', which !== 'signup');
+    document.getElementById('switchHint').innerHTML = which === 'login'
+      ? 'Belum punya akun? <a onclick="switchTab(\'signup\')">Daftar di sini</a>'
+      : 'Sudah punya akun? <a onclick="switchTab(\'login\')">Masuk di sini</a>';
+    clearMsg();
+  }
+
+  var pendingInviteToken = new URLSearchParams(location.search).get('invite');
+
+  async function initPage(){
+    if(pendingInviteToken){
+      var preview = await loadInvitePreview(pendingInviteToken);
+      if(preview){
+        document.getElementById('signupTitle').textContent = 'Gabung ke ' + preview.org_name;
+        document.getElementById('signupSub').textContent = 'Buat password untuk akun kamu, lalu konfirmasi nama untuk gabung.';
+        document.getElementById('signupEmail').value = preview.email;
+        document.getElementById('signupEmail').readOnly = true;
+        var badge = document.getElementById('inviteBadge');
+        badge.classList.remove('hidden');
+        badge.innerHTML = '<div class="invite-badge"><div class="ico">' + preview.org_name.charAt(0) + '</div><div><b>' + preview.org_name + '</b><span>Sebagai ' + (ROLE_LABEL[preview.role]||preview.role) + (preview.division_name ? ' · ' + preview.division_name : '') + '</span></div></div>';
+        switchTab('signup');
+      }
+    }
+
+    var { data:{ session } } = await sb.auth.getSession();
+    if(session){ await routeAfterAuth(); }
+  }
+
+  async function loadInvitePreview(token){
+    var { data, error } = await sb.rpc('get_invite_preview', { invite_token: token });
+    if(error || !data || !data.length){
+      showMsg('Link undangan ini sudah tidak berlaku atau sudah dipakai.', 'error');
+      return null;
+    }
+    return data[0];
+  }
+
+  async function routeAfterAuth(){
+    var { data: profile } = await sb.from('profiles').select('*').maybeSingle();
+    if(profile){
+      window.location.href = 'lenusa-flow-v65c-offline.html';
+      return;
+    }
+    if(pendingInviteToken){
+      var preview = await loadInvitePreview(pendingInviteToken);
+      if(preview){
+        document.getElementById('acceptInviteBadge').innerHTML = '<div class="invite-badge"><div class="ico">' + preview.org_name.charAt(0) + '</div><div><b>' + preview.org_name + '</b><span>Sebagai ' + (ROLE_LABEL[preview.role]||preview.role) + (preview.division_name ? ' · ' + preview.division_name : '') + '</span></div></div>';
+        showView('viewAcceptInvite');
+        return;
+      }
+    }
+    showView('viewCreateOrg');
+  }
+
+  async function doLogin(){
+    clearMsg();
+    var email = document.getElementById('loginEmail').value.trim();
+    var password = document.getElementById('loginPassword').value;
+    if(!email || !password){ showMsg('Email dan password wajib diisi.', 'error'); return; }
+    setBusy('loginBtn', true);
+    var { error } = await sb.auth.signInWithPassword({ email: email, password: password });
+    setBusy('loginBtn', false, 'Masuk');
+    if(error){ showMsg(error.message === 'Invalid login credentials' ? 'Email atau password salah.' : error.message, 'error'); return; }
+    await routeAfterAuth();
+  }
+
+  async function doSignup(){
+    clearMsg();
+    var email = document.getElementById('signupEmail').value.trim();
+    var password = document.getElementById('signupPassword').value;
+    if(!email || !password){ showMsg('Email dan password wajib diisi.', 'error'); return; }
+    if(password.length < 6){ showMsg('Password minimal 6 karakter.', 'error'); return; }
+    setBusy('signupBtn', true);
+    var { data, error } = await sb.auth.signUp({ email: email, password: password });
+    setBusy('signupBtn', false, 'Daftar');
+    if(error){ showMsg(error.message, 'error'); return; }
+    if(data.session){
+      await routeAfterAuth();
+    } else {
+      showMsg('Akun dibuat — cek email kamu untuk konfirmasi, lalu masuk lagi lewat halaman ini.', 'info');
+    }
+  }
+
+  async function doCreateOrg(){
+    clearMsg();
+    var orgName = document.getElementById('orgName').value.trim();
+    var ownerName = document.getElementById('orgOwnerName').value.trim();
+    if(!orgName || !ownerName){ showMsg('Nama organisasi dan nama kamu wajib diisi.', 'error'); return; }
+    setBusy('createOrgBtn', true);
+    var { error } = await sb.rpc('create_organization', { org_name: orgName, owner_name: ownerName });
+    setBusy('createOrgBtn', false, 'Buat Organisasi');
+    if(error){ showMsg(error.message, 'error'); return; }
+    await loadDivisionsForInvite();
+    showView('viewInviteTeam');
+  }
+
+  async function doAcceptInvite(){
+    clearMsg();
+    var name = document.getElementById('acceptName').value.trim();
+    if(!name){ showMsg('Nama wajib diisi.', 'error'); return; }
+    setBusy('acceptInviteBtn', true);
+    var { error } = await sb.rpc('accept_invite', { invite_token: pendingInviteToken, member_name: name });
+    setBusy('acceptInviteBtn', false, 'Gabung Sekarang');
+    if(error){ showMsg(error.message, 'error'); return; }
+    window.location.href = 'lenusa-flow-v65c-offline.html';
+  }
+
+  async function loadDivisionsForInvite(){
+    var { data: divisions } = await sb.from('divisions').select('id,name,is_personal').eq('is_personal', false).order('name');
+    var sel = document.getElementById('inviteDivision');
+    sel.innerHTML = (divisions||[]).map(function(d){ return '<option value="' + d.id + '">' + d.name + '</option>'; }).join('');
+  }
+
+  var invitedList = [];
+  async function doSendInvite(){
+    clearMsg();
+    var email = document.getElementById('inviteEmail').value.trim();
+    var role = document.getElementById('inviteRole').value;
+    var divisionId = document.getElementById('inviteDivision').value;
+    if(!email){ showMsg('Email anggota tim wajib diisi.', 'error'); return; }
+    var { data: profile } = await sb.from('profiles').select('org_id').maybeSingle();
+    var { data: inv, error } = await sb.from('invites').insert({ org_id: profile.org_id, email: email, role: role, division_id: divisionId }).select('token').single();
+    if(error){ showMsg(error.message.indexOf('duplicate') > -1 ? 'Email ini sudah diundang.' : error.message, 'error'); return; }
+    var link = location.origin + location.pathname.replace('auth.html','') + 'auth.html?invite=' + inv.token;
+    invitedList.push({ email: email, role: role, link: link });
+    renderTeamList();
+    document.getElementById('inviteEmail').value = '';
+  }
+  function renderTeamList(){
+    document.getElementById('teamList').innerHTML = invitedList.map(function(m){
+      return '<div class="team-chip"><span>' + m.email + ' · ' + (ROLE_LABEL[m.role]||m.role) + '</span><span class="link-btn" onclick="copyInviteLink(\'' + m.link + '\')">Salin Link</span></div>';
+    }).join('');
+  }
+  function copyInviteLink(link){
+    navigator.clipboard.writeText(link).then(function(){ showMsg('Link undangan disalin — kirim lewat WhatsApp/email.', 'info'); });
+  }
+  function finishOnboarding(){
+    window.location.href = 'lenusa-flow-v65c-offline.html';
+  }
+
+  initPage();
+</script>
+</body>
+</html>

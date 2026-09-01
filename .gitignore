@@ -1,1 +1,9 @@
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
+
+# Local Netlify folder
+.netlify
+
+# Deploy staging copy — generated from auth.html + lenusa-flow-v65c-offline.html,
+# not a source file. Regenerate with: cp auth.html lenusa-flow-v65c-offline.html public/
+public/
