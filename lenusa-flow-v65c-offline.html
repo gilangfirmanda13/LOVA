@@ -2107,7 +2107,9 @@
             <div class="back-btn" onclick="goBack()" style="margin-bottom:14px;"><i class="ti ti-arrow-left"></i></div>
             <div class="page-header">
               <div><div class="page-title" data-i18n="team.title">Team</div><div class="page-sub" id="teamSub">— anggota di workspace ini</div></div>
+              <button class="btn-new-project" id="teamInviteBtn" style="display:none;" onclick="openInviteTeamModal()"><i class="ti ti-user-plus"></i><span data-i18n="team.inviteBtn">Undang</span></button>
             </div>
+            <div id="teamPendingInvites"></div>
             <div class="filter-pills" id="teamSortRow">
               <div class="filter-pill active" data-sort="default" data-i18n="team.sortDefault">Default</div>
               <div class="filter-pill" data-sort="burnout" data-i18n="team.sortBurnout">Burnout tertinggi</div>
@@ -2156,6 +2158,8 @@
             <div class="account-card">
               <div id="tmFunFacts"></div>
             </div>
+
+            <button class="quiz-retake-btn" id="tmRemoveBtn" style="display:none;color:var(--revisi);" onclick="confirmRemoveTeamMember()" data-i18n="team.removeBtn">Hapus dari Tim</button>
           </div>
         </div>
 
@@ -2916,6 +2920,27 @@
     <div class="form-row"><label class="form-label" data-i18n="form.rincian">Rincian (opsional)</label><textarea class="form-textarea" id="gtNotes" rows="4" placeholder="Detail lengkap task ini… ketik @ untuk mention" oninput="handleMentionInput('gtNotes')"></textarea></div>
     <button class="modal-submit" onclick="submitNewGeneralTask()" id="newGeneralTaskSubmitBtn" data-i18n="general.submit">Tambah Task</button>
     <button class="quiz-retake-btn" id="generalTaskDeleteBtn" style="display:none;color:var(--revisi);" onclick="deleteGeneralTaskFromEditModal()" data-i18n="general.deleteBtn">Hapus Task Ini</button>
+  </div>
+</div>
+
+<!-- ===================== INVITE TEAM MEMBER MODAL ===================== -->
+<div class="modal-overlay" id="inviteTeamModal">
+  <div class="modal-sheet">
+    <div class="modal-head"><div class="modal-title" data-i18n="team.inviteModalTitle">Undang Anggota Tim</div><div class="modal-close" onclick="closeModal('inviteTeamModal')"><i class="ti ti-x"></i></div></div>
+    <div class="form-row"><label class="form-label" data-i18n="team.inviteEmail">Email</label><input class="form-input" type="email" id="inviteTeamEmail" placeholder="email@lenusa.co.id"></div>
+    <div class="form-error" id="inviteTeamEmailError" data-i18n="team.inviteEmailError">Email wajib diisi.</div>
+    <div class="form-row"><label class="form-label" data-i18n="team.inviteRole">Role</label>
+      <select class="form-select" id="inviteTeamRole">
+        <option value="manager" data-i18n="team.roleManager">Manager</option>
+        <option value="staff" selected data-i18n="team.roleStaff">Staff</option>
+        <option value="finance_admin" data-i18n="team.roleFinanceAdmin">Finance Admin</option>
+      </select>
+    </div>
+    <div class="form-row"><label class="form-label" data-i18n="team.inviteDivision">Divisi</label>
+      <select class="form-select" id="inviteTeamDivision"></select>
+    </div>
+    <button class="modal-submit" onclick="submitInviteTeamMember()" id="inviteTeamSubmitBtn" data-i18n="team.inviteSubmit">Kirim Undangan</button>
+    <div id="inviteTeamStatus" style="margin-top:10px;font-size:12px;text-align:center;"></div>
   </div>
 </div>
 
@@ -7471,6 +7496,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('teamAttentionList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('missed.empty')+'</div>';
   }
   function renderTeamList(){
+    var inviteBtn = document.getElementById('teamInviteBtn');
+    if(inviteBtn) inviteBtn.style.display = window.MY_PERM_ROLE==='owner' ? '' : 'none';
+    renderPendingInvitesList();
     document.getElementById('teamSub').textContent = USERS.length+' '+t('team.membersCount');
     var moreCountEl = document.getElementById('moreTeamCount');
     if(moreCountEl) moreCountEl.textContent = USERS.length+' orang';
@@ -7587,7 +7615,79 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(info.attachStyle){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.attachStyle')+'</span><span class="tm-fact-value">'+info.attachStyle+'</span></div>'; }
     document.getElementById('tmFunFacts').innerHTML = factsHtml || '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:10px 0;">—</div>';
 
+    currentTeamMemberName = name;
+    var removeBtn = document.getElementById('tmRemoveBtn');
+    if(removeBtn) removeBtn.style.display = (window.MY_PERM_ROLE==='owner' && name!==CURRENT_USER_NAME) ? 'block' : 'none';
+
     showScreen('team-member');
+  }
+
+  /* ---------- invite / remove team member (owner-only) ---------- */
+  var currentTeamMemberName = null;
+  var ROLE_LABEL_MAIN = { owner:'Business Owner', manager:'Manager', staff:'Staff', finance_admin:'Finance Admin' };
+  function openInviteTeamModal(){
+    document.getElementById('inviteTeamEmail').value = '';
+    document.getElementById('inviteTeamEmailError').classList.remove('active');
+    document.getElementById('inviteTeamRole').value = 'staff';
+    var sel = document.getElementById('inviteTeamDivision');
+    sel.innerHTML = Object.keys(divisions).filter(function(k){ return k!=='personal'; }).map(function(k){ return '<option value="'+k+'">'+divisions[k].name+'</option>'; }).join('');
+    document.getElementById('inviteTeamStatus').textContent = '';
+    openModal('inviteTeamModal');
+  }
+  async function submitInviteTeamMember(){
+    var email = document.getElementById('inviteTeamEmail').value.trim();
+    document.getElementById('inviteTeamEmailError').classList.remove('active');
+    if(!email){ document.getElementById('inviteTeamEmailError').classList.add('active'); return; }
+    var role = document.getElementById('inviteTeamRole').value;
+    var divisionKey = document.getElementById('inviteTeamDivision').value;
+    var statusEl = document.getElementById('inviteTeamStatus');
+    var btn = document.getElementById('inviteTeamSubmitBtn');
+    btn.disabled = true;
+    statusEl.style.color = 'var(--stone)';
+    statusEl.textContent = t('team.inviteSending');
+    var result = window.LovaDB ? await LovaDB.inviteTeamMember(email, role, divisionKey) : { error: 'offline' };
+    btn.disabled = false;
+    if(result.error){
+      statusEl.style.color = 'var(--revisi)';
+      statusEl.textContent = result.error;
+      return;
+    }
+    statusEl.style.color = 'var(--teal)';
+    statusEl.textContent = result.emailSent ? t('team.inviteSent') : t('team.inviteCreatedNoEmail');
+    document.getElementById('inviteTeamEmail').value = '';
+    showToast(t('team.inviteSent'));
+    renderPendingInvitesList();
+  }
+  async function renderPendingInvitesList(){
+    var container = document.getElementById('teamPendingInvites');
+    if(!container) return;
+    if(window.MY_PERM_ROLE!=='owner' || !window.LovaDB){ container.innerHTML = ''; return; }
+    var invites = await LovaDB.loadPendingInvites();
+    container.innerHTML = invites.length ? ('<div class="account-section-title">'+t('team.pendingInvites')+'</div>' + invites.map(function(inv){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;margin-bottom:6px;background:var(--surface);border:1px solid var(--glass-border);border-radius:12px;font-size:12.5px;">' +
+        '<span>'+inv.email+' · '+(ROLE_LABEL_MAIN[inv.role]||inv.role)+'</span>' +
+        '<span style="color:var(--revisi);font-weight:600;cursor:pointer;white-space:nowrap;" onclick="revokeTeamInvite(\''+inv.id+'\')">'+t('team.revokeInvite')+'</span>' +
+      '</div>';
+    }).join('')) : '';
+  }
+  function revokeTeamInvite(inviteId){
+    customConfirm(t('team.revokeConfirm'), async function(){
+      if(window.LovaDB) await LovaDB.revokeInvite(inviteId);
+      renderPendingInvitesList();
+      showToast(t('team.revokedToast'));
+    }, {label:t('team.revokeInvite')});
+  }
+  function confirmRemoveTeamMember(){
+    if(!currentTeamMemberName || currentTeamMemberName===CURRENT_USER_NAME) return;
+    var name = currentTeamMemberName;
+    customConfirm(t('team.removeConfirm').replace('{name}', name), async function(){
+      if(!window.LovaDB) return;
+      var result = await LovaDB.removeTeamMember(name);
+      if(result.error){ showToast(result.error); return; }
+      showToast(t('team.removedToast').replace('{name}', name));
+      goBack();
+      renderTeamList();
+    }, {label:t('team.removeBtn')});
   }
 
   /* ================= JOURNAL ================= */
@@ -9538,6 +9638,20 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "team.overrideNoContext": {id:"Task tidak diketahui", en:"Unknown task"},
     "team.overrideBy": {id:"oleh", en:"by"},
     "team.overrideNone": {id:"Belum ada riwayat", en:"No history yet"},
+    "team.inviteBtn": {id:"Undang", en:"Invite"}, "team.inviteModalTitle": {id:"Undang Anggota Tim", en:"Invite team member"},
+    "team.inviteEmail": {id:"Email", en:"Email"}, "team.inviteEmailError": {id:"Email wajib diisi.", en:"Email is required."},
+    "team.inviteRole": {id:"Role", en:"Role"}, "team.roleManager": {id:"Manager", en:"Manager"}, "team.roleStaff": {id:"Staff", en:"Staff"}, "team.roleFinanceAdmin": {id:"Finance Admin", en:"Finance Admin"},
+    "team.inviteDivision": {id:"Divisi", en:"Division"}, "team.inviteSubmit": {id:"Kirim Undangan", en:"Send invite"},
+    "team.inviteSending": {id:"Mengirim undangan…", en:"Sending invite…"},
+    "team.inviteSent": {id:"Undangan terkirim", en:"Invite sent"},
+    "team.inviteCreatedNoEmail": {id:"Undangan dibuat, tapi email gagal terkirim — cek menu Team untuk link undangan.", en:"Invite created, but the email failed — check the Team menu for the invite link."},
+    "team.pendingInvites": {id:"Undangan Menunggu", en:"Pending invites"},
+    "team.revokeInvite": {id:"Batalkan", en:"Revoke"},
+    "team.revokeConfirm": {id:"Batalkan undangan ini?", en:"Revoke this invite?"},
+    "team.revokedToast": {id:"Undangan dibatalkan", en:"Invite revoked"},
+    "team.removeBtn": {id:"Hapus dari Tim", en:"Remove from team"},
+    "team.removeConfirm": {id:"Hapus {name} dari tim? Akun dan semua akses mereka akan dihapus permanen.", en:"Remove {name} from the team? Their account and all access will be permanently deleted."},
+    "team.removedToast": {id:"{name} sudah dihapus dari tim", en:"{name} has been removed from the team"},
     "journal.sub": {id:"Cek diri sendiri, sejenak", en:"Check in with yourself, for a moment"},
     "journal.save": {id:"Simpan", en:"Save"}, "journal.saved": {id:"Catatan tersimpan", en:"Entry saved"},
     "journal.history": {id:"Riwayat", en:"History"}, "journal.empty": {id:"Belum ada catatan", en:"No entries yet"},
@@ -10161,6 +10275,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(isScreenActive('screen-personaltasks')) renderPersonalTasksScreen();
     if(isScreenActive('screen-taskdetail')) renderTaskDetail();
     if(isScreenActive('screen-eventdetail')) renderEventDetail();
+    if(isScreenActive('screen-team')) renderTeamList();
   }
   function applyLang(lang){
     document.documentElement.dataset.lang = lang;
@@ -10755,6 +10870,52 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     deleteGeneralTask: async function(id){
       var { error } = await sb.from('general_tasks').delete().eq('id', id);
       if(error) console.error('LovaDB.deleteGeneralTask', error);
+    },
+
+    inviteTeamMember: async function(email, role, divisionKey){
+      var { data: inv, error } = await sb.from('invites')
+        .insert({ org_id: myOrgId, email: email, role: role, division_id: divKeyToId[divisionKey] || null })
+        .select('token').single();
+      if(error) return { error: error.message.indexOf('duplicate')>-1 ? 'Email ini sudah diundang.' : error.message };
+      try {
+        var { data: { session } } = await sb.auth.getSession();
+        var resp = await fetch(SUPABASE_URL + '/functions/v1/send-invite-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+          body: JSON.stringify({ inviteToken: inv.token, appUrl: location.origin })
+        });
+        return { ok: true, emailSent: resp.ok };
+      } catch(e) {
+        return { ok: true, emailSent: false };
+      }
+    },
+    loadPendingInvites: async function(){
+      var { data, error } = await sb.from('invites').select('id, email, role').eq('org_id', myOrgId).is('accepted_at', null).gt('expires_at', new Date().toISOString()).order('created_at', {ascending:false});
+      if(error){ console.error('LovaDB.loadPendingInvites', error); return []; }
+      return data || [];
+    },
+    revokeInvite: async function(inviteId){
+      var { error } = await sb.from('invites').delete().eq('id', inviteId);
+      if(error) console.error('LovaDB.revokeInvite', error);
+    },
+    removeTeamMember: async function(name){
+      var targetId = idOf(name);
+      if(!targetId) return { error: 'Anggota tidak ditemukan.' };
+      try {
+        var { data: { session } } = await sb.auth.getSession();
+        var resp = await fetch(SUPABASE_URL + '/functions/v1/remove-team-member', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+          body: JSON.stringify({ targetProfileId: targetId })
+        });
+        var result = await resp.json();
+        if(!resp.ok) return { error: (result.error && result.error.message) || result.error || 'Gagal menghapus anggota.' };
+        delete nameToId[name]; delete idToName[targetId];
+        USERS = USERS.filter(function(u){ return u!==name; });
+        return { ok: true };
+      } catch(e) {
+        return { error: String(e) };
+      }
     }
   };
 })();
