@@ -1127,7 +1127,12 @@
 
     .today-ritual-card{ grid-column:1/-1; }
     .biz-health-card{ grid-column:1/-1; padding:18px 24px; }
-    .biz-health-row{ max-width:520px; }
+    /* biz-health-card spans the full grid width, but its stat row only ever
+       holds 3 short pills -- stretching them edge-to-edge over 1000px+ would
+       look just as awkward as the old left-pinned 520px cap. Center it
+       instead, so the leftover space reads as balanced margin, not a
+       lopsided card that only fills its left half. */
+    .biz-health-row{ max-width:520px; margin:0 auto; }
     .col-main{ grid-column:1/-1; }
     .section-title{ font-size:19px; }
     .section-link{ font-size:13.5px; }
@@ -1296,7 +1301,7 @@
   .today-ritual-head{ font-family:var(--font-display); font-weight:700; font-size:14.5px; color:var(--ink); margin-bottom:10px; }
   .today-ritual-row{ display:flex; align-items:center; gap:12px; padding:9px 4px; cursor:pointer; }
   .today-ritual-row + .today-ritual-row{ border-top:1px solid var(--glass-border); }
-  .today-ritual-time{ font-family:var(--font-mono); font-size:12px; color:var(--stone); width:42px; flex-shrink:0; }
+  .today-ritual-time{ font-family:var(--font-body); font-size:12px; color:var(--stone); width:38px; flex-shrink:0; white-space:nowrap; }
   .today-ritual-body{ flex:1; min-width:0; }
   .today-ritual-title{ font-size:13.5px; color:var(--ink); }
   .today-ritual-tags{ display:flex; gap:5px; margin-top:3px; flex-wrap:wrap; align-items:center; }
@@ -3310,6 +3315,18 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     }
     return null;
   }
+  /* marks a task as pending MY response, attributing it to whoever assigned it
+     to me. Unlike markPendingAssignment below (which fabricates an assigner from
+     the division manager, for self-claimed tasks), this is for the actual
+     everyday case: I assign a task directly to a teammate. Without this, the
+     assignee only ever got a one-time notification -- no badge on the task row,
+     no accept/deny/hold, and no way for the assigner to see whether it was ever
+     acknowledged. */
+  function markAssignedByMe(taskObj){
+    if(!taskObj) return;
+    taskObj.assignedBy = CURRENT_USER_NAME;
+    taskObj.assignmentStatus = 'pending';
+  }
   /* marks a task as a pending assignment awaiting accept/deny/hold from the assignee — only when someone other than the assignee themself did the assigning, and never for personal-space tasks */
   function markPendingAssignment(taskObj, divKey, isPersonal){
     if(isPersonal || !taskObj) return;
@@ -3840,6 +3857,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(myMissed.length){
       actionItems.push({ icon:'ti-clock', tone:'warn',
         text:'<b>'+myMissed.length+'</b> '+t('dash.actionMissed'), onclick:"openMissedTasksModal()" });
+    }
+    var myPendingAssignments = getPendingAssignmentsForMe();
+    if(myPendingAssignments.length){
+      actionItems.push({ icon:'ti-inbox', tone:'warn',
+        text:'<b>'+myPendingAssignments.length+'</b> '+t('dash.actionPendingAssignment'), onclick:"showScreen('today')" });
+    }
+    var myPendingDelegations = getPendingDelegationsByMe();
+    if(myPendingDelegations.length){
+      actionItems.push({ icon:'ti-send', tone:'warn',
+        text:'<b>'+myPendingDelegations.length+'</b> '+t('dash.actionPendingDelegation'), onclick:"showScreen('today')" });
     }
     var myPending = approvalRequests.filter(function(a){ return isPendingForMe(a); }).sort(function(a,b){ return a.createdAt.localeCompare(b.createdAt); });
     if(myPending.length){
@@ -4378,6 +4405,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           markPendingAssignment(newTask, divFinal, false);
           pushNotification(t('notif.picGeneral')+': '+name, gtMeta, 'ti-user-plus', '#F7A433', gtOpenAction);
         } else if(picFinal){
+          markAssignedByMe(newTask);
+          if(window.LovaDB) LovaDB.updateGeneralTask(newTask);
           notifyUser(picFinal, t('notif.picGeneral')+': '+name, gtMeta, 'ti-user-plus', '#F7A433', gtOpenAction);
         }
       }
@@ -6474,10 +6503,15 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var ph = p.phases.find(function(x){ return x.id===popoverCtx.phId; });
       var tk = ph.tasks.find(function(x){ return x.id===popoverCtx.tId; });
       tk.pic = u;
+      var tiOpenAction = "openTaskDetailProject('"+p.id+"','"+ph.id+"','"+tk.id+"')";
       if(u===CURRENT_USER_NAME){
         markPendingAssignment(tk, p.division, p.division==='personal');
-        pushNotification(t('notif.picTask')+': '+tk.name, p.title, 'ti-user-plus', '#F7A433', "openTaskDetailProject('"+p.id+"','"+ph.id+"','"+tk.id+"')");
+        pushNotification(t('notif.picTask')+': '+tk.name, p.title, 'ti-user-plus', '#F7A433', tiOpenAction);
+      } else if(u){
+        markAssignedByMe(tk);
+        notifyUser(u, t('notif.picTask')+': '+tk.name, p.title, 'ti-user-plus', '#F7A433', tiOpenAction);
       }
+      if(window.LovaDB) LovaDB.updateProjectTask(tk);
       renderPhases();
     } else if(popoverTarget==='taskPic'){
       formPicUtama = u;
@@ -6486,10 +6520,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     } else if(popoverTarget==='generalTaskInline' && popoverCtx){
       var gt = generalTasks.find(function(x){ return x.id===popoverCtx.taskId; });
       gt.pic = u;
+      var gtiOpenAction = "openTaskDetailGeneral('"+gt.division+"','"+gt.id+"')";
+      var gtiMeta = (divisions[gt.division]?divisions[gt.division].name:gt.division)+' · '+t('divtab.general');
       if(u===CURRENT_USER_NAME){
         markPendingAssignment(gt, gt.division, gt.division==='personal');
-        pushNotification(t('notif.picGeneral')+': '+gt.name, (divisions[gt.division]?divisions[gt.division].name:gt.division)+' · '+t('divtab.general'), 'ti-user-plus', '#F7A433', "openTaskDetailGeneral('"+gt.division+"','"+gt.id+"')");
+        pushNotification(t('notif.picGeneral')+': '+gt.name, gtiMeta, 'ti-user-plus', '#F7A433', gtiOpenAction);
+      } else if(u){
+        markAssignedByMe(gt);
+        notifyUser(u, t('notif.picGeneral')+': '+gt.name, gtiMeta, 'ti-user-plus', '#F7A433', gtiOpenAction);
       }
+      if(window.LovaDB) LovaDB.updateGeneralTask(gt);
       renderGeneralTaskList();
     } else if(popoverTarget==='generalPic'){
       formGeneralPic = u;
@@ -6936,6 +6976,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         markPendingAssignment(newTask, p.division, false);
         pushNotification(t('notif.picSecondary')+': '+name, p.title, 'ti-user-plus', '#F7A433', atOpenAction);
       } else if(newTask.pic){
+        markAssignedByMe(newTask);
+        if(window.LovaDB) LovaDB.updateProjectTask(newTask);
         notifyUser(newTask.pic, t('notif.picTask')+': '+name, p.title, 'ti-user-plus', '#F7A433', atOpenAction);
       }
       newTask.secondaryPic.forEach(function(u){ if(u!==newTask.pic) notifyUser(u, t('notif.picSecondary')+': '+name, p.title, 'ti-user-plus', '#F7A433', atOpenAction); });
@@ -9058,6 +9100,40 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var today = todayISO();
     return getMyTasks(true).filter(function(m){ return m.task.deadline && m.task.deadline<today && m.task.status!=='done'; });
   }
+  /* tasks assigned to me that I haven't accepted/denied/held yet -- these already
+     show a small badge wherever the task row renders, but that only helps if you
+     happen to scroll past the row; this powers a visible count on Today instead. */
+  function getPendingAssignmentsForMe(){
+    var results = [];
+    projects.forEach(function(p){
+      if(p.division==='personal' || p.inactive) return;
+      p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){
+        if(tk.assignmentStatus==='pending' && tk.assignedBy && tk.assignedBy!==CURRENT_USER_NAME && (tk.pic===CURRENT_USER_NAME || (tk.secondaryPic||[]).indexOf(CURRENT_USER_NAME)>-1)) results.push(tk);
+      }); });
+    });
+    generalTasks.forEach(function(g){
+      if(g.division==='personal') return;
+      if(g.assignmentStatus==='pending' && g.assignedBy && g.assignedBy!==CURRENT_USER_NAME && g.pic===CURRENT_USER_NAME) results.push(g);
+    });
+    return results;
+  }
+  /* the flip side: tasks I handed to someone else that they haven't responded to
+     yet -- otherwise the only way to know is to keep checking, since the app never
+     tells the assigner anything beyond the one-time notification it already sent. */
+  function getPendingDelegationsByMe(){
+    var results = [];
+    projects.forEach(function(p){
+      if(p.division==='personal' || p.inactive) return;
+      p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){
+        if(tk.assignmentStatus==='pending' && tk.assignedBy===CURRENT_USER_NAME && tk.pic!==CURRENT_USER_NAME) results.push(tk);
+      }); });
+    });
+    generalTasks.forEach(function(g){
+      if(g.division==='personal') return;
+      if(g.assignmentStatus==='pending' && g.assignedBy===CURRENT_USER_NAME && g.pic!==CURRENT_USER_NAME) results.push(g);
+    });
+    return results;
+  }
   function handleMentionInput(textareaId){
     var ta = document.getElementById(textareaId);
     if(!ta) return;
@@ -10018,6 +10094,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "dash.actionNeeded": {id:"Perlu Perhatian", en:"Needs attention"},
     "dash.actionApproval": {id:"approval menunggu keputusanmu", en:"approvals waiting on your decision"},
     "dash.actionMissed": {id:"tugas dari sebelumnya masih perlu diselesaikan", en:"tasks from before still need finishing"},
+    "dash.actionPendingAssignment": {id:"tugas baru menunggu kamu terima", en:"new assignments waiting for you to accept"},
+    "dash.actionPendingDelegation": {id:"tugas yang kamu berikan belum direspon", en:"tasks you assigned haven't been responded to yet"},
     "missed.modalTitle": {id:"Perlu Diselesaikan", en:"Needs finishing"},
     "missed.oneDayAgo": {id:"jatuh tempo kemarin", en:"was due yesterday"},
     "missed.daysAgo": {id:"jatuh tempo {n} hari lalu", en:"was due {n} days ago"},
@@ -10349,13 +10427,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var divKeyToId = {}, divIdToKey = {}, nameToId = {}, idToName = {}, myOrgId = null, myOrgName = null;
   function nameOf(id){ return id ? (idToName[id] || null) : null; }
   function idOf(name){ return name ? (nameToId[name] || null) : null; }
+  // Postgres `time` columns round-trip through PostgREST as "HH:MM:SS" even
+  // when only "HH:MM" was ever written -- strip the seconds so every startTime/
+  // endTime the app displays matches what the <input type="time"> field showed.
+  function hhmm(t){ return t ? t.slice(0,5) : t; }
 
   function mapTaskRow(t){
     return {
       id: t.id, name: t.name, status: t.status, pic: nameOf(t.pic_id),
       secondaryPic: (t.secondary_pic || []).map(nameOf).filter(Boolean),
       priority: t.priority, effort: t.effort,
-      start: t.start_date, startTime: t.start_time, deadline: t.deadline, endTime: t.end_time,
+      start: t.start_date, startTime: hhmm(t.start_time), deadline: t.deadline, endTime: hhmm(t.end_time),
       zone: t.zone, notes: t.notes || '',
       assignedBy: nameOf(t.assigned_by), originalAssignedBy: nameOf(t.original_assigned_by),
       assignmentStatus: t.assignment_status, assignedAt: t.assigned_at,
@@ -10418,7 +10500,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     (rows || []).forEach(function(g){
       generalTasks.push({
         id: g.id, division: divIdToKey[g.division_id], name: g.name, status: g.status, pic: nameOf(g.pic_id),
-        priority: g.priority, start: g.start_date, startTime: g.start_time, deadline: g.deadline, endTime: g.end_time,
+        priority: g.priority, start: g.start_date, startTime: hhmm(g.start_time), deadline: g.deadline, endTime: hhmm(g.end_time),
         notes: g.notes || '', zone: g.zone, assignedBy: nameOf(g.assigned_by), originalAssignedBy: nameOf(g.original_assigned_by),
         assignmentStatus: g.assignment_status, assignedAt: g.assigned_at, preToggleStatus: g.pre_toggle_status,
         completedAt: g.completed_at, focusOrder: g.focus_order, order: g.sort_order,
@@ -10440,7 +10522,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       events.push({
         id: e.id, title: e.title, description: e.description || '', eventType: e.event_type, cakupan: e.cakupan,
         clientName: e.client_name || '', date: e.date, dateMulai: e.date_mulai, dateSelesai: e.date_selesai,
-        startTime: e.start_time, endTime: e.end_time, locationType: e.location_type, locationDetail: e.location_detail || '',
+        startTime: hhmm(e.start_time), endTime: hhmm(e.end_time), locationType: e.location_type, locationDetail: e.location_detail || '',
         attendees: (e.attendee_ids || []).map(nameOf).filter(Boolean), division: e.division_id ? divIdToKey[e.division_id] : 'umum',
         linkedProjectId: e.linked_project_id, pembicara: e.pembicara || '', harga: Number(e.harga) || 0, jumlahPeserta: e.jumlah_peserta || 0
       });
@@ -10489,7 +10571,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     rituals.length = 0; ritualCompletions.length = 0;
     (rows || []).forEach(function(r){
       rituals.push({
-        id: r.id, title: r.title, description: r.description || '', startTime: r.start_time, endTime: r.end_time,
+        id: r.id, title: r.title, description: r.description || '', startTime: hhmm(r.start_time), endTime: hhmm(r.end_time),
         days: r.days || [], divisions: divIdsToKeys(r.division_ids), pic: nameOf(r.pic_id), order: r.sort_order
       });
       (r.ritual_completions || []).forEach(function(c){
