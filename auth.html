@@ -342,13 +342,35 @@
     var { data: inv, error } = await sb.from('invites').insert({ org_id: profile.org_id, email: email, role: role, division_id: divisionId }).select('token').single();
     if(error){ showMsg(error.message.indexOf('duplicate') > -1 ? 'Email ini sudah diundang.' : error.message, 'error'); return; }
     var link = location.origin + location.pathname.replace('auth.html','') + 'auth.html?invite=' + inv.token;
-    invitedList.push({ email: email, role: role, link: link });
+    invitedList.push({ email: email, role: role, link: link, emailStatus: 'sending' });
     renderTeamList();
     document.getElementById('inviteEmail').value = '';
+    sendInviteEmail(inv.token, invitedList[invitedList.length - 1]);
+  }
+  async function sendInviteEmail(inviteToken, entry){
+    try {
+      var { data: { session } } = await sb.auth.getSession();
+      var resp = await fetch(SUPABASE_URL + '/functions/v1/send-invite-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+        body: JSON.stringify({ inviteToken: inviteToken, appUrl: location.origin })
+      });
+      var result = await resp.json();
+      entry.emailStatus = resp.ok ? 'sent' : 'failed';
+      entry.emailError = resp.ok ? null : (result.error && result.error.message ? result.error.message : JSON.stringify(result.error));
+    } catch(e) {
+      entry.emailStatus = 'failed';
+      entry.emailError = String(e);
+    }
+    renderTeamList();
   }
   function renderTeamList(){
     document.getElementById('teamList').innerHTML = invitedList.map(function(m){
-      return '<div class="team-chip"><span>' + m.email + ' · ' + (ROLE_LABEL[m.role]||m.role) + '</span><span class="link-btn" onclick="copyInviteLink(\'' + m.link + '\')">Salin Link</span></div>';
+      var statusHtml = m.emailStatus === 'sending' ? '<span style="color:var(--stone);font-size:11px;">mengirim email…</span>'
+        : m.emailStatus === 'sent' ? '<span style="color:var(--teal);font-size:11px;">✓ email terkirim</span>'
+        : m.emailStatus === 'failed' ? '<span style="color:var(--critical);font-size:11px;" title="' + (m.emailError||'').replace(/"/g,'&quot;') + '">email gagal, pakai link</span>'
+        : '';
+      return '<div class="team-chip"><span>' + m.email + ' · ' + (ROLE_LABEL[m.role]||m.role) + ' · ' + statusHtml + '</span><span class="link-btn" onclick="copyInviteLink(\'' + m.link + '\')">Salin Link</span></div>';
     }).join('');
   }
   function copyInviteLink(link){
