@@ -214,6 +214,7 @@
 
   async function routeAfterAuth(){
     var { data: { user: authUser } } = await sb.auth.getUser();
+    if(!authUser){ await sb.auth.signOut(); showView('viewAuth'); return; }
     var { data: profile } = await sb.from('profiles').select('*').eq('id', authUser.id).maybeSingle();
     if(profile){
       window.location.href = 'lenusa-flow-v65c-offline.html';
