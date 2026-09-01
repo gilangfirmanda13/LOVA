@@ -9011,6 +9011,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!recipientName || recipientName===CURRENT_USER_NAME) return;
     if(window.LovaDB){
       LovaDB.createNotification(recipientName, { id:LovaDB.newId(), title:title, meta:meta, icon:icon, color:color, read:false, action:action||null });
+      var bodyHtml = '<p>' + title + '</p>' + (meta ? '<p style="color:#8A9490;font-size:13px;">' + meta + '</p>' : '') +
+        '<p style="margin-top:16px;"><a href="' + location.origin + '/lenusa-flow-v65c-offline.html">Buka LOVA</a></p>';
+      LovaDB.sendEmailNotification(recipientName, title, bodyHtml);
     }
   }
   function notifyNewMentions(oldText, newText, sourceLabel, openAction){
@@ -10584,6 +10587,20 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(error) console.error('LovaDB.updateIdea', error);
     },
 
+    sendEmailNotification: async function(recipientName, subject, bodyHtml){
+      var recipientId = idOf(recipientName);
+      if(!recipientId) return;
+      var { data: sessionData } = await sb.auth.getSession();
+      if(!sessionData || !sessionData.session) return;
+      try {
+        var resp = await fetch(SUPABASE_URL + '/functions/v1/send-notification-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionData.session.access_token },
+          body: JSON.stringify({ recipientProfileId: recipientId, subject: subject, bodyHtml: bodyHtml })
+        });
+        if(!resp.ok) console.error('LovaDB.sendEmailNotification', await resp.text());
+      } catch(e){ console.error('LovaDB.sendEmailNotification', e); }
+    },
     createDelegation: async function(isGeneral, taskId, fromName, toName, note){
       var table = isGeneral ? 'general_task_delegations' : 'task_delegations';
       var idCol = isGeneral ? 'general_task_id' : 'task_id';
