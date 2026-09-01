@@ -80,11 +80,24 @@
   html{scroll-behavior:smooth;}
   body{
     font-family:var(--font-body); color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased;
+    background:var(--bg);
+    position:relative;
+  }
+  /* background-attachment:fixed on body is unreliable on mobile browsers (it
+     tends to scroll away with the page instead of staying pinned to the
+     viewport), which left the teal/orange tint visible only near the very top
+     of a scrolled page and flat white everywhere else. A position:fixed
+     pseudo-element behind everything renders consistently on mobile and
+     desktop alike. */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
     background:
       radial-gradient(560px 380px at 92% -4%, rgba(247,164,51,0.10), transparent 62%),
-      radial-gradient(520px 420px at -8% 22%, rgba(0,159,141,0.10), transparent 60%),
-      var(--bg);
-    background-attachment:fixed;
+      radial-gradient(520px 420px at -8% 22%, rgba(0,159,141,0.10), transparent 60%);
   }
   body, button, input, select, textarea{ font-family:var(--font-body); }
   ::selection{background:var(--orange-tint);}
@@ -1158,12 +1171,11 @@
     .evcat-grid{ grid-template-columns:repeat(4,1fr); }
     .evcat-card{ aspect-ratio:auto; min-height:150px; }
 
-    body{
+    body::before{
       background:
         radial-gradient(1080px 760px at 97% -8%, rgba(247,164,51,0.42), transparent 72%),
         radial-gradient(1000px 820px at -8% 14%, rgba(0,159,141,0.40), transparent 70%),
-        radial-gradient(780px 560px at 58% 108%, rgba(0,159,141,0.20), transparent 74%),
-        var(--bg);
+        radial-gradient(780px 560px at 58% 108%, rgba(0,159,141,0.20), transparent 74%);
     }
 
     .list-card{ background:var(--surface); }
