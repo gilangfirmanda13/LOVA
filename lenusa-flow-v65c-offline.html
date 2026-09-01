@@ -3302,8 +3302,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     'Cindy':{ role:'Staff', division:'lnd', birthDate:'1996-07-22', hobbies:['Olahraga','Menonton Film'], favColor:'#108AB1', loveLangReceiving:'Sentuhan Fisik', loveLangGiving:'Tindakan Melayani', attachStyle:'Menghindar (Avoidant)', moodKey:'anxious', burnoutPct:45 },
     'Ayu':{ role:'Staff', division:'pbd', birthDate:'1998-10-11', hobbies:['Membaca','Musik'], favColor:'#B4182D', loveLangReceiving:'Waktu Berkualitas', loveLangGiving:'Menerima Hadiah', attachStyle:'Aman (Secure)', moodKey:'calm', burnoutPct:15 }
   };
+  var PERM_ROLE_BY_NAME = {}; // real org permission role (owner/manager/staff/finance_admin), NOT the free-text job_title in TEAM_PROFILES[name].role -- populated from real data once LovaDB boots, empty in the offline demo
   function getDivisionManager(divKey){
-    for(var name in TEAM_PROFILES){ if(TEAM_PROFILES[name].role==='Manager' && TEAM_PROFILES[name].division===divKey) return name; }
+    for(var name in TEAM_PROFILES){
+      var permRole = PERM_ROLE_BY_NAME[name] || (TEAM_PROFILES[name].role==='Manager' ? 'manager' : null);
+      if(permRole==='manager' && TEAM_PROFILES[name].division===divKey) return name;
+    }
     return null;
   }
   /* marks a task as a pending assignment awaiting accept/deny/hold from the assignee — only when someone other than the assignee themself did the assigning, and never for personal-space tasks */
@@ -7861,12 +7865,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(pct>=34) return { color:'var(--orange)', label:t('journal.burnoutMed'), desc:t('journal.burnoutMedDesc'), tips:[t('journal.burnoutTipMed1'),t('journal.burnoutTipMed2'),t('journal.burnoutTipMed3')] };
     return { color:'var(--teal)', label:t('journal.burnoutLow'), desc:t('journal.burnoutLowDesc'), tips:[t('journal.burnoutTipLow1'),t('journal.burnoutTipLow2')] };
   }
-  function getDivisionManager(division){
-    for(var name in TEAM_PROFILES){
-      if(TEAM_PROFILES[name].division===division && TEAM_PROFILES[name].role==='Manager') return name;
-    }
-    return null;
-  }
+  // getDivisionManager is defined once, near TEAM_PROFILES (~line 3306) --
+  // this used to be a second, duplicate definition that silently shadowed
+  // the real one (later function declarations win), so fixing the first
+  // one to check the real org permission role instead of a free-text job
+  // title never actually took effect until this duplicate was removed.
   function notifyManagerBurnout(){
     var mgr = getDivisionManager(userProfile.division);
     var btn = document.getElementById('burnoutNotifyBtn');
@@ -10609,6 +10612,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     // teammates show their actual job title/hobbies/mood/avatar instead
     // of generic placeholder defaults (see getTeamMemberInfo).
     var newTeamProfiles = {};
+    var newPermRoles = {};
     (profileRows || []).forEach(function(p){
       newTeamProfiles[p.name] = {
         role: p.job_title || '', division: divIdToKey[p.division_id] || 'pbd', hobbies: p.hobbies || [],
@@ -10617,8 +10621,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         attachStyle: p.attach_style || '', moodKey: p.mood_key || 'calm', burnoutPct: p.burnout_pct,
         avatarPhoto: p.avatar_url || null
       };
+      newPermRoles[p.name] = p.role;
     });
     TEAM_PROFILES = newTeamProfiles;
+    PERM_ROLE_BY_NAME = newPermRoles;
 
     var newDivisions = {};
     (divisionRows || []).forEach(function(d){
@@ -10672,6 +10678,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       (profileRows || []).forEach(function(p){ idToName[p.id] = p.name; nameToId[p.name] = p.id; });
       USERS = (profileRows || []).map(function(p){ return p.name; });
       var newTeamProfiles = {};
+      var newPermRoles = {};
       (profileRows || []).forEach(function(p){
         newTeamProfiles[p.name] = {
           role: p.job_title || '', division: divIdToKey[p.division_id] || 'pbd', hobbies: p.hobbies || [],
@@ -10680,8 +10687,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           attachStyle: p.attach_style || '', moodKey: p.mood_key || 'calm', burnoutPct: p.burnout_pct,
           avatarPhoto: p.avatar_url || null
         };
+        newPermRoles[p.name] = p.role;
       });
       TEAM_PROFILES = newTeamProfiles;
+      PERM_ROLE_BY_NAME = newPermRoles;
       refreshVisibleScreens();
       if(isScreenActive('screen-team-member') && currentTeamMemberName) openTeamMember(currentTeamMemberName);
     }, 400);
