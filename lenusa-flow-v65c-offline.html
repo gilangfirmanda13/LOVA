@@ -1089,6 +1089,11 @@
     .greeting-eyebrow, .greeting-title{ grid-column:1/-1; }
     .greeting-eyebrow{ font-size:14px; }
     .topbar{ padding:22px 40px 4px; }
+    /* .brand is hidden on desktop (sidebar shows the logo instead), leaving
+       .topbar-right as the topbar's only flex child -- space-between has
+       nothing to space between then, so it collapses to flex-start and
+       pins the notif bell/avatar to the left. Force it to the right. */
+    .topbar-right{ margin-left:auto; }
     .greeting-title{ font-size:30px; }
 
     .hero-progress-card{ grid-column:1; padding:30px 32px; }
