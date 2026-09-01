@@ -10664,10 +10664,22 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var resyncIdeas = debounced(async function(){ await loadIdeas(myOrgId); if(typeof renderIdeaList==='function' && isScreenActive('screen-ideas')) renderIdeaList(); }, 400);
     var resyncJournal = debounced(async function(){ await loadJournal(); if(typeof renderJournalHistory==='function' && isScreenActive('screen-journal')) renderJournalHistory(); }, 400);
     var resyncProfiles = debounced(async function(){
-      var { data: profileRows } = await sb.from('profiles').select('id,name,role,division_id').eq('org_id', myOrgId);
+      var { data: profileRows } = await sb.from('profiles').select('id,name,role,job_title,division_id,hobbies,birth_date,favorite_color,love_lang_receiving,love_lang_giving,attach_style,mood_key,burnout_pct,avatar_url').eq('org_id', myOrgId);
       (profileRows || []).forEach(function(p){ idToName[p.id] = p.name; nameToId[p.name] = p.id; });
       USERS = (profileRows || []).map(function(p){ return p.name; });
+      var newTeamProfiles = {};
+      (profileRows || []).forEach(function(p){
+        newTeamProfiles[p.name] = {
+          role: p.job_title || '', division: divIdToKey[p.division_id] || 'pbd', hobbies: p.hobbies || [],
+          birthDate: p.birth_date || '', favColor: p.favorite_color || '#8A9490',
+          loveLangReceiving: p.love_lang_receiving || '', loveLangGiving: p.love_lang_giving || '',
+          attachStyle: p.attach_style || '', moodKey: p.mood_key || 'calm', burnoutPct: p.burnout_pct,
+          avatarPhoto: p.avatar_url || null
+        };
+      });
+      TEAM_PROFILES = newTeamProfiles;
       refreshVisibleScreens();
+      if(isScreenActive('screen-team-member') && currentTeamMemberName) openTeamMember(currentTeamMemberName);
     }, 400);
 
     realtimeChannel = sb.channel('lova-org-'+myOrgId)
