@@ -1,0 +1,3 @@
+[build]
+  command = "mkdir -p public && cp auth.html public/auth.html && cp lenusa-flow-v65c-offline.html public/lenusa-flow-v65c-offline.html && printf '/  /auth.html  200\n' > public/_redirects"
+  publish = "public"

@@ -55,6 +55,9 @@
   .team-list{ margin:14px 0; display:flex; flex-direction:column; gap:8px; }
   .team-chip{ display:flex; align-items:center; justify-content:space-between; background:var(--bg); border-radius:10px; padding:9px 12px; font-size:13px; }
   .team-chip .link-btn{ font-size:11.5px; color:var(--teal); cursor:pointer; font-weight:600; }
+  .hobby-grid{ display:flex; flex-wrap:wrap; gap:8px; }
+  .hobby-chip{ font-size:12px; padding:7px 12px; border-radius:99px; background:var(--bg); border:1px solid var(--glass-border); cursor:pointer; user-select:none; }
+  .hobby-chip.checked{ background:var(--teal); color:#fff; border-color:var(--teal); }
   .foot-link{ text-align:center; font-size:12.5px; color:var(--stone); margin-top:18px; }
   .foot-link a{ color:var(--teal); cursor:pointer; font-weight:600; text-decoration:none; }
   .hidden{ display:none !important; }
@@ -129,7 +132,18 @@
       <div class="row"><select id="inviteDivision"></select></div>
       <button class="ghost" onclick="doSendInvite()">+ Tambah Undangan</button>
       <div class="team-list" id="teamList"></div>
-      <button class="primary" onclick="finishOnboarding()">Lanjut ke LOVA →</button>
+      <button class="primary" onclick="goToCompleteProfile()">Lanjut →</button>
+    </div>
+
+    <!-- ===== ONBOARDING: COMPLETE PROFILE ===== -->
+    <div id="viewCompleteProfile" class="hidden">
+      <h1>Lengkapi profil kamu</h1>
+      <p class="sub">Beberapa data buat kenal kamu lebih baik. Bisa diubah lagi nanti lewat menu Akun.</p>
+      <div class="row"><label>Jabatan</label><input type="text" id="cpJobTitle" placeholder="cth. Project Manager"></div>
+      <div class="row" id="cpDivisionRow"><label>Divisi Kamu</label><select id="cpDivision"></select></div>
+      <div class="row"><label>Hobi (pilih beberapa)</label><div class="hobby-grid" id="cpHobbies"></div></div>
+      <button class="primary" id="completeProfileBtn" onclick="doCompleteProfile()">Lanjut ke Tes Kepribadian →</button>
+      <button class="ghost" onclick="skipCompleteProfile()">Lewati untuk sekarang</button>
     </div>
   </div>
 </div>
@@ -139,13 +153,15 @@
   const SUPABASE_ANON_KEY = 'sb_publishable_WiWoAjmiz9j9pXCahoPCcA_ol1rqNYt';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const ROLE_LABEL = { owner:'Business Owner', manager:'Manager', staff:'Staff', finance_admin:'Finance Admin' };
+  const HOBBY_OPTIONS = ['Membaca','Fotografi','Mendaki','Kuliner','Musik','Olahraga','Traveling','Gaming','Menonton Film','Memasak','Menulis','Berkebun','Menggambar','Desain Grafis','Coding','Yoga','Meditasi','Bersepeda','Renang','Hiking','Camping','Memancing','Karaoke','Podcasting','Vlogging','Koleksi Barang','Melukis','Crafting','Badminton','Futsal','Basket'];
+  var selectedHobbies = [];
 
   function showMsg(text, kind){
     document.getElementById('msgBox').innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
   }
   function clearMsg(){ document.getElementById('msgBox').innerHTML = ''; }
   function showView(id){
-    ['viewAuth','viewCreateOrg','viewAcceptInvite','viewInviteTeam'].forEach(function(v){
+    ['viewAuth','viewCreateOrg','viewAcceptInvite','viewInviteTeam','viewCompleteProfile'].forEach(function(v){
       document.getElementById(v).classList.toggle('hidden', v !== id);
     });
   }
@@ -197,7 +213,8 @@
   }
 
   async function routeAfterAuth(){
-    var { data: profile } = await sb.from('profiles').select('*').maybeSingle();
+    var { data: { user: authUser } } = await sb.auth.getUser();
+    var { data: profile } = await sb.from('profiles').select('*').eq('id', authUser.id).maybeSingle();
     if(profile){
       window.location.href = 'lenusa-flow-v65c-offline.html';
       return;
@@ -263,6 +280,46 @@
     var { error } = await sb.rpc('accept_invite', { invite_token: pendingInviteToken, member_name: name });
     setBusy('acceptInviteBtn', false, 'Gabung Sekarang');
     if(error){ showMsg(error.message, 'error'); return; }
+    goToCompleteProfile();
+  }
+
+  async function goToCompleteProfile(){
+    clearMsg();
+    document.getElementById('cpHobbies').innerHTML = HOBBY_OPTIONS.map(function(h){
+      return '<div class="hobby-chip" onclick="toggleHobbyChip(this,\'' + h + '\')">' + h + '</div>';
+    }).join('');
+    var divRow = document.getElementById('cpDivisionRow');
+    if(pendingInviteToken){
+      // Joined via invite — division already set there, don't ask again.
+      divRow.classList.add('hidden');
+    } else {
+      divRow.classList.remove('hidden');
+      var { data: divisionsList } = await sb.from('divisions').select('id,name,is_personal').eq('is_personal', false).order('name');
+      document.getElementById('cpDivision').innerHTML = (divisionsList || []).map(function(d){ return '<option value="' + d.id + '">' + d.name + '</option>'; }).join('');
+    }
+    showView('viewCompleteProfile');
+  }
+  function toggleHobbyChip(el, h){
+    var idx = selectedHobbies.indexOf(h);
+    if(idx > -1) selectedHobbies.splice(idx, 1); else selectedHobbies.push(h);
+    el.classList.toggle('checked');
+  }
+  async function doCompleteProfile(){
+    clearMsg();
+    setBusy('completeProfileBtn', true);
+    var jobTitle = document.getElementById('cpJobTitle').value.trim();
+    var row = { job_title: jobTitle || null, hobbies: selectedHobbies };
+    if(!pendingInviteToken){
+      var divId = document.getElementById('cpDivision').value;
+      if(divId) row.division_id = divId;
+    }
+    var { data: { user } } = await sb.auth.getUser();
+    var { error } = await sb.from('profiles').update(row).eq('id', user.id);
+    setBusy('completeProfileBtn', false, 'Lanjut ke Tes Kepribadian →');
+    if(error){ showMsg(error.message, 'error'); return; }
+    window.location.href = 'lenusa-flow-v65c-offline.html?startQuiz=1';
+  }
+  function skipCompleteProfile(){
     window.location.href = 'lenusa-flow-v65c-offline.html';
   }
 
@@ -279,7 +336,8 @@
     var role = document.getElementById('inviteRole').value;
     var divisionId = document.getElementById('inviteDivision').value;
     if(!email){ showMsg('Email anggota tim wajib diisi.', 'error'); return; }
-    var { data: profile } = await sb.from('profiles').select('org_id').maybeSingle();
+    var { data: { user: inviterUser } } = await sb.auth.getUser();
+    var { data: profile } = await sb.from('profiles').select('org_id').eq('id', inviterUser.id).maybeSingle();
     var { data: inv, error } = await sb.from('invites').insert({ org_id: profile.org_id, email: email, role: role, division_id: divisionId }).select('token').single();
     if(error){ showMsg(error.message.indexOf('duplicate') > -1 ? 'Email ini sudah diundang.' : error.message, 'error'); return; }
     var link = location.origin + location.pathname.replace('auth.html','') + 'auth.html?invite=' + inv.token;

@@ -3445,19 +3445,19 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   var HOBBY_OPTIONS = ['Membaca','Fotografi','Mendaki','Kuliner','Musik','Olahraga','Traveling','Gaming','Menonton Film','Memasak','Menulis','Berkebun','Menggambar','Desain Grafis','Coding','Yoga','Meditasi','Bersepeda','Renang','Hiking','Camping','Memancing','Karaoke','Podcasting','Vlogging','Koleksi Barang','Melukis','Crafting','Badminton','Futsal','Basket'];
   var FAVCOLOR_OPTIONS = ['#F7A433','#009F8D','#B4182D','#F78C6A','#06D7A0','#108AB1','#F04770','#37415C','#FFD167','#54162B'];
-  var LOVE_LANG_OPTIONS = ['Kata-kata Afirmasi','Waktu Berkualitas','Menerima Hadiah','Tindakan Melayani','Sentuhan Fisik'];
-  var ATTACH_STYLE_OPTIONS = ['Aman (Secure)','Cemas (Anxious)','Menghindar (Avoidant)'];
+  var LOVE_LANG_OPTIONS = ['Words of Affirmation','Quality Time','Receiving Gifts','Acts of Service','Physical Touch'];
+  var ATTACH_STYLE_OPTIONS = ['Secure','Anxious','Avoidant'];
   var LOVE_LANG_INFO = {
-    words:{ label:'Kata-kata Afirmasi', desc:'Kamu paling merasa dicintai lewat pujian tulus, kata-kata penyemangat, dan apresiasi verbal. Kritik kasar lebih membekas buat kamu dibanding orang lain.' },
-    quality:{ label:'Waktu Berkualitas', desc:'Kamu paling merasa dicintai lewat perhatian penuh tanpa distraksi — waktu berdua yang benar-benar hadir, bukan cuma di ruangan yang sama.' },
-    gifts:{ label:'Menerima Hadiah', desc:'Kamu paling merasa dicintai lewat simbol perhatian — bukan soal harga, tapi soal dipikirkan dan diingat.' },
-    acts:{ label:'Tindakan Melayani', desc:'Kamu paling merasa dicintai lewat bantuan nyata yang meringankan bebanmu — aksi lebih berarti daripada kata.' },
-    touch:{ label:'Sentuhan Fisik', desc:'Kamu paling merasa dicintai lewat kedekatan fisik — pelukan, genggaman tangan, kehadiran fisik yang menenangkan.' }
+    words:{ label:'Words of Affirmation', desc:'Kamu paling merasa dicintai lewat pujian tulus, kata-kata penyemangat, dan apresiasi verbal. Kritik kasar lebih membekas buat kamu dibanding orang lain.' },
+    quality:{ label:'Quality Time', desc:'Kamu paling merasa dicintai lewat perhatian penuh tanpa distraksi — waktu berdua yang benar-benar hadir, bukan cuma di ruangan yang sama.' },
+    gifts:{ label:'Receiving Gifts', desc:'Kamu paling merasa dicintai lewat simbol perhatian — bukan soal harga, tapi soal dipikirkan dan diingat.' },
+    acts:{ label:'Acts of Service', desc:'Kamu paling merasa dicintai lewat bantuan nyata yang meringankan bebanmu — aksi lebih berarti daripada kata.' },
+    touch:{ label:'Physical Touch', desc:'Kamu paling merasa dicintai lewat kedekatan fisik — pelukan, genggaman tangan, kehadiran fisik yang menenangkan.' }
   };
   var ATTACH_INFO = {
-    secure:{ label:'Aman (Secure)', desc:'Kamu cenderung nyaman baik dengan kedekatan maupun ruang pribadi, percaya pada hubungan, dan bisa komunikasi terbuka saat ada masalah.' },
-    anxious:{ label:'Cemas (Anxious)', desc:'Kamu cenderung butuh kepastian dan kedekatan, dan bisa merasa was-was saat hubungan terasa jauh. Ini pola yang umum dan bisa dipahami bareng orang terdekatmu.' },
-    avoidant:{ label:'Menghindar (Avoidant)', desc:'Kamu cenderung nyaman dengan kemandirian dan kadang butuh ruang lebih saat hubungan terasa terlalu dekat. Ini juga pola yang umum dan bisa dikomunikasikan pelan-pelan.' }
+    secure:{ label:'Secure', desc:'Kamu cenderung nyaman baik dengan kedekatan maupun ruang pribadi, percaya pada hubungan, dan bisa komunikasi terbuka saat ada masalah.' },
+    anxious:{ label:'Anxious', desc:'Kamu cenderung butuh kepastian dan kedekatan, dan bisa merasa was-was saat hubungan terasa jauh. Ini pola yang umum dan bisa dipahami bareng orang terdekatmu.' },
+    avoidant:{ label:'Avoidant', desc:'Kamu cenderung nyaman dengan kemandirian dan kadang butuh ruang lebih saat hubungan terasa terlalu dekat. Ini juga pola yang umum dan bisa dikomunikasikan pelan-pelan.' }
   };
   var LOVE_LANG_QUESTIONS = [
     {type:'receiving', text:'Kamu paling ngerasa disayang kalau orang spesial kamu…', options:[{key:'touch',label:'Pegang tangan atau meluk kamu'},{key:'acts',label:'Bantuin beresin sesuatu tanpa diminta'},{key:'gifts',label:'Kasih sesuatu kecil yang kamu suka'},{key:'quality',label:'Ngobrol berdua tanpa gangguan HP'},{key:'words',label:'Bilang langsung hal baik soal kamu'}]},
@@ -4337,9 +4337,15 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       notifyNewMentions('', notes, name, "openTaskDetailGeneral('"+divFinal+"','"+newTask.id+"')");
       closeModal('newGeneralTaskModal');
       renderGeneralTaskList();
-      if(!isPersonal && picFinal===CURRENT_USER_NAME){
-        markPendingAssignment(newTask, divFinal, false);
-        pushNotification(t('notif.picGeneral')+': '+name, (divisions[divFinal]?divisions[divFinal].name:divFinal)+' · '+t('divtab.general'), 'ti-user-plus', '#F7A433', "openTaskDetailGeneral('"+divFinal+"','"+newTask.id+"')");
+      if(!isPersonal){
+        var gtOpenAction = "openTaskDetailGeneral('"+divFinal+"','"+newTask.id+"')";
+        var gtMeta = (divisions[divFinal]?divisions[divFinal].name:divFinal)+' · '+t('divtab.general');
+        if(picFinal===CURRENT_USER_NAME){
+          markPendingAssignment(newTask, divFinal, false);
+          pushNotification(t('notif.picGeneral')+': '+name, gtMeta, 'ti-user-plus', '#F7A433', gtOpenAction);
+        } else if(picFinal){
+          notifyUser(picFinal, t('notif.picGeneral')+': '+name, gtMeta, 'ti-user-plus', '#F7A433', gtOpenAction);
+        }
       }
     }
   }
@@ -6382,7 +6388,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       renderDecisionQueue();
       refreshDecisionQueueBadge();
       renderDashGlance();
-      if(allDone && a.requestedBy===CURRENT_USER_NAME){ pushNotification(t('notif.approved')+': '+a.title, '', 'ti-check', '#009F8D', "openDecisionQueueScreen(); switchDecisionTab('requested');"); }
+      if(allDone){ notifyUser(a.requestedBy, t('notif.approved')+': '+a.title, '', 'ti-check', '#009F8D', "openDecisionQueueScreen(); switchDecisionTab('requested');"); }
       showToast(allDone ? t('decision.approvedToast') : t('decision.partialApprovedToast'));
     }, {label:t('decision.approve'), danger:false});
   }
@@ -6395,7 +6401,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       renderDecisionQueue();
       refreshDecisionQueueBadge();
       renderDashGlance();
-      if(a.requestedBy===CURRENT_USER_NAME){ pushNotification(t('notif.rejected')+': '+a.title, '', 'ti-x', '#C43D1E', "openDecisionQueueScreen(); switchDecisionTab('requested');"); }
+      notifyUser(a.requestedBy, t('notif.rejected')+': '+a.title, '', 'ti-x', '#C43D1E', "openDecisionQueueScreen(); switchDecisionTab('requested');");
       showToast(t('decision.rejectedToast'));
     }, {label:t('decision.reject')});
   }
@@ -6885,13 +6891,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     closeModal('addTaskModal');
     renderPhases();
     if(!isPersonal){
+      var atOpenAction = "openTaskDetailProject('"+p.id+"','"+ph.id+"','"+newTask.id+"')";
       if(newTask.pic===CURRENT_USER_NAME){
         markPendingAssignment(newTask, p.division, false);
-        pushNotification(t('notif.picTask')+': '+name, p.title, 'ti-user-plus', '#F7A433', "openTaskDetailProject('"+p.id+"','"+ph.id+"','"+newTask.id+"')");
+        pushNotification(t('notif.picTask')+': '+name, p.title, 'ti-user-plus', '#F7A433', atOpenAction);
       } else if(newTask.secondaryPic.indexOf(CURRENT_USER_NAME)>-1){
         markPendingAssignment(newTask, p.division, false);
-        pushNotification(t('notif.picSecondary')+': '+name, p.title, 'ti-user-plus', '#F7A433', "openTaskDetailProject('"+p.id+"','"+ph.id+"','"+newTask.id+"')");
+        pushNotification(t('notif.picSecondary')+': '+name, p.title, 'ti-user-plus', '#F7A433', atOpenAction);
+      } else if(newTask.pic){
+        notifyUser(newTask.pic, t('notif.picTask')+': '+name, p.title, 'ti-user-plus', '#F7A433', atOpenAction);
       }
+      newTask.secondaryPic.forEach(function(u){ if(u!==newTask.pic) notifyUser(u, t('notif.picSecondary')+': '+name, p.title, 'ti-user-plus', '#F7A433', atOpenAction); });
     }
   }
 
@@ -7230,6 +7240,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('accountHeroName').textContent = userProfile.name;
     document.getElementById('accountHeroRole').textContent = userProfile.role+' · '+(divisions[userProfile.division]?divisions[userProfile.division].name:userProfile.division);
     updateAvatarDisplay();
+    if(window.LovaDB) LovaDB.updateProfile();
     showToast(t('account.saved'));
   }
   function saveCapacityHours(){
@@ -7286,6 +7297,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function exitQuiz(){
     quizState = null;
     burnoutQuizState = null;
+    window.onboardingQuizFlow = null;
     showScreen(quizReturnScreen || 'account');
   }
   function renderQuizQuestion(){
@@ -7361,6 +7373,19 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function saveQuizResult(){
     quizState = null;
+    if(window.LovaDB) LovaDB.updateProfile();
+    if(window.onboardingQuizFlow === 'lovelang'){
+      window.onboardingQuizFlow = 'attach';
+      startQuiz('attach');
+      return;
+    }
+    if(window.onboardingQuizFlow === 'attach'){
+      window.onboardingQuizFlow = null;
+      if(window.LovaDB) LovaDB.markProfileCompleted();
+      showScreen('today');
+      showToast('Profil kamu lengkap — selamat datang di LOVA!');
+      return;
+    }
     showScreen('account');
     renderAccountScreen();
     showToast(t('account.saved'));
@@ -7645,10 +7670,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function renderMoodPreview(){ renderMoodSummaryInto('moodSummaryIconPreview','moodSummaryTextPreview'); }
   function saveMoodEntry(){
     var s = computeMoodSummary();
-    journalEntries.unshift({ id:uid('j'), date:todayISO(), type:'mood', moodValues:Object.assign({},moodValues), summaryKey:s.key });
+    var entry = { id:(window.LovaDB?LovaDB.newId():uid('j')), date:todayISO(), type:'mood', moodValues:Object.assign({},moodValues), summaryKey:s.key };
+    journalEntries.unshift(entry);
+    if(window.LovaDB) LovaDB.createJournalEntry(entry);
     userProfile.moodValues = Object.assign({}, moodValues);
     userProfile.moodSummaryKey = s.key;
     userProfile.moodDate = todayISO();
+    if(window.LovaDB) LovaDB.updateProfile();
     renderMoodPreview();
     renderJournalHistory();
     showScreen('journal');
@@ -7679,7 +7707,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function saveEmotionEntry(){
     var note = document.getElementById('emotionNoteInput').value.trim();
     if(!selectedEmotionOption && !note){ showToast(t('journal.emotionEmpty')); return; }
-    journalEntries.unshift({ id:uid('j'), date:todayISO(), type:'emotion', question:currentEmotionQ.q, answer:selectedEmotionOption, note:note });
+    var emotionEntry = { id:(window.LovaDB?LovaDB.newId():uid('j')), date:todayISO(), type:'emotion', question:currentEmotionQ.q, answer:selectedEmotionOption, note:note };
+    journalEntries.unshift(emotionEntry);
+    if(window.LovaDB) LovaDB.createJournalEntry(emotionEntry);
     document.getElementById('emotionNoteInput').value = '';
     pickEmotionQuestion();
     renderJournalHistory();
@@ -7765,7 +7795,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function saveBurnoutResult(pct){
     userProfile.burnoutPct = pct;
     userProfile.burnoutDate = todayISO();
-    journalEntries.unshift({ id:uid('j'), date:todayISO(), type:'burnout', pct:pct });
+    var burnoutEntry = { id:(window.LovaDB?LovaDB.newId():uid('j')), date:todayISO(), type:'burnout', pct:pct };
+    journalEntries.unshift(burnoutEntry);
+    if(window.LovaDB){ LovaDB.createJournalEntry(burnoutEntry); LovaDB.updateProfile(); }
     burnoutQuizState = null;
     showScreen('journal');
     openJournalScreen();
@@ -7788,7 +7820,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function saveObstacleEntry(){
     var note = document.getElementById('obstacleNoteInput').value.trim();
     if(!note && !selectedObstacles.length){ showToast(t('journal.obstacleEmpty')); return; }
-    journalEntries.unshift({ id:uid('j'), date:todayISO(), type:'obstacle', categories:selectedObstacles.slice(), note:note });
+    var obstacleEntry = { id:(window.LovaDB?LovaDB.newId():uid('j')), date:todayISO(), type:'obstacle', categories:selectedObstacles.slice(), note:note };
+    journalEntries.unshift(obstacleEntry);
+    if(window.LovaDB) LovaDB.createJournalEntry(obstacleEntry);
     selectedObstacles = [];
     renderObstacleChips();
     document.getElementById('obstacleNoteInput').value = '';
@@ -7800,7 +7834,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function saveSelfNote(){
     var note = document.getElementById('selfNoteInput').value.trim();
     if(!note){ showToast(t('journal.noteEmpty')); return; }
-    journalEntries.unshift({ id:uid('j'), date:todayISO(), type:'note', note:note });
+    var selfNoteEntry = { id:(window.LovaDB?LovaDB.newId():uid('j')), date:todayISO(), type:'note', note:note };
+    journalEntries.unshift(selfNoteEntry);
+    if(window.LovaDB) LovaDB.createJournalEntry(selfNoteEntry);
     document.getElementById('selfNoteInput').value = '';
     renderJournalHistory();
     showToast(t('journal.saved'));
@@ -8348,7 +8384,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(window.LovaDB){ if(taskDetailCtx.isGeneral) LovaDB.updateGeneralTask(tk); else LovaDB.updateProjectTask(tk); }
     if(tk.assignedBy && tk.assignedBy!==CURRENT_USER_NAME && (decision==='hold' || decision==='denied')){
       var openAction = taskDetailCtx.isGeneral ? ("openTaskDetailGeneral('"+taskDetailCtx.divisionKey+"','"+tk.id+"')") : ("openTaskDetailProject('"+taskDetailCtx.projectId+"','"+taskDetailCtx.phaseId+"','"+tk.id+"')");
-      pushNotification(t('notif.assignmentResponded.'+decision).replace('{name}', CURRENT_USER_NAME).replace('{task}', tk.name), tk.assignedBy, 'ti-alert-triangle', decision==='denied' ? '#C43D1E' : '#F7A433', openAction);
+      notifyUser(tk.assignedBy, t('notif.assignmentResponded.'+decision).replace('{name}', CURRENT_USER_NAME).replace('{task}', tk.name), tk.name, 'ti-alert-triangle', decision==='denied' ? '#C43D1E' : '#F7A433', openAction);
     }
     renderTaskDetail();
     showToast(t('taskdetail.responded.'+decision));
@@ -8968,13 +9004,22 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     });
     return found;
   }
+  // Notify someone OTHER than the current user — pushNotification() only
+  // ever writes to your own feed, this is the counterpart for "let the
+  // other party know" (mentions, assignments, delegation, decisions).
+  function notifyUser(recipientName, title, meta, icon, color, action){
+    if(!recipientName || recipientName===CURRENT_USER_NAME) return;
+    if(window.LovaDB){
+      LovaDB.createNotification(recipientName, { id:LovaDB.newId(), title:title, meta:meta, icon:icon, color:color, read:false, action:action||null });
+    }
+  }
   function notifyNewMentions(oldText, newText, sourceLabel, openAction){
     var before = extractMentions(oldText);
     var after = extractMentions(newText);
     after.forEach(function(u){
       if(u===CURRENT_USER_NAME) return;
       if(before.indexOf(u)>-1) return;
-      pushNotification(t('notif.mentioned').replace('{name}', CURRENT_USER_NAME).replace('{where}', sourceLabel), u, 'ti-at', '#5C4FD6', openAction||'');
+      notifyUser(u, t('notif.mentioned').replace('{name}', CURRENT_USER_NAME).replace('{where}', sourceLabel), sourceLabel, 'ti-at', '#5C4FD6', openAction||'');
     });
   }
   var RTE_TEXTAREA_IDS = ['fDesc','edDesc','atNotes','etNotes','gtNotes','nbContent','apDesc','blDesc','idDesc','rtDesc','evDesc','kText'];
@@ -9217,9 +9262,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(window.LovaDB && m){
       LovaDB.createDelegation(m.isGeneral, m.task.id, fromUser, toUser, note);
     }
-    pushNotification(t('notif.delegatedToYou').replace('{from}', fromUser).replace('{task}', taskName), note||'', 'ti-transfer', '#F5A623', "openMyTasksScreen()");
+    notifyUser(toUser, t('notif.delegatedToYou').replace('{from}', fromUser).replace('{task}', taskName), note||'', 'ti-transfer', '#F5A623', "openMyTasksScreen()");
     if(originalAssigner && originalAssigner!==fromUser){
-      pushNotification(t('notif.delegatedFromYou').replace('{from}', fromUser).replace('{to}', toUser).replace('{task}', taskName), note||'', 'ti-transfer', '#F5A623', "openTeamMember('"+toUser+"')");
+      notifyUser(originalAssigner, t('notif.delegatedFromYou').replace('{from}', fromUser).replace('{to}', toUser).replace('{task}', taskName), note||'', 'ti-transfer', '#F5A623', "openTeamMember('"+toUser+"')");
     }
     closeModal('delegateModal');
     afterMissedTaskAction();
@@ -10325,6 +10370,19 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     });
   }
 
+  async function loadJournal(){
+    var { data: rows, error } = await sb.from('journal_entries').select('*').order('entry_date', {ascending:false});
+    if(error){ console.error('LovaDB: failed to load journal', error); return; }
+    journalEntries.length = 0;
+    (rows || []).forEach(function(j){
+      var entry = { id: j.id, date: j.entry_date, type: j.type };
+      if(j.note) entry.note = j.note;
+      if(j.categories && j.categories.length) entry.categories = j.categories;
+      Object.assign(entry, j.meta || {});
+      journalEntries.push(entry);
+    });
+  }
+
   async function loadIdeas(orgId){
     var { data: rows, error } = await sb.from('ideas').select('*').eq('org_id', orgId).order('created_at', {ascending:false});
     if(error){ console.error('LovaDB: failed to load ideas', error); return; }
@@ -10347,7 +10405,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var { data: sessionData } = await sb.auth.getSession();
     if(!sessionData || !sessionData.session){ window.location.href = 'auth.html'; return; }
 
-    var { data: profile } = await sb.from('profiles').select('*').maybeSingle();
+    var { data: profile } = await sb.from('profiles').select('*').eq('id', sessionData.session.user.id).maybeSingle();
     if(!profile){ window.location.href = 'auth.html'; return; }
     myOrgId = profile.org_id;
 
@@ -10361,9 +10419,24 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     CURRENT_USER_NAME = profile.name;
     if(typeof ME !== 'undefined') ME = profile.name;
+    window.MY_PERM_ROLE = profile.role; // owner/manager/staff/finance_admin — NOT userProfile.role (that's the job-title field below)
     userProfile.name = profile.name;
     userProfile.division = divIdToKey[profile.division_id] || 'pbd';
-    userProfile.role = profile.role;
+    userProfile.role = profile.job_title || '';
+    userProfile.email = profile.email || '';
+    userProfile.hobbies = profile.hobbies || [];
+    userProfile.birthPlace = profile.birth_place || '';
+    userProfile.birthDate = profile.birth_date || '';
+    userProfile.partner = profile.partner || '';
+    userProfile.favColor = profile.favorite_color || userProfile.favColor;
+    userProfile.loveLangReceiving = profile.love_lang_receiving || '';
+    userProfile.loveLangGiving = profile.love_lang_giving || '';
+    userProfile.attachStyle = profile.attach_style || '';
+    userProfile.moodSummaryKey = profile.mood_key || 'calm';
+    userProfile.moodDate = profile.mood_date || null;
+    userProfile.burnoutPct = profile.burnout_pct;
+    userProfile.burnoutDate = profile.burnout_date || null;
+    window.MY_PROFILE_COMPLETED = !!profile.profile_completed_at;
     USERS = (profileRows || []).map(function(p){ return p.name; });
 
     var newDivisions = {};
@@ -10375,9 +10448,15 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     await Promise.all([
       loadProjectsAndTasks(myOrgId), loadGeneralTasks(myOrgId), loadEvents(myOrgId),
-      loadApprovals(myOrgId), loadRituals(myOrgId), loadNotebook(myOrgId), loadNotifications(), loadIdeas(myOrgId)
+      loadApprovals(myOrgId), loadRituals(myOrgId), loadNotebook(myOrgId), loadNotifications(), loadIdeas(myOrgId), loadJournal()
     ]);
     reRenderAfterLoad();
+
+    var wantsQuiz = new URLSearchParams(location.search).get('startQuiz') === '1';
+    if(wantsQuiz && !window.MY_PROFILE_COMPLETED && typeof startQuiz === 'function'){
+      window.onboardingQuizFlow = 'lovelang';
+      startQuiz('lovelang');
+    }
   }
 
   window.LovaDB = {
@@ -10394,6 +10473,34 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var { error } = await sb.from('tasks').update(taskToRow(tk)).eq('id', tk.id);
       if(error) console.error('LovaDB.updateProjectTask', error);
     },
+    updateProfile: async function(){
+      var row = {
+        name: userProfile.name, job_title: userProfile.role || null, email: userProfile.email || null,
+        hobbies: userProfile.hobbies || [], birth_place: userProfile.birthPlace || null, birth_date: userProfile.birthDate || null,
+        partner: userProfile.partner || null, favorite_color: userProfile.favColor || null,
+        love_lang_receiving: userProfile.loveLangReceiving || null, love_lang_giving: userProfile.loveLangGiving || null,
+        attach_style: userProfile.attachStyle || null, mood_key: userProfile.moodSummaryKey || null, mood_date: userProfile.moodDate || null,
+        burnout_pct: userProfile.burnoutPct, burnout_date: userProfile.burnoutDate || null,
+        division_id: divKeyToId[userProfile.division] || null
+      };
+      var { error } = await sb.from('profiles').update(row).eq('id', (await sb.auth.getUser()).data.user.id);
+      if(error) console.error('LovaDB.updateProfile', error);
+    },
+    markProfileCompleted: async function(){
+      var { error } = await sb.from('profiles').update({ profile_completed_at: new Date().toISOString() }).eq('id', (await sb.auth.getUser()).data.user.id);
+      if(error) console.error('LovaDB.markProfileCompleted', error);
+      window.MY_PROFILE_COMPLETED = true;
+    },
+    createJournalEntry: async function(j){
+      var meta = {};
+      Object.keys(j).forEach(function(k){ if(['id','date','type','note','categories'].indexOf(k)===-1) meta[k] = j[k]; });
+      var { error } = await sb.from('journal_entries').insert({
+        id: j.id, profile_id: (await sb.auth.getUser()).data.user.id, entry_date: j.date, type: j.type,
+        note: j.note || null, categories: j.categories || [], meta: meta
+      });
+      if(error) console.error('LovaDB.createJournalEntry', error);
+    },
+
     createEvent: async function(ev){
       var row = eventToRow(ev); row.id = ev.id; row.org_id = myOrgId; row.created_by = idOf(CURRENT_USER_NAME);
       var { error } = await sb.from('events').insert(row);
