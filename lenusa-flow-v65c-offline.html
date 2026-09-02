@@ -529,6 +529,8 @@
   .blocker-row.resolved{ opacity:0.72; }
   .blocker-undo-btn{ color:var(--teal-deep); font-size:15px; cursor:pointer; flex-shrink:0; padding:2px; }
   .blocker-resolve-btn:hover{ color:var(--teal); }
+  .blocker-delete-btn{ color:var(--stone); font-size:15px; cursor:pointer; flex-shrink:0; padding:2px; }
+  .blocker-delete-btn:hover{ color:var(--revisi); }
 
   .checkin-my-card{ background:var(--teal-tint); border-radius:20px; padding:18px; margin-bottom:18px; }
   .checkin-my-title{ font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--teal-deep); margin-bottom:12px; }
@@ -869,7 +871,7 @@
   .division-icon{ width:40px; height:40px; border-radius:13px; background:rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; font-size:19px; }
   .division-badge{ position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.22); font-size:11px; font-weight:500; padding:5px 11px; border-radius:99px; }
   .division-title{ font-family:var(--font-display); font-weight:700; font-size:18px; margin-top:14px; line-height:1.25; }
-  .division-sub{ font-size:12px; opacity:0.85; margin-top:3px; }
+  .division-sub{ font-size:12px; opacity:0.85; margin-top:3px; padding-right:44px; }
   .division-arrow{ position:absolute; bottom:18px; right:18px; width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px; }
 
   /* ---------- division detail ---------- */
@@ -1243,7 +1245,7 @@
 
   .section-head-inline{ display:flex; justify-content:flex-end; margin-bottom:12px; }
   .general-hint{ font-size:12px; color:var(--stone); margin-bottom:14px; line-height:1.5; }
-  .general-task-row{ display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--glass-border); border-radius:16px; padding:12px 13px; margin-bottom:9px; box-shadow:var(--shadow); cursor:pointer; }
+  .general-task-row{ display:flex; flex-direction:column; gap:7px; background:var(--surface); border:1px solid var(--glass-border); border-radius:16px; padding:12px 13px; margin-bottom:9px; box-shadow:var(--shadow); cursor:pointer; }
   .general-task-body{ flex:1; min-width:0; }
   .general-task-name{ font-size:13.5px; font-weight:500; color:var(--ink); }
   .general-priority-badge{ font-size:8.5px; font-weight:700; padding:2px 7px; border-radius:99px; margin-right:6px; text-transform:uppercase; letter-spacing:0.02em; display:inline-block; vertical-align:middle; }
@@ -1329,7 +1331,7 @@
   .ritual-progress-row{ display:flex; align-items:center; gap:8px; margin-top:6px; }
   .ritual-progress-track{ flex:1; height:5px; border-radius:99px; background:var(--bg); overflow:hidden; }
   .ritual-progress-fill{ height:100%; background:var(--teal); border-radius:99px; }
-  .ritual-progress-label{ font-family:var(--font-mono); font-size:10.5px; color:var(--stone); flex-shrink:0; white-space:nowrap; }
+  .ritual-progress-label{ font-size:10.5px; color:var(--stone); flex-shrink:0; white-space:nowrap; }
   .celebrate-burst{ position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden; }
   .celebrate-particle{ position:fixed; width:8px; height:8px; margin:-4px 0 0 -4px; animation:celebrateFly 1.1s cubic-bezier(.2,.8,.3,1) forwards; }
   @keyframes celebrateFly{
@@ -1489,11 +1491,11 @@
               <div class="block-row">
                 <div class="block-card solid" id="blockFocusCard" onclick="openFocusZoneScreen()">
                   <div class="block-icon"><i class="ti ti-target"></i></div>
-                  <div><div class="block-title" data-i18n="block.focus.title">Focus zone</div><div class="block-sub" id="todayFocusCount">0 tugas · hari ini</div><div class="block-bar"><div class="block-bar-fill"></div></div></div>
+                  <div><div class="block-title" data-i18n="block.focus.title">Focus zone</div><div class="block-sub" id="todayFocusCount">0 tugas · hari ini</div><div class="block-bar"><div class="block-bar-fill" id="todayFocusBarFill" style="width:0%;"></div></div></div>
                 </div>
                 <div class="block-card light" id="blockUpnextCard" onclick="openUpNextScreen()">
                   <div class="block-icon"><i class="ti ti-clipboard-list"></i></div>
-                  <div><div class="block-title" data-i18n="block.next.title">Up next</div><div class="block-sub" id="todayUpnextCount">0 tugas · menyusul</div><div class="block-bar"><div class="block-bar-fill"></div></div></div>
+                  <div><div class="block-title" data-i18n="block.next.title">Up next</div><div class="block-sub" id="todayUpnextCount">0 tugas · menyusul</div><div class="block-bar"><div class="block-bar-fill" id="todayUpnextBarFill" style="width:0%;"></div></div></div>
                 </div>
               </div>
               <div class="list-card glass" id="todayTaskList"></div>
@@ -3301,7 +3303,34 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     'Bill Gates':{available:36,planned:20}, 'Emir':{available:32,planned:33}, 'Wando':{available:30,planned:26},
     'Hilda':{available:28,planned:24}, 'Dinda':{available:32,planned:12}, 'Cindy':{available:34,planned:19}, 'Ayu':{available:30,planned:15}
   };
-  function capacityPct(u){ var c=USER_CAPACITY[u]; return c ? Math.round(c.planned/c.available*100) : 0; }
+  var AVAILABLE_HOURS_BY_NAME = {}; // real profiles.weekly_capacity_hours, populated once LovaDB boots -- falls back to the offline demo's USER_CAPACITY figures when absent
+  var EFFORT_HOURS = { low:4, medium:8, high:16, extreme:24 };
+  var GENERAL_TASK_PRIORITY_HOURS = { tinggi:8, sedang:4, rendah:2 };
+  function computePlannedHours(name){
+    var hours = 0;
+    projects.forEach(function(p){
+      if(p.division==='personal' || p.inactive) return;
+      p.phases.forEach(function(ph){
+        ph.tasks.forEach(function(tk){
+          if(tk.status==='done') return;
+          if(tk.pic===name) hours += EFFORT_HOURS[p.effort] || EFFORT_HOURS.medium;
+          else if(tk.secondaryPic && tk.secondaryPic.indexOf(name)>-1) hours += (EFFORT_HOURS[p.effort] || EFFORT_HOURS.medium)/2;
+        });
+      });
+    });
+    generalTasks.forEach(function(g){
+      if(g.division==='personal' || g.status==='done' || g.pic!==name) return;
+      hours += GENERAL_TASK_PRIORITY_HOURS[g.priority] || GENERAL_TASK_PRIORITY_HOURS.sedang;
+    });
+    return Math.round(hours);
+  }
+  function getUserCapacity(u){
+    if(window.LovaDB){
+      return { available: AVAILABLE_HOURS_BY_NAME[u]!=null ? AVAILABLE_HOURS_BY_NAME[u] : 40, planned: computePlannedHours(u) };
+    }
+    return USER_CAPACITY[u] || { available:40, planned:0 };
+  }
+  function capacityPct(u){ var c=getUserCapacity(u); return c.available ? Math.round(c.planned/c.available*100) : 0; }
   function capacityStatus(pct){ if(pct>=100) return 'overloaded'; if(pct>=85) return 'busy'; return 'healthy'; }
   function capacityColor(pct){ var s=capacityStatus(pct); return s==='overloaded' ? 'var(--revisi)' : (s==='busy' ? 'var(--orange)' : 'var(--teal)'); }
 
@@ -3420,11 +3449,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     client_data:'#F7A433', review:'#5C4FD6', decision:'#F04770', other_team:'#108AB1', technical:'#3E8F5F', resource:'#8577A8', other:'#8A9490'
   };
   var blSelectedScope = 'general', blSelectedCategory = '';
-  var blockerReports = [
-    { id:uid('bl'), date:'2026-08-22', reportedBy:'Iola', scope:'project', division:'pbd', projectId:'p1', phaseId:null, taskId:null, category:'client_data', description:'PT Bara Kaltim belum kirim data survey lokasi terbaru.', resolved:false },
-    { id:uid('bl'), date:'2026-08-23', reportedBy:'Wando', scope:'project', division:'creative', projectId:'p6', phaseId:null, taskId:null, category:'review', description:'', resolved:false },
-    { id:uid('bl'), date:'2026-08-20', reportedBy:'Kalista', scope:'general', division:'lnd', projectId:null, phaseId:null, taskId:null, category:'resource', description:'Kurang fasilitator buat training bulan depan.', resolved:false }
-  ];
+  var blockerReports = [];
   var dailyCheckins = [
     { id:uid('ci'), date:todayISO(), user:'Iola', yesterday:'Follow up proposal PT Bara Kaltim, review kontrak fasilitator BNSP.', today:'Ketemu klien CKP jam 2 siang, lanjut review budget training.', blocker:'' },
     { id:uid('ci'), date:todayISO(), user:'Rama', yesterday:'Kirim penawaran ke 3 klien baru.', today:'Follow up 2 klien yang belum respon.', blocker:'Nunggu approval harga dari Iola' },
@@ -3839,7 +3864,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     /* ---- hero progress ring: today's focus + up next tasks ---- */
     var mineForHero = getMyTasks(true);
-    var todayTasks = mineForHero.filter(function(m){ return m.task.zone==='focus' || m.task.zone==='upnext'; });
+    var todayISOForHero = todayISO();
+    // focus/up-next is a standing flag, not a per-day one -- a task finished
+    // yesterday and never moved out of the zone shouldn't keep counting
+    // toward (or completing) today's ring. Stale-done tasks are excluded
+    // entirely from both the numerator and denominator; only work that's
+    // still open, or was actually finished today, counts.
+    var todayTasks = mineForHero.filter(function(m){
+      if(m.task.zone!=='focus' && m.task.zone!=='upnext') return false;
+      if(m.task.status==='done' && m.task.completedAt && m.task.completedAt!==todayISOForHero) return false;
+      return true;
+    });
     var doneToday = todayTasks.filter(function(m){ return m.task.status==='done'; }).length;
     var totalToday = todayTasks.length;
     var heroRingEl = document.getElementById('heroRing');
@@ -3956,7 +3991,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('checkinStreakCaption').textContent = t('widget.checkin.streakCaption').replace('{n}', filledCount);
 
     /* ---- workload health: planned vs available hours, personal (not team-wide) ---- */
-    var myCap = USER_CAPACITY[CURRENT_USER_NAME];
+    var myCap = getUserCapacity(CURRENT_USER_NAME);
     if(myCap){
       var pct = Math.round(myCap.planned/myCap.available*100);
       var status = capacityStatus(pct);
@@ -4252,18 +4287,24 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var html = list.map(function(g){
       var statusOpts = STATUS_ORDER.map(function(s){ return '<option value="'+s+'"'+(g.status===s?' selected':'')+'>'+statusLabel(s)+'</option>'; }).join('');
       var timeStr = (g.start?fmtDate(g.start)+(g.startTime?' '+g.startTime:''):'') + (g.deadline ? (g.start?' → ':t('general.dueLabel')+' ') + fmtDate(g.deadline)+(g.endTime?' '+g.endTime:'') : '');
-      var meta = (timeStr || t('general.noDeadline'))+(g.notes?' · '+g.notes:'');
+      var meta = timeStr || t('general.noDeadline');
+      var notesIcon = g.notes ? ' <i class="ti ti-file-text" style="font-size:11px;color:var(--teal-deep);vertical-align:middle;" title="'+t('taskdetail.hasRincian')+'"></i>' : '';
       var prioBadge = g.priority ? '<span class="general-priority-badge priority-'+g.priority+'">'+t('priority.'+g.priority)+'</span>' : '';
       var picBlock = isPersonal ? '' : '<div class="mini-avatar task-mini-avatar" title="PIC — klik untuk ganti" onclick="event.stopPropagation(); openAssigneePopover(event,\'generalTaskInline\',{taskId:\''+g.id+'\'})">'+(g.pic?initials(g.pic):'?')+'</div>';
       return '<div class="general-task-row" onclick="openTaskDetailGeneral(\''+g.division+'\',\''+g.id+'\')">' +
-        '<i class="ti ti-grip-vertical task-drag-handle" onclick="event.stopPropagation();"></i>' +
-        picBlock +
-        '<div class="general-task-body"><div class="general-task-name">'+prioBadge+g.name+'</div><div class="general-task-meta">'+meta+'</div></div>' +
-        '<select class="task-status-select status-'+g.status+'-sel" onclick="event.stopPropagation();" onchange="changeGeneralTaskStatus(\''+g.id+'\',this.value)">'+statusOpts+'</select>' +
-        '<i class="ti ti-edit task-edit-btn" title="'+t('general.editTitle')+'" onclick="event.stopPropagation(); openEditGeneralTaskModal(\''+g.id+'\')"></i>' +
-        '<i class="ti ti-target task-focus-btn'+(g.zone==='focus'?' active':'')+'" title="'+t('zone.focusShortcut')+'" onclick="event.stopPropagation(); toggleGeneralTaskFocus(\''+g.id+'\')"></i>' +
-        '<i class="ti ti-alert-triangle task-blocker-btn" title="'+t('blocker.report')+'" onclick="event.stopPropagation(); quickReportBlockerForGeneralTask(\''+g.id+'\')"></i>' +
-        '<i class="ti ti-trash task-del-btn" onclick="event.stopPropagation(); deleteGeneralTask(\''+g.id+'\')"></i>' +
+        '<div class="task-row-top">' +
+          '<i class="ti ti-grip-vertical task-drag-handle" onclick="event.stopPropagation();"></i>' +
+          '<div class="general-task-body"><div class="general-task-name">'+prioBadge+g.name+notesIcon+'</div><div class="general-task-meta">'+meta+'</div></div>' +
+        '</div>' +
+        '<div class="task-row-bottom">' +
+          picBlock +
+          '<select class="task-status-select status-'+g.status+'-sel" onclick="event.stopPropagation();" onchange="changeGeneralTaskStatus(\''+g.id+'\',this.value)">'+statusOpts+'</select>' +
+          '<div class="task-row-spacer"></div>' +
+          '<i class="ti ti-edit task-edit-btn" title="'+t('general.editTitle')+'" onclick="event.stopPropagation(); openEditGeneralTaskModal(\''+g.id+'\')"></i>' +
+          '<i class="ti ti-target task-focus-btn'+(g.zone==='focus'?' active':'')+'" title="'+t('zone.focusShortcut')+'" onclick="event.stopPropagation(); toggleGeneralTaskFocus(\''+g.id+'\')"></i>' +
+          '<i class="ti ti-alert-triangle task-blocker-btn" title="'+t('blocker.report')+'" onclick="event.stopPropagation(); quickReportBlockerForGeneralTask(\''+g.id+'\')"></i>' +
+          '<i class="ti ti-trash task-del-btn" onclick="event.stopPropagation(); deleteGeneralTask(\''+g.id+'\')"></i>' +
+        '</div>' +
       '</div>';
     }).join('');
     document.getElementById('generalTaskListContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:24px 0;">'+t('general.empty')+'</div>';
@@ -5554,7 +5595,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var capacityModalUser = null;
   function openCapacityModal(u, pct){
     capacityModalUser = u;
-    var c = USER_CAPACITY[u];
+    var c = getUserCapacity(u);
     var overHours = c ? Math.max(0, c.planned - c.available) : 0;
     var msg = t('capacity.modalMsg1').replace('{name}', u).replace('{pct}', pct);
     if(overHours>0) msg += ' ' + t('capacity.modalMsg2').replace('{h}', overHours);
@@ -6198,7 +6239,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         if(taskVal){ var parts = taskVal.split('|'); phaseId = parts[0]; taskId = parts[1]; }
       }
     }
-    blockerReports.unshift({ id:uid('bl'), date:todayISO(), reportedBy:(userProfile.name||CURRENT_USER_NAME), scope:blSelectedScope, division:division, projectId:projectId, phaseId:phaseId, taskId:taskId, category:blSelectedCategory, description:document.getElementById('blDesc').value.trim(), resolved:false });
+    var newBlocker = { id:(window.LovaDB?LovaDB.newId():uid('bl')), date:todayISO(), reportedBy:(userProfile.name||CURRENT_USER_NAME), scope:blSelectedScope, division:division, projectId:projectId, phaseId:phaseId, taskId:taskId, category:blSelectedCategory, description:document.getElementById('blDesc').value.trim(), resolved:false };
+    blockerReports.unshift(newBlocker);
+    if(window.LovaDB) LovaDB.createBlocker(newBlocker);
     closeModal('newBlockerModal');
     renderBlockerCard();
     showToast(t('blocker.submitted'));
@@ -6208,9 +6251,18 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var b = blockerReports.find(function(x){ return x.id===id; });
       if(!b) return;
       b.resolved = true; b.resolvedAt = todayISO();
+      if(window.LovaDB) LovaDB.updateBlocker(b);
       renderBlockerCard();
       showToast(t('blocker.resolvedToast'));
     }, {label:t('blocker.markResolved'), danger:false});
+  }
+  function deleteBlocker(id){
+    customConfirm(t('blocker.confirmDelete'), function(){
+      blockerReports = blockerReports.filter(function(x){ return x.id!==id; });
+      if(window.LovaDB) LovaDB.deleteBlocker(id);
+      renderBlockerCard();
+      showToast(t('blocker.deletedToast'));
+    }, {label:t('confirm.delete')});
   }
   var blockerChartInst = null;
   function renderBlockerCard(){
@@ -6232,7 +6284,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       else if(b.scope==='task' && b.taskId){ var p2 = projects.find(function(x){return x.id===b.projectId;}); var ph2 = p2 && p2.phases.find(function(x){return x.id===b.phaseId;}); var tk2 = ph2 && ph2.tasks.find(function(x){return x.id===b.taskId;}); scopeLabel = tk2 ? tk2.name : ''; }
       else { scopeLabel = t('blocker.scope.general'); }
       var divName = divisions[b.division] ? divisions[b.division].name : b.division;
-      return '<div class="blocker-row"><div class="blocker-row-dot" style="background:'+BLOCKER_CATEGORY_COLOR[b.category]+';"></div><div class="blocker-row-body"><div class="blocker-row-title">'+BLOCKER_CATEGORY_LABEL[b.category]+' · '+scopeLabel+'</div><div class="blocker-row-meta">'+divName+' · '+b.reportedBy+' · '+fmtDate(b.date)+'</div>'+(b.description?'<div class="blocker-row-desc">'+renderMentions(b.description)+'</div>':'')+'</div><i class="ti ti-check blocker-resolve-btn" onclick="resolveBlocker(\''+b.id+'\')" title="'+t('blocker.markResolved')+'"></i></div>';
+      return '<div class="blocker-row"><div class="blocker-row-dot" style="background:'+BLOCKER_CATEGORY_COLOR[b.category]+';"></div><div class="blocker-row-body"><div class="blocker-row-title">'+BLOCKER_CATEGORY_LABEL[b.category]+' · '+scopeLabel+'</div><div class="blocker-row-meta">'+divName+' · '+b.reportedBy+' · '+fmtDate(b.date)+'</div>'+(b.description?'<div class="blocker-row-desc">'+renderMentions(b.description)+'</div>':'')+'</div><i class="ti ti-check blocker-resolve-btn" onclick="resolveBlocker(\''+b.id+'\')" title="'+t('blocker.markResolved')+'"></i><i class="ti ti-trash blocker-delete-btn" onclick="deleteBlocker(\''+b.id+'\')" title="'+t('confirm.delete')+'"></i></div>';
     }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12px;padding:16px 0;">'+t('blocker.empty')+'</div>';
     hydrateIcons(document.getElementById('blockerList'));
     renderBlockerHistory();
@@ -6247,7 +6299,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     else if(b.scope==='task' && b.taskId){ var p2 = projects.find(function(x){return x.id===b.projectId;}); var ph2 = p2 && p2.phases.find(function(x){return x.id===b.phaseId;}); var tk2 = ph2 && ph2.tasks.find(function(x){return x.id===b.taskId;}); scopeLabel = tk2 ? tk2.name : ''; }
     else { scopeLabel = t('blocker.scope.general'); }
     var divName = divisions[b.division] ? divisions[b.division].name : b.division;
-    return '<div class="blocker-row resolved"><div class="blocker-row-dot" style="background:var(--stone);"></div><div class="blocker-row-body"><div class="blocker-row-title">'+BLOCKER_CATEGORY_LABEL[b.category]+' · '+scopeLabel+'</div><div class="blocker-row-meta">'+divName+' · '+b.reportedBy+' · '+t('blocker.resolvedOn')+' '+fmtDate(b.resolvedAt)+'</div>'+(b.description?'<div class="blocker-row-desc">'+renderMentions(b.description)+'</div>':'')+'</div><i class="ti ti-refresh blocker-undo-btn" onclick="unresolveBlocker(\''+b.id+'\')" title="'+t('blocker.undoResolve')+'"></i></div>';
+    return '<div class="blocker-row resolved"><div class="blocker-row-dot" style="background:var(--stone);"></div><div class="blocker-row-body"><div class="blocker-row-title">'+BLOCKER_CATEGORY_LABEL[b.category]+' · '+scopeLabel+'</div><div class="blocker-row-meta">'+divName+' · '+b.reportedBy+' · '+t('blocker.resolvedOn')+' '+fmtDate(b.resolvedAt)+'</div>'+(b.description?'<div class="blocker-row-desc">'+renderMentions(b.description)+'</div>':'')+'</div><i class="ti ti-refresh blocker-undo-btn" onclick="unresolveBlocker(\''+b.id+'\')" title="'+t('blocker.undoResolve')+'"></i><i class="ti ti-trash blocker-delete-btn" onclick="deleteBlocker(\''+b.id+'\')" title="'+t('confirm.delete')+'"></i></div>';
   }
   function renderBlockerHistory(){
     var resolved = blockerReports.filter(function(b){ return b.resolved; }).sort(function(a,b){ return (b.resolvedAt||'').localeCompare(a.resolvedAt||''); });
@@ -6262,6 +6314,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var b = blockerReports.find(function(x){ return x.id===id; });
     if(!b) return;
     b.resolved = false; b.resolvedAt = null;
+    if(window.LovaDB) LovaDB.updateBlocker(b);
     renderBlockerCard();
     renderBlockerHistory();
     showToast(t('blocker.undoneToast'));
@@ -7214,7 +7267,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var _ad=document.getElementById('accDivision'); if(_ad) _ad.value = userProfile.division||'pbd';
     document.getElementById('accBirthDate').value = userProfile.birthDate;
     document.getElementById('accPartner').value = userProfile.partner;
-    document.getElementById('accCapacityHours').value = USER_CAPACITY[CURRENT_USER_NAME] ? USER_CAPACITY[CURRENT_USER_NAME].available : userProfile.capacityHours;
+    document.getElementById('accCapacityHours').value = getUserCapacity(CURRENT_USER_NAME).available;
     document.getElementById('accRitualDivision').value = userProfile.ritualDivision||'';
     renderHobbyChips();
     renderColorSwatches();
@@ -7359,7 +7412,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function saveCapacityHours(){
     var hrs = parseInt(document.getElementById('accCapacityHours').value||'40',10);
     userProfile.capacityHours = hrs;
+    AVAILABLE_HOURS_BY_NAME[CURRENT_USER_NAME] = hrs;
     if(USER_CAPACITY[CURRENT_USER_NAME]) USER_CAPACITY[CURRENT_USER_NAME].available = hrs;
+    if(window.LovaDB) LovaDB.updateProfile();
     renderDashGlance();
     showToast(t('account.saved'));
   }
@@ -9504,10 +9559,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var zd = (zoneOrder[a.task.zone]||2)-(zoneOrder[b.task.zone]||2);
       return zd!==0 ? zd : (a.task.focusOrder||0)-(b.task.focusOrder||0);
     });
-    var focusCount = mine.filter(function(m){ return m.task.zone==='focus' && m.task.status!=='done'; }).length;
-    var upnextCount = mine.filter(function(m){ return m.task.zone==='upnext' && m.task.status!=='done'; }).length;
-    document.getElementById('todayFocusCount').textContent = t('block.focus.sub').replace('{n}', focusCount);
-    document.getElementById('todayUpnextCount').textContent = t('block.next.sub').replace('{n}', upnextCount);
+    var focusAll = mine.filter(function(m){ return m.task.zone==='focus'; });
+    var upnextAll = mine.filter(function(m){ return m.task.zone==='upnext'; });
+    var focusDone = focusAll.filter(function(m){ return m.task.status==='done'; }).length;
+    var upnextDone = upnextAll.filter(function(m){ return m.task.status==='done'; }).length;
+    document.getElementById('todayFocusCount').textContent = t('block.focus.sub').replace('{n}', focusAll.length);
+    document.getElementById('todayUpnextCount').textContent = t('block.next.sub').replace('{n}', upnextAll.length);
+    var focusBarFill = document.getElementById('todayFocusBarFill');
+    if(focusBarFill) focusBarFill.style.width = (focusAll.length ? Math.round(focusDone/focusAll.length*100) : 0)+'%';
+    var upnextBarFill = document.getElementById('todayUpnextBarFill');
+    if(upnextBarFill) upnextBarFill.style.width = (upnextAll.length ? Math.round(upnextDone/upnextAll.length*100) : 0)+'%';
     document.getElementById('myTasksCount').textContent = getMyTasks().length;
     var personalProjN = projects.filter(function(p){ return p.division==='personal'; }).length;
     document.getElementById('personalProjCount').textContent = personalProjN;
@@ -10250,6 +10311,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "blocker.resolvedToast": {id:"Ditandai selesai", en:"Marked resolved"},
     "blocker.markResolved": {id:"Tandai selesai", en:"Mark resolved"},
     "blocker.confirmResolve": {id:"Tandai kendala ini sudah selesai?", en:"Mark this issue as resolved?"},
+    "blocker.confirmDelete": {id:"Hapus laporan kendala ini?", en:"Delete this blocker report?"},
+    "blocker.deletedToast": {id:"Laporan kendala dihapus", en:"Blocker report deleted"},
     "blocker.quickDescPrefill": {id:"Terkait task: {task}", en:"Related to task: {task}"},
     "blocker.showHistory": {id:"Lihat riwayat selesai", en:"View resolved history"},
     "blocker.historyTitle": {id:"Riwayat Kendala Selesai", en:"Resolved Blocker History"},
@@ -10379,6 +10442,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     renderDashGlance();
     refreshDivisionBadges();
     if(isScreenActive('screen-division')) renderProjectList();
+    if(isScreenActive('screen-projects')) renderBlockerCard();
     if(isScreenActive('screen-project')){ renderPhases(); renderInfoTab(projects.find(function(x){ return x.id===currentProject; })); if(isScreenActive('tabpanel-analytics')) renderAnalytics(); }
     if(isScreenActive('screen-mytasks')) renderMyTasksScreen();
     if(isScreenActive('screen-events')) renderEventsScreen();
@@ -10489,8 +10553,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var { data: rows, error } = await sb.from('projects')
       .select('*, project_assignees(profile_id), phases(*, tasks(*, task_delegations(*)))')
       .eq('org_id', orgId).order('created_at');
+    projects.length = 0; // clear the offline demo seed unconditionally -- a query error should leave the user with an empty (real) state, never stale fake data
     if(error){ console.error('LovaDB: failed to load projects', error); return; }
-    projects.length = 0;
     (rows || []).forEach(function(p){
       projects.push({
         id: p.id, division: divIdToKey[p.division_id], title: p.title, client: p.client || '',
@@ -10507,8 +10571,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadGeneralTasks(orgId){
     var { data: rows, error } = await sb.from('general_tasks').select('*, general_task_delegations(*)').eq('org_id', orgId).order('created_at');
-    if(error){ console.error('LovaDB: failed to load general tasks', error); return; }
     generalTasks.length = 0;
+    if(error){ console.error('LovaDB: failed to load general tasks', error); return; }
     (rows || []).forEach(function(g){
       generalTasks.push({
         id: g.id, division: divIdToKey[g.division_id], name: g.name, status: g.status, pic: nameOf(g.pic_id),
@@ -10528,8 +10592,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadEvents(orgId){
     var { data: rows, error } = await sb.from('events').select('*').eq('org_id', orgId).order('date');
-    if(error){ console.error('LovaDB: failed to load events', error); return; }
     events.length = 0;
+    if(error){ console.error('LovaDB: failed to load events', error); return; }
     (rows || []).forEach(function(e){
       events.push({
         id: e.id, title: e.title, description: e.description || '', eventType: e.event_type, cakupan: e.cakupan,
@@ -10552,8 +10616,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadApprovals(orgId){
     var { data: rows, error } = await sb.from('approval_requests').select('*').eq('org_id', orgId).order('created_at');
-    if(error){ console.error('LovaDB: failed to load approvals', error); return; }
     approvalRequests.length = 0;
+    if(error){ console.error('LovaDB: failed to load approvals', error); return; }
     (rows || []).forEach(function(a){
       approvalRequests.push({
         id: a.id, requestType: a.request_type, title: a.title, description: a.description || '',
@@ -10579,8 +10643,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadRituals(orgId){
     var { data: rows, error } = await sb.from('rituals').select('*, ritual_completions(*)').eq('org_id', orgId).order('sort_order');
-    if(error){ console.error('LovaDB: failed to load rituals', error); return; }
     rituals.length = 0; ritualCompletions.length = 0;
+    if(error){ console.error('LovaDB: failed to load rituals', error); return; }
     (rows || []).forEach(function(r){
       rituals.push({
         id: r.id, title: r.title, description: r.description || '', startTime: hhmm(r.start_time), endTime: hhmm(r.end_time),
@@ -10600,8 +10664,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadNotebook(orgId){
     var { data: rows, error } = await sb.from('notebook_entries').select('*').eq('org_id', orgId).order('created_at', {ascending:false});
-    if(error){ console.error('LovaDB: failed to load notebook', error); return; }
     notebookEntries.length = 0;
+    if(error){ console.error('LovaDB: failed to load notebook', error); return; }
     (rows || []).forEach(function(n){
       notebookEntries.push({
         id: n.id, title: n.title, type: n.type, content: n.content || '', author: nameOf(n.author_id),
@@ -10620,8 +10684,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadNotifications(){
     var { data: rows, error } = await sb.from('notifications').select('*').order('created_at', {ascending:false}).limit(50);
-    if(error){ console.error('LovaDB: failed to load notifications', error); return; }
     notifications.length = 0;
+    if(error){ console.error('LovaDB: failed to load notifications', error); return; }
     (rows || []).forEach(function(n){
       notifications.push({ id: n.id, title: n.title, meta: n.meta || '', icon: n.icon, color: n.color, read: n.read, action: n.action || '' });
     });
@@ -10629,8 +10693,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadJournal(){
     var { data: rows, error } = await sb.from('journal_entries').select('*').order('entry_date', {ascending:false});
-    if(error){ console.error('LovaDB: failed to load journal', error); return; }
     journalEntries.length = 0;
+    if(error){ console.error('LovaDB: failed to load journal', error); return; }
     (rows || []).forEach(function(j){
       var entry = { id: j.id, date: j.entry_date, type: j.type };
       if(j.note) entry.note = j.note;
@@ -10642,11 +10706,32 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   async function loadIdeas(orgId){
     var { data: rows, error } = await sb.from('ideas').select('*').eq('org_id', orgId).order('created_at', {ascending:false});
-    if(error){ console.error('LovaDB: failed to load ideas', error); return; }
     ideas.length = 0;
+    if(error){ console.error('LovaDB: failed to load ideas', error); return; }
     (rows || []).forEach(function(i){
       ideas.push({ id: i.id, title: i.title, description: i.description || '', submittedBy: nameOf(i.submitted_by), date: i.entry_date, archived: i.archived });
     });
+  }
+
+  async function loadBlockers(orgId){
+    var { data: rows, error } = await sb.from('blocker_reports').select('*').eq('org_id', orgId).order('created_at', {ascending:false});
+    blockerReports.length = 0;
+    if(error){ console.error('LovaDB: failed to load blockers', error); return; }
+    (rows || []).forEach(function(b){
+      blockerReports.push({
+        id: b.id, date: b.entry_date, reportedBy: nameOf(b.reported_by), scope: b.scope,
+        division: b.division_id ? divIdToKey[b.division_id] : null, projectId: b.project_id, phaseId: b.phase_id, taskId: b.task_id,
+        category: b.category, description: b.description || '', resolved: b.resolved, resolvedAt: b.resolved_at
+      });
+    });
+  }
+  function blockerToRow(b){
+    return {
+      reported_by: idOf(b.reportedBy), scope: b.scope, division_id: b.division ? (divKeyToId[b.division] || null) : null,
+      project_id: b.projectId || null, phase_id: b.phaseId || null, task_id: b.taskId || null,
+      category: b.category, description: b.description || null, entry_date: b.date,
+      resolved: !!b.resolved, resolved_at: b.resolvedAt || null
+    };
   }
 
   function reRenderAfterLoad(){
@@ -10671,7 +10756,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     var [{ data: divisionRows }, { data: profileRows }, { data: orgRow }] = await Promise.all([
       sb.from('divisions').select('*').eq('org_id', myOrgId),
-      sb.from('profiles').select('id,name,role,job_title,division_id,hobbies,birth_date,favorite_color,love_lang_receiving,love_lang_giving,attach_style,mood_key,burnout_pct,avatar_url').eq('org_id', myOrgId),
+      sb.from('profiles').select('id,name,role,job_title,division_id,hobbies,birth_date,favorite_color,love_lang_receiving,love_lang_giving,attach_style,mood_key,burnout_pct,avatar_url,weekly_capacity_hours').eq('org_id', myOrgId),
       sb.from('organizations').select('name').eq('id', myOrgId).maybeSingle()
     ]);
     myOrgName = orgRow ? orgRow.name : null;
@@ -10699,6 +10784,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     userProfile.burnoutPct = profile.burnout_pct;
     userProfile.burnoutDate = profile.burnout_date || null;
     userProfile.avatarPhoto = profile.avatar_url || null;
+    userProfile.capacityHours = profile.weekly_capacity_hours || 40;
     window.MY_PROFILE_COMPLETED = !!profile.profile_completed_at;
     USERS = (profileRows || []).map(function(p){ return p.name; });
 
@@ -10707,6 +10793,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     // of generic placeholder defaults (see getTeamMemberInfo).
     var newTeamProfiles = {};
     var newPermRoles = {};
+    var newAvailableHours = {};
     (profileRows || []).forEach(function(p){
       newTeamProfiles[p.name] = {
         role: p.job_title || '', division: divIdToKey[p.division_id] || 'pbd', hobbies: p.hobbies || [],
@@ -10716,9 +10803,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         avatarPhoto: p.avatar_url || null
       };
       newPermRoles[p.name] = p.role;
+      newAvailableHours[p.name] = p.weekly_capacity_hours || 40;
     });
     TEAM_PROFILES = newTeamProfiles;
     PERM_ROLE_BY_NAME = newPermRoles;
+    AVAILABLE_HOURS_BY_NAME = newAvailableHours;
 
     var newDivisions = {};
     (divisionRows || []).forEach(function(d){
@@ -10729,7 +10818,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     await Promise.all([
       loadProjectsAndTasks(myOrgId), loadGeneralTasks(myOrgId), loadEvents(myOrgId),
-      loadApprovals(myOrgId), loadRituals(myOrgId), loadNotebook(myOrgId), loadNotifications(), loadIdeas(myOrgId), loadJournal()
+      loadApprovals(myOrgId), loadRituals(myOrgId), loadNotebook(myOrgId), loadNotifications(), loadIdeas(myOrgId), loadJournal(), loadBlockers(myOrgId)
     ]);
     reRenderAfterLoad();
     subscribeRealtime();
@@ -10766,13 +10855,15 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var resyncNotebook = debounced(async function(){ await loadNotebook(myOrgId); if(typeof renderNotebookScreen==='function' && isScreenActive('screen-notebook')) renderNotebookScreen(); }, 400);
     var resyncNotifications = debounced(async function(){ await loadNotifications(); if(typeof renderNotifPanel==='function') renderNotifPanel(); }, 300);
     var resyncIdeas = debounced(async function(){ await loadIdeas(myOrgId); if(typeof renderIdeaList==='function' && isScreenActive('screen-ideas')) renderIdeaList(); }, 400);
+    var resyncBlockers = debounced(async function(){ await loadBlockers(myOrgId); if(typeof renderBlockerCard==='function' && isScreenActive('screen-projects')) renderBlockerCard(); }, 400);
     var resyncJournal = debounced(async function(){ await loadJournal(); if(typeof renderJournalHistory==='function' && isScreenActive('screen-journal')) renderJournalHistory(); }, 400);
     var resyncProfiles = debounced(async function(){
-      var { data: profileRows } = await sb.from('profiles').select('id,name,role,job_title,division_id,hobbies,birth_date,favorite_color,love_lang_receiving,love_lang_giving,attach_style,mood_key,burnout_pct,avatar_url').eq('org_id', myOrgId);
+      var { data: profileRows } = await sb.from('profiles').select('id,name,role,job_title,division_id,hobbies,birth_date,favorite_color,love_lang_receiving,love_lang_giving,attach_style,mood_key,burnout_pct,avatar_url,weekly_capacity_hours').eq('org_id', myOrgId);
       (profileRows || []).forEach(function(p){ idToName[p.id] = p.name; nameToId[p.name] = p.id; });
       USERS = (profileRows || []).map(function(p){ return p.name; });
       var newTeamProfiles = {};
       var newPermRoles = {};
+      var newAvailableHours = {};
       (profileRows || []).forEach(function(p){
         newTeamProfiles[p.name] = {
           role: p.job_title || '', division: divIdToKey[p.division_id] || 'pbd', hobbies: p.hobbies || [],
@@ -10782,9 +10873,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           avatarPhoto: p.avatar_url || null
         };
         newPermRoles[p.name] = p.role;
+        newAvailableHours[p.name] = p.weekly_capacity_hours || 40;
       });
       TEAM_PROFILES = newTeamProfiles;
       PERM_ROLE_BY_NAME = newPermRoles;
+      AVAILABLE_HOURS_BY_NAME = newAvailableHours;
       refreshVisibleScreens();
       if(isScreenActive('screen-team-member') && currentTeamMemberName) openTeamMember(currentTeamMemberName);
     }, 400);
@@ -10803,6 +10896,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       .on('postgres_changes', { event: '*', schema: 'public', table: 'notebook_entries' }, resyncNotebook)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, resyncNotifications)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ideas' }, resyncIdeas)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'blocker_reports' }, resyncBlockers)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'journal_entries' }, resyncJournal)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: 'org_id=eq.'+myOrgId }, resyncProfiles)
       .subscribe();
@@ -10835,7 +10929,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         love_lang_receiving: userProfile.loveLangReceiving || null, love_lang_giving: userProfile.loveLangGiving || null,
         attach_style: userProfile.attachStyle || null, mood_key: userProfile.moodSummaryKey || null, mood_date: userProfile.moodDate || null,
         burnout_pct: userProfile.burnoutPct, burnout_date: userProfile.burnoutDate || null,
-        division_id: divKeyToId[userProfile.division] || null
+        division_id: divKeyToId[userProfile.division] || null,
+        weekly_capacity_hours: userProfile.capacityHours || 40
       };
       var { error } = await sb.from('profiles').update(row).eq('id', (await sb.auth.getUser()).data.user.id);
       if(error) console.error('LovaDB.updateProfile', error);
@@ -11082,6 +11177,20 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       } catch(e) {
         return { error: String(e) };
       }
+    },
+
+    createBlocker: async function(b){
+      var row = blockerToRow(b); row.org_id = myOrgId; row.id = b.id;
+      var { error } = await sb.from('blocker_reports').insert(row);
+      if(error) console.error('LovaDB.createBlocker', error);
+    },
+    updateBlocker: async function(b){
+      var { error } = await sb.from('blocker_reports').update(blockerToRow(b)).eq('id', b.id);
+      if(error) console.error('LovaDB.updateBlocker', error);
+    },
+    deleteBlocker: async function(id){
+      var { error } = await sb.from('blocker_reports').delete().eq('id', id);
+      if(error) console.error('LovaDB.deleteBlocker', error);
     }
   };
 })();
