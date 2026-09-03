@@ -6,6 +6,8 @@
 
 ## Projects
 - [[Software Renewal 2027]]
+- [[Marketing RAB 2027]]
 
 ## Tasks
 - [[Tes]]
+- [[Approval strategi]]
