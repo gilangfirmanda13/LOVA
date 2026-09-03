@@ -977,6 +977,9 @@
   .rte-toolbar-btn:hover{ background:var(--teal-tint); color:var(--teal-deep); }
   .notebook-filter-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:14px 0 6px; }
   .notebook-filter-grid input, .notebook-filter-grid select{ margin-bottom:0; }
+  .team-filter-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0 0 14px; }
+  .team-filter-grid input, .team-filter-grid select{ margin-bottom:0; }
+  .team-filter-grid input{ grid-column:1 / -1; }
   .notebook-filter-clear{ font-size:11.5px; font-weight:600; color:var(--teal-deep); cursor:pointer; margin-bottom:14px; text-align:right; }
   .notebook-card{ background:var(--surface); border-radius:18px; padding:15px 16px; box-shadow:var(--shadow); margin-bottom:10px; cursor:pointer; }
   .notebook-card-top{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
@@ -2139,6 +2142,19 @@
               <div class="filter-pill" data-sort="burnout" data-i18n="team.sortBurnout">Burnout tertinggi</div>
               <div class="filter-pill" data-sort="mood" data-i18n="team.sortMood">Mood perlu perhatian</div>
               <div class="filter-pill" data-sort="capacity" data-i18n="team.sortCapacity">Kapasitas tertinggi</div>
+            </div>
+            <div class="team-filter-grid">
+              <select class="form-input" id="teamFilterDivision" onchange="renderTeamList()">
+                <option value="" data-i18n="team.filterAllDivisions">Semua Divisi</option>
+              </select>
+              <select class="form-input" id="teamFilterRole" onchange="renderTeamList()">
+                <option value="" data-i18n="team.filterAllRoles">Semua Level Kerjaan</option>
+                <option value="owner">Business Owner</option>
+                <option value="manager">Manager</option>
+                <option value="staff">Staff</option>
+                <option value="finance_admin">Finance Admin</option>
+              </select>
+              <input class="form-input" id="teamFilterJabatan" type="text" placeholder="Cari jabatan…" oninput="renderTeamList()">
             </div>
             <div class="cap-legend" style="margin-bottom:12px;"><span><span class="cap-dot" style="background:var(--teal);"></span><span data-i18n="capacity.legendHealthy">Sehat</span></span><span><span class="cap-dot" style="background:var(--orange);"></span><span data-i18n="capacity.legendBusy">Sibuk</span></span><span><span class="cap-dot" style="background:var(--revisi);"></span><span data-i18n="capacity.legendFull">Penuh</span></span></div>
             <div id="teamListContainer"></div>
@@ -7467,6 +7483,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function saveRitualDivisionPref(){
     userProfile.ritualDivision = document.getElementById('accRitualDivision').value;
+    if(window.LovaDB) LovaDB.updateProfile();
     renderDashGlance();
     showToast(t('account.saved'));
   }
@@ -7475,12 +7492,14 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function toggleQuietHours(){
     quietHours.enabled = !quietHours.enabled;
     document.getElementById('quietToggle').classList.toggle('active', quietHours.enabled);
+    if(window.LovaDB) LovaDB.updateProfile();
     renderDashGlance();
     showToast(quietHours.enabled ? t('quiet.toastOn') : t('quiet.toastOff'));
   }
   function saveQuietHoursTimes(){
     quietHours.start = document.getElementById('quietStart').value || quietHours.start;
     quietHours.end = document.getElementById('quietEnd').value || quietHours.end;
+    if(window.LovaDB) LovaDB.updateProfile();
     renderDashGlance();
   }
   function isQuietHoursNow(){
@@ -7675,6 +7694,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     }).join('');
     document.getElementById('teamAttentionList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('missed.empty')+'</div>';
   }
+  function populateTeamFilterDivisions(){
+    var sel = document.getElementById('teamFilterDivision');
+    if(!sel) return;
+    var current = sel.value;
+    var opts = Object.keys(divisions).filter(function(k){ return k!=='personal'; }).map(function(k){
+      return '<option value="'+k+'">'+divisions[k].name+'</option>';
+    }).join('');
+    sel.innerHTML = '<option value="" data-i18n="team.filterAllDivisions">'+t('team.filterAllDivisions')+'</option>'+opts;
+    if(Object.keys(divisions).indexOf(current)>-1) sel.value = current;
+  }
   function renderTeamList(){
     var inviteBtn = document.getElementById('teamInviteBtn');
     if(inviteBtn) inviteBtn.style.display = window.MY_PERM_ROLE==='owner' ? '' : 'none';
@@ -7682,7 +7711,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('teamSub').textContent = USERS.length+' '+t('team.membersCount');
     var moreCountEl = document.getElementById('moreTeamCount');
     if(moreCountEl) moreCountEl.textContent = USERS.length+' orang';
-    var sortedUsers = USERS.slice();
+    populateTeamFilterDivisions();
+    var filterDivision = document.getElementById('teamFilterDivision') ? document.getElementById('teamFilterDivision').value : '';
+    var filterRole = document.getElementById('teamFilterRole') ? document.getElementById('teamFilterRole').value : '';
+    var filterJabatan = document.getElementById('teamFilterJabatan') ? document.getElementById('teamFilterJabatan').value.trim().toLowerCase() : '';
+    var sortedUsers = USERS.filter(function(name){
+      var info = getTeamMemberInfo(name);
+      if(filterDivision && info.division!==filterDivision) return false;
+      if(filterRole && (PERM_ROLE_BY_NAME[name]||'')!==filterRole) return false;
+      if(filterJabatan && (info.role||'').toLowerCase().indexOf(filterJabatan)===-1) return false;
+      return true;
+    });
     if(teamSortMode==='burnout'){
       sortedUsers.sort(function(a,b){
         var ba = getTeamMemberInfo(a).burnoutPct; ba = (ba==null) ? -1 : ba;
@@ -7715,7 +7754,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div class="team-cap-dot" style="background:'+color+';" title="'+pct+'%"></div>' +
       '</div>';
     }).join('');
-    document.getElementById('teamListContainer').innerHTML = html;
+    document.getElementById('teamListContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('team.filterNoResults')+'</div>';
     hydrateIcons(document.getElementById('teamListContainer'));
   }
   document.getElementById('teamSortRow').addEventListener('click', function(e){
@@ -9926,6 +9965,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "journal.burnoutSentToast": {id:"Info kondisi kamu udah dikirim ke {name}", en:"Your status has been sent to {name}"},
     "team.sortDefault": {id:"Default", en:"Default"}, "team.sortBurnout": {id:"Burnout tertinggi", en:"Highest burnout"},
     "team.sortMood": {id:"Mood perlu perhatian", en:"Mood needs attention"}, "team.sortCapacity": {id:"Kapasitas tertinggi", en:"Highest capacity"},
+    "team.filterAllDivisions": {id:"Semua Divisi", en:"All Divisions"}, "team.filterAllRoles": {id:"Semua Level Kerjaan", en:"All Job Levels"},
+    "team.filterNoResults": {id:"Tidak ada anggota yang cocok dengan filter.", en:"No members match this filter."},
     "team.needsAttentionMood": {id:"Mood perlu perhatian", en:"Mood needs attention"},
     "team.needsAttentionBurnout": {id:"Burnout tinggi", en:"High burnout"},
     "journal.obstacleTitle": {id:"Apa hambatan kamu hari ini?", en:"What's blocking you today?"}, "journal.obstacleEmpty": {id:"Isi kategori atau ceritain dulu ya", en:"Pick a category or write something first"},
@@ -10842,6 +10883,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     window.MY_PERM_ROLE = profile.role; // owner/manager/staff/finance_admin — NOT userProfile.role (that's the job-title field below)
     userProfile.name = profile.name;
     userProfile.division = divIdToKey[profile.division_id] || 'pbd';
+    userProfile.ritualDivision = profile.ritual_division_id ? (divIdToKey[profile.ritual_division_id] || '') : '';
+    quietHours.enabled = !!profile.quiet_hours_enabled;
+    quietHours.start = profile.quiet_hours_start || '18:00';
+    quietHours.end = profile.quiet_hours_end || '08:00';
     userProfile.role = profile.job_title || '';
     userProfile.email = profile.email || '';
     userProfile.hobbies = profile.hobbies || [];
@@ -11003,7 +11048,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         attach_style: userProfile.attachStyle || null, mood_key: userProfile.moodSummaryKey || null, mood_date: userProfile.moodDate || null,
         burnout_pct: userProfile.burnoutPct, burnout_date: userProfile.burnoutDate || null,
         division_id: divKeyToId[userProfile.division] || null,
-        weekly_capacity_hours: userProfile.capacityHours || 40
+        weekly_capacity_hours: userProfile.capacityHours || 40,
+        ritual_division_id: divKeyToId[userProfile.ritualDivision] || null,
+        quiet_hours_enabled: !!quietHours.enabled,
+        quiet_hours_start: quietHours.start || '18:00',
+        quiet_hours_end: quietHours.end || '08:00'
       };
       var { error } = await sb.from('profiles').update(row).eq('id', (await sb.auth.getUser()).data.user.id);
       if(error) console.error('LovaDB.updateProfile', error);
