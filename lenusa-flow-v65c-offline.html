@@ -7427,8 +7427,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function saveAccountProfile(){
     var oldName = userProfile.name;
     var newNameInput = document.getElementById('accName').value.trim();
-    if(newNameInput && NAME_UNSAFE_CHARS.test(newNameInput)){ showToast(t('account.nameUnsafeChars')); return; }
-    userProfile.name = newNameInput || userProfile.name;
+    var nameRejected = newNameInput && NAME_UNSAFE_CHARS.test(newNameInput);
+    if(nameRejected){ document.getElementById('accName').value = oldName; }
+    else{ userProfile.name = newNameInput || userProfile.name; }
     if(userProfile.name !== oldName){
       CURRENT_USER_NAME = userProfile.name;
       if(typeof ME !== 'undefined') ME = userProfile.name;
