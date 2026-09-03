@@ -7836,8 +7836,18 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     statusEl.style.color = 'var(--teal)';
     statusEl.textContent = result.emailSent ? t('team.inviteSent') : t('team.inviteCreatedNoEmail');
     document.getElementById('inviteTeamEmail').value = '';
-    showToast(t('team.inviteSent'));
+    if(result.token) copyInviteLink(result.token);
+    else showToast(t('team.inviteSent'));
     renderPendingInvitesList();
+  }
+  function inviteLinkFor(token){
+    return location.origin + location.pathname.replace('lenusa-flow-v65c-offline.html','') + 'auth.html?invite=' + token;
+  }
+  function copyInviteLink(token){
+    var link = inviteLinkFor(token);
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(link).then(function(){ showToast(t('team.inviteLinkCopied')); }).catch(function(){});
+    }
   }
   async function renderPendingInvitesList(){
     var container = document.getElementById('teamPendingInvites');
@@ -7846,8 +7856,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var invites = await LovaDB.loadPendingInvites();
     container.innerHTML = invites.length ? ('<div class="account-section-title">'+t('team.pendingInvites')+'</div>' + invites.map(function(inv){
       return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;margin-bottom:6px;background:var(--surface);border:1px solid var(--glass-border);border-radius:12px;font-size:12.5px;">' +
-        '<span>'+inv.email+' · '+(ROLE_LABEL_MAIN[inv.role]||inv.role)+'</span>' +
-        '<span style="color:var(--revisi);font-weight:600;cursor:pointer;white-space:nowrap;" onclick="revokeTeamInvite(\''+inv.id+'\')">'+t('team.revokeInvite')+'</span>' +
+        '<span>'+escapeHtml(inv.email)+' · '+(ROLE_LABEL_MAIN[inv.role]||inv.role)+'</span>' +
+        '<span style="display:flex;align-items:center;gap:10px;white-space:nowrap;">' +
+          '<span style="color:var(--teal-deep);font-weight:600;cursor:pointer;" onclick="copyInviteLink(\''+inv.token+'\')">'+t('team.copyLink')+'</span>' +
+          '<span style="color:var(--revisi);font-weight:600;cursor:pointer;" onclick="revokeTeamInvite(\''+inv.id+'\')">'+t('team.revokeInvite')+'</span>' +
+        '</span>' +
       '</div>';
     }).join('')) : '';
   }
@@ -9864,8 +9877,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "team.inviteDivision": {id:"Divisi", en:"Division"}, "team.inviteSubmit": {id:"Kirim Undangan", en:"Send invite"},
     "team.inviteSending": {id:"Mengirim undangan…", en:"Sending invite…"},
     "team.inviteSent": {id:"Undangan terkirim", en:"Invite sent"},
-    "team.inviteCreatedNoEmail": {id:"Undangan dibuat, tapi email gagal terkirim — cek menu Team untuk link undangan.", en:"Invite created, but the email failed — check the Team menu for the invite link."},
+    "team.inviteCreatedNoEmail": {id:"Undangan dibuat, tapi email gagal terkirim — link undangan sudah disalin, kirim manual lewat WhatsApp/email.", en:"Invite created, but the email failed — the invite link was copied, share it manually via WhatsApp/email."},
     "team.pendingInvites": {id:"Undangan Menunggu", en:"Pending invites"},
+    "team.copyLink": {id:"Salin Link", en:"Copy link"},
+    "team.inviteLinkCopied": {id:"Link undangan disalin", en:"Invite link copied"},
     "team.revokeInvite": {id:"Batalkan", en:"Revoke"},
     "team.revokeConfirm": {id:"Batalkan undangan ini?", en:"Revoke this invite?"},
     "team.revokedToast": {id:"Undangan dibatalkan", en:"Invite revoked"},
@@ -11203,13 +11218,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
           body: JSON.stringify({ inviteToken: inv.token, appUrl: location.origin })
         });
-        return { ok: true, emailSent: resp.ok };
+        return { ok: true, emailSent: resp.ok, token: inv.token };
       } catch(e) {
-        return { ok: true, emailSent: false };
+        return { ok: true, emailSent: false, token: inv.token };
       }
     },
     loadPendingInvites: async function(){
-      var { data, error } = await sb.from('invites').select('id, email, role').eq('org_id', myOrgId).is('accepted_at', null).gt('expires_at', new Date().toISOString()).order('created_at', {ascending:false});
+      var { data, error } = await sb.from('invites').select('id, email, role, token').eq('org_id', myOrgId).is('accepted_at', null).gt('expires_at', new Date().toISOString()).order('created_at', {ascending:false});
       if(error){ console.error('LovaDB.loadPendingInvites', error); return []; }
       return data || [];
     },
