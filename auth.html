@@ -289,6 +289,13 @@
 
   async function goToCompleteProfile(){
     clearMsg();
+    var pendingEmail = document.getElementById('inviteEmail');
+    if(pendingEmail && pendingEmail.value.trim()){
+      // The user filled in an invite but clicked "Lanjut" instead of
+      // "+ Tambah Undangan" -- send it now rather than silently
+      // discarding it, since a filled email field reads as clear intent.
+      await doSendInvite();
+    }
     document.getElementById('cpHobbies').innerHTML = HOBBY_OPTIONS.map(function(h){
       return '<div class="hobby-chip" onclick="toggleHobbyChip(this,\'' + h + '\')">' + h + '</div>';
     }).join('');
