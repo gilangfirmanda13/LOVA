@@ -3754,6 +3754,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var popoverSelection = [];
 
   function initials(name){ return name.trim().charAt(0).toUpperCase(); }
+  /* SECURITY: escape user-controlled text before it's concatenated into an
+     innerHTML template string. Task/project/person names etc. are free text
+     any org member can set, and this is a multi-user app -- without this,
+     a name like <img src=x onerror=...> would execute in every teammate's
+     browser wherever that value gets rendered. Use for every plain-text
+     field (names, titles, meta strings); rich-text fields already go through
+     renderMentions(), which does its own equivalent escaping first. */
+  function escapeHtml(str){
+    if(str===null || str===undefined) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
   function fmtDate(d){ if(!d) return '-'; var parts=d.split('-'); if(parts.length < 3) return '-'; var months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; var month=parseInt(parts[1],10)-1; if(month<0||month>=12) return '-'; return parts[2]+' '+months[month]; }
   function daysBetween(a,b){ if(!a||!b) return 0; var d1=new Date(a), d2=new Date(b); return Math.max(0, Math.round((d2-d1)/86400000)); }
 
@@ -3960,7 +3971,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       eventsCard.style.display = 'block';
       document.getElementById('dashUpcomingEvents').innerHTML = upcoming.map(function(ev){
         var d = new Date(ev.date+'T00:00:00');
-        return '<div class="dash-event-chip" onclick="openEventDetail(\''+ev.id+'\')"><div class="dash-event-date">'+d.getDate()+' '+monthNamesShort[d.getMonth()]+'</div><div class="dash-event-title">'+ev.title+'</div></div>';
+        return '<div class="dash-event-chip" onclick="openEventDetail(\''+ev.id+'\')"><div class="dash-event-date">'+d.getDate()+' '+monthNamesShort[d.getMonth()]+'</div><div class="dash-event-title">'+escapeHtml(ev.title)+'</div></div>';
       }).join('');
     } else {
       eventsCard.style.display = 'none';
@@ -4088,7 +4099,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       return '<div class="today-ritual-row">' +
         '<div class="today-ritual-check'+(done?' done':'')+'" onclick="event.stopPropagation(); toggleMyRitualDone(\''+r.id+'\', event)">'+(done?'<i class="ti ti-check"></i>':'')+'</div>' +
         '<div class="today-ritual-time">'+r.startTime+'</div>' +
-        '<div class="today-ritual-body" onclick="openEditRitualModal(\''+r.id+'\')"><div class="today-ritual-title'+(done?' done':'')+'">'+r.title+'</div></div>' +
+        '<div class="today-ritual-body" onclick="openEditRitualModal(\''+r.id+'\')"><div class="today-ritual-title'+(done?' done':'')+'">'+escapeHtml(r.title)+'</div></div>' +
       '</div>';
     }).join('');
 
@@ -4099,7 +4110,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       return '<div class="today-ritual-row division" onclick="openEditRitualModal(\''+r.id+'\')">' +
         '<div class="today-ritual-time">'+r.startTime+'</div>' +
         '<div class="today-ritual-body">' +
-          '<div class="today-ritual-title">'+r.title+'</div>' +
+          '<div class="today-ritual-title">'+escapeHtml(r.title)+'</div>' +
           '<div class="today-ritual-tags">'+divTags+freqTag+'</div>' +
           '<div class="ritual-progress-row"><div class="ritual-progress-track"><div class="ritual-progress-fill" style="width:'+stats.pct+'%;"></div></div><span class="ritual-progress-label">'+stats.done+'/'+stats.total+' '+t('ritual.membersCompleted')+' — '+stats.pct+'%</span></div>' +
         '</div>' +
@@ -4210,8 +4221,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       return '' +
         '<div class="project-card'+(p.inactive?' project-inactive':'')+'" onclick="openProject(\''+p.id+'\')">' +
           '<div class="project-top"><span class="priority-tag priority-'+p.priority+'">'+priorityLabel(p.priority)+'</span><span class="nominal-tag">'+formatIDR(p.value)+'</span><button class="project-dots-btn" onclick="event.stopPropagation();openProjectMenu(event,\''+p.id+'\')" title="Opsi"><i class="ti ti-dots-vertical"></i></button></div>' +
-          '<div class="project-title">'+p.title+'</div>' +
-          '<div class="project-client">'+p.client+'</div>' +
+          '<div class="project-title">'+escapeHtml(p.title)+'</div>' +
+          '<div class="project-client">'+escapeHtml(p.client)+'</div>' +
           '<div class="project-meta-row">' +
             '<div class="avatar-stack">'+avatars+'</div>' +
             '<div class="project-meta"><i class="ti ti-calendar"></i>'+fmtDate(p.deadline)+'</div>' +
@@ -4294,7 +4305,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       return '<div class="general-task-row" onclick="openTaskDetailGeneral(\''+g.division+'\',\''+g.id+'\')">' +
         '<div class="task-row-top">' +
           '<i class="ti ti-grip-vertical task-drag-handle" onclick="event.stopPropagation();"></i>' +
-          '<div class="general-task-body"><div class="general-task-name">'+prioBadge+g.name+notesIcon+'</div><div class="general-task-meta">'+meta+'</div></div>' +
+          '<div class="general-task-body"><div class="general-task-name">'+prioBadge+escapeHtml(g.name)+notesIcon+'</div><div class="general-task-meta">'+escapeHtml(meta)+'</div></div>' +
         '</div>' +
         '<div class="task-row-bottom">' +
           picBlock +
@@ -4486,7 +4497,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         return '<div class="ritual-row" onclick="openEditRitualModal(\''+r.id+'\')">' +
           '<i class="ti ti-grip-vertical ritual-drag-handle" onclick="event.stopPropagation();"></i>' +
           '<div class="ritual-time">'+r.startTime+'<br>'+r.endTime+'</div>' +
-          '<div class="ritual-body"><div class="ritual-title">'+r.title+'</div>'+(r.description?'<div class="ritual-desc">'+renderMentions(r.description)+'</div>':'')+picTag+divTags+'</div>' +
+          '<div class="ritual-body"><div class="ritual-title">'+escapeHtml(r.title)+'</div>'+(r.description?'<div class="ritual-desc">'+renderMentions(r.description)+'</div>':'')+picTag+divTags+'</div>' +
           '<i class="ti ti-trash task-del-btn" onclick="event.stopPropagation(); deleteRitual(\''+r.id+'\')"></i>' +
         '</div>';
       }).join('');
@@ -4668,13 +4679,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var divTag = m.division!=='umum' ? '<span class="event-div-tag">'+(m.division==='personal'?'Personal':(DIVISION_SHORT[m.division]||m.division))+'</span>' : '';
     var attendeeAvatars = (m.attendees||[]).map(function(a){ return '<div class="mini-avatar" onclick="event.stopPropagation(); openTeamMember(\''+a+'\')">'+initials(a)+'</div>'; }).join('');
     var typeBadge = showCategoryBadge ? '<span class="event-loc-badge" style="background:'+(EVENT_TYPE_COLOR[m.eventType]||'#8A9490')+'22;color:'+(EVENT_TYPE_COLOR[m.eventType]||'#8A9490')+';">'+(EVENT_TYPE_LABEL[m.eventType]||m.eventType)+'</span>' : '';
-    var scopeBadge = '<span class="event-loc-badge" style="background:var(--teal-tint);color:var(--teal-deep);">'+CAKUPAN_LABEL[m.cakupan||'internal']+(m.cakupan==='klien'&&m.clientName?' · '+m.clientName:'')+'</span>';
+    var scopeBadge = '<span class="event-loc-badge" style="background:var(--teal-tint);color:var(--teal-deep);">'+CAKUPAN_LABEL[m.cakupan||'internal']+(m.cakupan==='klien'&&m.clientName?' · '+escapeHtml(m.clientName):'')+'</span>';
     var linkedProj = m.linkedProjectId ? projects.find(function(p){ return p.id===m.linkedProjectId; }) : null;
-    var linkedTag = linkedProj ? '<span class="event-loc-badge" style="background:var(--purple-tint);color:var(--purple-deep);"><i class="ti ti-folder"></i>'+linkedProj.title+'</span>' : '';
+    var linkedTag = linkedProj ? '<span class="event-loc-badge" style="background:var(--purple-tint);color:var(--purple-deep);"><i class="ti ti-folder"></i>'+escapeHtml(linkedProj.title)+'</span>' : '';
     return '<div class="event-row" style="cursor:pointer;" onclick="openEventDetail(\''+m.id+'\')">' +
       '<div class="event-time">'+m.startTime+'<br>'+m.endTime+'</div>' +
       '<div class="event-body">' +
-        '<div class="event-title-txt">'+m.title+'</div>' +
+        '<div class="event-title-txt">'+escapeHtml(m.title)+'</div>' +
         '<div class="event-meta-row">' +
           typeBadge + scopeBadge +
           '<span class="event-loc-badge loc-'+m.locationType+'"><i class="ti '+EVENT_LOC_ICON[m.locationType]+'"></i>'+EVENT_LOC_LABEL[m.locationType]+'</span>' +
@@ -4864,7 +4875,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var sel = document.getElementById('evLinkedProject');
     var currentVal = sel.value;
     var relevant = div==='umum' ? projects.filter(function(p){ return p.division!=='personal'; }) : projects.filter(function(p){ return p.division===div; });
-    sel.innerHTML = '<option value="">—</option>' + relevant.map(function(p){ return '<option value="'+p.id+'">'+p.title+'</option>'; }).join('');
+    sel.innerHTML = '<option value="">—</option>' + relevant.map(function(p){ return '<option value="'+p.id+'">'+escapeHtml(p.title)+'</option>'; }).join('');
     if(relevant.some(function(p){ return p.id===currentVal; })) sel.value = currentVal;
   }
   function openNewEventModal(prefillCategory){
@@ -5170,7 +5181,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var html = items.map(function(it, idx){
       var canReschedule = it.type==='project' || it.type==='event';
       var rescheduleBtn = canReschedule ? '<div class="cal-item-reschedule" onclick="event.stopPropagation(); openCalRescheduleModal('+idx+')" title="'+t('calendar.reschedule')+'"><i class="ti ti-calendar-time"></i></div>' : '';
-      return '<div class="cal-item-row" style="background:'+it.color+';"><div class="cal-item-body"><div class="cal-item-title">'+it.title+'</div><div class="cal-item-meta">'+(it.time?it.time+' · ':'')+CAL_TYPE_LABEL[it.type]+'</div></div>'+rescheduleBtn+'</div>';
+      return '<div class="cal-item-row" style="background:'+it.color+';"><div class="cal-item-body"><div class="cal-item-title">'+escapeHtml(it.title)+'</div><div class="cal-item-meta">'+(it.time?it.time+' · ':'')+CAL_TYPE_LABEL[it.type]+'</div></div>'+rescheduleBtn+'</div>';
     }).join('');
     document.getElementById('calDayDetailContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('calendar.empty')+'</div>';
     hydrateIcons(document.getElementById('calDayDetailContainer'));
@@ -5266,7 +5277,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var attrs = isEvent ? ' data-source="event" data-eventid="'+it.eventId+'" data-date="'+dateStr+'"' : '';
     var handle = isEvent ? '<div class="cal-resize-handle"></div>' : '';
     return '<div class="'+cls+'" style="top:'+top+'px;height:'+height+'px;background:'+it.color+';"'+attrs+'>' +
-      '<div class="cal-timeblock-title">'+it.title+'</div>' +
+      '<div class="cal-timeblock-title">'+escapeHtml(it.title)+'</div>' +
       '<div class="cal-timeblock-time">'+it.time+'</div>' +
       handle +
     '</div>';
@@ -5291,7 +5302,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     document.getElementById('calWeekAllDayStrip').innerHTML = '<div></div>' + dateStrs.map(function(ds){
       var items = getCalendarItems(ds).filter(function(it){ return it.type==='project' && (filters.type==='all'||filters.type==='project') && calItemMatchesDivision(it, filters.div); });
-      var chips = items.map(function(it){ return '<div class="cal-allday-chip" style="background:'+it.color+';" data-source="'+it.source+'" data-projectid="'+(it.projectId||'')+'" data-phaseid="'+(it.phaseId||'')+'" data-taskid="'+(it.taskId||'')+'" data-date="'+ds+'">'+it.title+'</div>'; }).join('');
+      var chips = items.map(function(it){ return '<div class="cal-allday-chip" style="background:'+it.color+';" data-source="'+it.source+'" data-projectid="'+(it.projectId||'')+'" data-phaseid="'+(it.phaseId||'')+'" data-taskid="'+(it.taskId||'')+'" data-date="'+ds+'">'+escapeHtml(it.title)+'</div>'; }).join('');
       return '<div class="cal-allday-cell">'+chips+'</div>';
     }).join('');
 
@@ -5335,7 +5346,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     var alldayItems = getCalendarItems(ds).filter(function(it){ return it.type==='project' && (filters.type==='all'||filters.type==='project') && calItemMatchesDivision(it, filters.div); });
     document.getElementById('calDayAllDayStrip').innerHTML = alldayItems.map(function(it){
-      return '<div class="cal-allday-chip" style="background:'+it.color+';display:inline-block;margin-right:6px;" data-source="'+it.source+'" data-projectid="'+(it.projectId||'')+'" data-phaseid="'+(it.phaseId||'')+'" data-taskid="'+(it.taskId||'')+'" data-date="'+ds+'">'+it.title+'</div>';
+      return '<div class="cal-allday-chip" style="background:'+it.color+';display:inline-block;margin-right:6px;" data-source="'+it.source+'" data-projectid="'+(it.projectId||'')+'" data-phaseid="'+(it.phaseId||'')+'" data-taskid="'+(it.taskId||'')+'" data-date="'+ds+'">'+escapeHtml(it.title)+'</div>';
     }).join('');
 
     renderTimeAxis('calDayTimeAxis');
@@ -5977,8 +5988,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var linkTags = notebookLinkTagsHtml(n);
     var followUpBadge = n.followUp ? '<span class="notebook-followup-tag'+(n.followUp<todayISO()?' overdue':'')+'"><i class="ti ti-bell"></i> '+fmtDate(n.followUp)+'</span>' : '';
     return '<div class="notebook-card" onclick="openNotebookDetail(\''+n.id+'\')">' +
-      '<div class="notebook-card-top"><i class="ti '+(NOTEBOOK_TYPE_ICON[n.type]||'ti-note')+'" style="color:var(--teal-deep);font-size:15px;"></i><div class="notebook-card-title">'+n.title+'</div><span class="notebook-type-badge">'+t('notebook.type.'+n.type)+'</span></div>' +
-      '<div class="notebook-card-preview">'+n.content.replace(/</g,'&lt;')+'</div>' +
+      '<div class="notebook-card-top"><i class="ti '+(NOTEBOOK_TYPE_ICON[n.type]||'ti-note')+'" style="color:var(--teal-deep);font-size:15px;"></i><div class="notebook-card-title">'+escapeHtml(n.title)+'</div><span class="notebook-type-badge">'+t('notebook.type.'+n.type)+'</span></div>' +
+      '<div class="notebook-card-preview">'+escapeHtml(n.content)+'</div>' +
       '<div class="notebook-card-meta"><span class="mini-avatar">'+initials(n.author)+'</span>'+displayAuthor+' · '+fmtDate(n.date)+linkTags+followUpBadge+'</div>' +
     '</div>';
   }
@@ -6000,7 +6011,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!div){ projRow.style.display='none'; taskRow.style.display='none'; projSel.value=''; return; }
     projRow.style.display = 'block';
     var list = projects.filter(function(p){ return p.division===div; });
-    projSel.innerHTML = '<option value="">'+t('notebook.linkNone')+'</option>' + list.map(function(p){ return '<option value="'+p.id+'">'+p.title+'</option>'; }).join('');
+    projSel.innerHTML = '<option value="">'+t('notebook.linkNone')+'</option>' + list.map(function(p){ return '<option value="'+p.id+'">'+escapeHtml(p.title)+'</option>'; }).join('');
     projSel.value = '';
     taskRow.style.display = 'none';
   }
@@ -6011,7 +6022,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!pid){ taskRow.style.display='none'; return; }
     var p = projects.find(function(x){ return x.id===pid; });
     var opts = ['<option value="">'+t('notebook.linkNone')+'</option>'];
-    p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){ opts.push('<option value="'+ph.id+'|'+tk.id+'">'+tk.name+'</option>'); }); });
+    p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){ opts.push('<option value="'+ph.id+'|'+tk.id+'">'+escapeHtml(tk.name)+'</option>'); }); });
     taskSel.innerHTML = opts.join('');
     taskRow.style.display = 'block';
   }
@@ -6067,7 +6078,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var displayAuthor = n.author===CURRENT_USER_NAME ? (userProfile.name||n.author) : n.author;
     var linkTags = notebookLinkTagsHtml(n);
     body.innerHTML =
-      '<div class="td-header"><div class="td-title">'+n.title+'</div></div>' +
+      '<div class="td-header"><div class="td-title">'+escapeHtml(n.title)+'</div></div>' +
       '<div class="notebook-detail-meta"><span class="notebook-type-badge">'+t('notebook.type.'+n.type)+'</span><span class="mini-avatar">'+initials(n.author)+'</span><span class="td-meta-sub">'+displayAuthor+' · '+fmtDate(n.date)+'</span>'+linkTags+'</div>' +
       (n.followUp ? '<div class="notebook-followup-tag'+(n.followUp<todayISO()?' overdue':'')+'"><i class="ti ti-bell"></i> '+t('notebook.followUpBadge').replace('{date}', fmtDate(n.followUp))+'</div>' : '') +
       '<div class="rincian-box">'+renderMentions(n.content)+'</div>' +
@@ -6116,7 +6127,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('ideaList').innerHTML = list.length ? list.map(function(i){
       var displayName = i.submittedBy===CURRENT_USER_NAME ? (userProfile.name||CURRENT_USER_NAME) : i.submittedBy;
       return '<div class="idea-card">' +
-        '<div class="idea-card-title">'+i.title+'</div>' +
+        '<div class="idea-card-title">'+escapeHtml(i.title)+'</div>' +
         (i.description?'<div class="idea-card-desc">'+renderMentions(i.description)+'</div>':'') +
         '<div class="idea-card-meta">'+displayName+' · '+fmtDate(i.date)+'</div>' +
         '<div class="idea-card-actions"><span class="idea-archive-btn" onclick="archiveIdea(\''+i.id+'\')">'+t('idea.archive')+'</span></div>' +
@@ -6198,7 +6209,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('blTaskRow').style.display = blSelectedScope==='task' ? '' : 'none';
     if(blSelectedScope!=='general'){
       var sel = document.getElementById('blProject');
-      sel.innerHTML = '<option value="">—</option>' + projects.filter(function(p){ return p.division!=='personal'; }).map(function(p){ return '<option value="'+p.id+'">'+p.title+'</option>'; }).join('');
+      sel.innerHTML = '<option value="">—</option>' + projects.filter(function(p){ return p.division!=='personal'; }).map(function(p){ return '<option value="'+p.id+'">'+escapeHtml(p.title)+'</option>'; }).join('');
     }
   }
   function onBlockerProjectChange(){
@@ -6210,7 +6221,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var opts = ['<option value="">—</option>'];
     p.phases.forEach(function(ph){
       ph.tasks.forEach(function(tk){
-        opts.push('<option value="'+ph.id+'|'+tk.id+'">'+tk.name+'</option>');
+        opts.push('<option value="'+ph.id+'|'+tk.id+'">'+escapeHtml(tk.name)+'</option>');
       });
     });
     sel.innerHTML = opts.join('');
@@ -6393,10 +6404,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '<span class="decision-type-badge">'+t('decision.type.'+(a.requestType||'general'))+'</span>' +
           (decisionTab==='mine' ? '<div class="decision-wait-badge" style="background:'+waitBadgeColor(days)+';">'+waitLabel+'</div>' : statusBadge) +
         '</div>' +
-        '<div class="decision-card-title">'+a.title+'</div>' +
+        '<div class="decision-card-title">'+escapeHtml(a.title)+'</div>' +
         (typeSummary ? '<div class="decision-card-type-summary">'+typeSummary+'</div>' : '') +
         (a.description ? '<div class="decision-card-desc">'+renderMentions(a.description)+'</div>' : '') +
-        '<div class="decision-card-meta">' + (decisionTab==='mine' ? t('decision.from')+' '+a.requestedBy : t('decision.to')+' '+approvalApproverSummary(a)) + (linkedProj ? ' · '+linkedProj.title : '') + '</div>' +
+        '<div class="decision-card-meta">' + (decisionTab==='mine' ? t('decision.from')+' '+escapeHtml(a.requestedBy) : t('decision.to')+' '+escapeHtml(approvalApproverSummary(a))) + (linkedProj ? ' · '+escapeHtml(linkedProj.title) : '') + '</div>' +
         actionsHtml +
       '</div>';
     }).join('');
@@ -6412,16 +6423,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var isMine = isPendingForMe(a);
     var rows = [
       [t('decision.type'), t('decision.type.'+(a.requestType||'general'))],
-      [t('decision.from'), a.requestedBy],
-      [t('decision.to'), approvalApproverSummary(a)],
+      [t('decision.from'), escapeHtml(a.requestedBy)],
+      [t('decision.to'), escapeHtml(approvalApproverSummary(a))],
       [t('decision.createdAt'), fmtDate(a.createdAt)+' · '+waitLabel]
     ];
     if(a.requestType==='dana') rows.push([t('decision.amount'), formatIDR(a.amount||0)]);
     if(a.requestType==='cuti') rows.push([t('decision.leaveRange'), fmtDate(a.leaveStart)+' – '+fmtDate(a.leaveEnd)]);
     if(a.requestType==='lembur') rows.push([t('decision.overtimeInfo'), fmtDate(a.overtimeDate)+' · '+(a.overtimeHours||0)+' '+t('decision.hoursShort')]);
-    if(linkedProj) rows.push([t('decision.linkedProject'), linkedProj.title]);
+    if(linkedProj) rows.push([t('decision.linkedProject'), escapeHtml(linkedProj.title)]);
     if(a.status!=='pending') rows.push([t('decision.status.'+a.status), fmtDate(a.resolvedAt)]);
-    var html = '<div class="decision-detail-title">'+a.title+'</div>' +
+    var html = '<div class="decision-detail-title">'+escapeHtml(a.title)+'</div>' +
       (a.description ? '<div class="decision-detail-desc">'+renderMentions(a.description)+'</div>' : '') +
       '<div class="decision-detail-rows">' + rows.map(function(r){ return '<div class="decision-detail-row"><div class="l">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>'; }).join('') + '</div>' +
       (isMine ? '<div class="decision-actions" style="margin-top:16px;">' +
@@ -6467,7 +6478,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('apLeaveError').classList.remove('active');
     document.getElementById('apOvertimeError').classList.remove('active');
     var sel = document.getElementById('apLinkedProject');
-    sel.innerHTML = '<option value="">—</option>' + projects.filter(function(p){ return p.division!=='personal'; }).map(function(p){ return '<option value="'+p.id+'">'+p.title+'</option>'; }).join('');
+    sel.innerHTML = '<option value="">—</option>' + projects.filter(function(p){ return p.division!=='personal'; }).map(function(p){ return '<option value="'+p.id+'">'+escapeHtml(p.title)+'</option>'; }).join('');
     openModal('newApprovalModal');
   }
   function submitNewApproval(){
@@ -6709,14 +6720,14 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     var linkedEvents = events.filter(function(ev){ return ev.linkedProjectId===p.id; }).sort(function(a,b){ return (a.date+a.startTime).localeCompare(b.date+b.startTime); });
     var linkedEventsHtml = linkedEvents.length ? linkedEvents.map(function(ev){
-      return '<div class="proj-linked-event-row" onclick="openEventDetail(\''+ev.id+'\')"><i class="ti ti-calendar"></i><span>'+ev.title+'</span><span class="proj-linked-event-date">'+fmtDate(ev.date)+'</span></div>';
+      return '<div class="proj-linked-event-row" onclick="openEventDetail(\''+ev.id+'\')"><i class="ti ti-calendar"></i><span>'+escapeHtml(ev.title)+'</span><span class="proj-linked-event-date">'+fmtDate(ev.date)+'</span></div>';
     }).join('') : '<span style="color:var(--stone);">'+t('info.noEvents')+'</span>';
 
     var html;
     if(!infoEditMode){
       html =
-        field(t('form.client'), p.client) +
-        field(t('form.title'), p.title, true) +
+        field(t('form.client'), escapeHtml(p.client)) +
+        field(t('form.title'), escapeHtml(p.title), true) +
         field(t('form.priority'), priorityLabel(p.priority)) +
         field(t('form.effort'), effortLabel(p.effort)) +
         field(t('form.value'), formatIDR(p.value) + ' <span style="color:var(--stone);font-size:11px;">(~'+formatUSD(p.value/usdToIdrRate)+')</span>') +
@@ -6727,8 +6738,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         field(t('info.linkedEvents'), linkedEventsHtml, true);
     } else {
       html =
-        field(t('form.client'), '<input id="edClient" value="'+p.client+'">') +
-        field(t('form.title'), '<input id="edTitle" value="'+p.title+'">', true) +
+        field(t('form.client'), '<input id="edClient" value="'+escapeHtml(p.client)+'">') +
+        field(t('form.title'), '<input id="edTitle" value="'+escapeHtml(p.title)+'">', true) +
         field(t('form.priority'), '<select id="edPriority"><option value="tinggi"'+(p.priority==='tinggi'?' selected':'')+'>'+t('priority.tinggi')+'</option><option value="sedang"'+(p.priority==='sedang'?' selected':'')+'>'+t('priority.sedang')+'</option><option value="rendah"'+(p.priority==='rendah'?' selected':'')+'>'+t('priority.rendah')+'</option></select>') +
         field(t('form.effort'), '<select id="edEffort">'+Object.keys(EFFORT_LABEL).map(function(e){ return '<option value="'+e+'"'+(p.effort===e?' selected':'')+'>'+effortLabel(e)+'</option>'; }).join('')+'</select>') +
         field(t('form.value'), '<div class="currency-pair"><div class="currency-input-wrap"><span class="currency-symbol">Rp</span><input id="edValueRp" value="'+p.value.toLocaleString('id-ID')+'"></div><div class="currency-input-wrap"><span class="currency-symbol">$</span><input id="edValueUsd" value="'+(p.value/usdToIdrRate).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'"></div></div><div class="rate-label"><span class="rate-dot" id="rateDotEdit"></span><span id="rateLabelEdit"></span></div>', true) +
@@ -6736,7 +6747,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         field(t('info.deadline'), '<input id="edDeadline" type="date" value="'+p.deadline+'">') +
         '<div class="form-error" id="edDateError" style="grid-column:1/-1;">Deadline tidak boleh sebelum tanggal mulai.</div>' +
         (isPersonal ? '' : field(t('form.assignees'), '<div class="assignee-picker-trigger" id="edAssigneesTrigger" onclick="openAssigneePopover(event,\'edit\')">'+(assigneeChips||'<span class="assignee-placeholder">'+t('form.chooseAssignees')+'</span>')+'</div>', true)) +
-        field(t('info.desc'), '<textarea id="edDesc">'+(p.description||'')+'</textarea>', true);
+        field(t('info.desc'), '<textarea id="edDesc">'+escapeHtml(p.description||'')+'</textarea>', true);
       popoverSelection = p.assignees.slice();
     }
     document.getElementById('infoFieldsContainer').innerHTML = html;
@@ -6799,7 +6810,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '<div class="task-row-v2" data-task-id="'+task.id+'">' +
             '<div class="task-row-top">' +
               '<i class="ti ti-grip-vertical task-drag-handle"></i>' +
-              '<div class="task-name-input" style="cursor:pointer;" title="'+t('taskdetail.viewTitle')+'" onclick="openTaskDetailProject(\''+p.id+'\',\''+phase.id+'\',\''+task.id+'\')">'+task.name+(task.notes?' <i class="ti ti-file-text" style="font-size:11px;color:var(--teal-deep);vertical-align:middle;" title="'+t('taskdetail.hasRincian')+'"></i>':'')+'</div>' +
+              '<div class="task-name-input" style="cursor:pointer;" title="'+t('taskdetail.viewTitle')+'" onclick="openTaskDetailProject(\''+p.id+'\',\''+phase.id+'\',\''+task.id+'\')">'+escapeHtml(task.name)+(task.notes?' <i class="ti ti-file-text" style="font-size:11px;color:var(--teal-deep);vertical-align:middle;" title="'+t('taskdetail.hasRincian')+'"></i>':'')+'</div>' +
             '</div>' +
             '<div class="task-row-bottom">' +
               '<select class="task-status-select status-'+task.status+'-sel" onclick="event.stopPropagation();" onchange="changeTaskStatus(\''+p.id+'\',\''+phase.id+'\',\''+task.id+'\',this.value)">'+statusOpts+'</select>' +
@@ -6817,7 +6828,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
             '<i class="ti ti-grip-vertical phase-drag-handle"></i>' +
             '<i class="ti ti-chevron-down phase-chevron" onclick="togglePhaseCollapse(\''+phase.id+'\')"></i>' +
             '<div class="phase-card-info" onclick="togglePhaseCollapse(\''+phase.id+'\')">' +
-              '<div class="phase-card-name">'+phase.name+'</div>' +
+              '<div class="phase-card-name">'+escapeHtml(phase.name)+'</div>' +
               '<div class="phase-card-meta">'+prog+'% · '+phase.tasks.filter(function(t){return t.status==="done";}).length+'/'+phase.tasks.length+' task</div>' +
             '</div>' +
             '<div class="avatar-stack">'+avatars+'</div>' +
@@ -7122,7 +7133,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var p = projects.find(function(x){ return x.id===pid; });
     var ph = p.phases.find(function(x){ return x.id===phId; });
     if(!card) return;
-    card.outerHTML = '<input class="phase-name-input" id="renameInput_'+phId+'" value="'+ph.name+'">';
+    card.outerHTML = '<input class="phase-name-input" id="renameInput_'+phId+'" value="'+escapeHtml(ph.name)+'">';
     var inp = document.getElementById('renameInput_'+phId);
     inp.focus(); inp.select();
     function commit(){ ph.name = inp.value.trim()||ph.name; if(window.LovaDB) LovaDB.renamePhase(ph.id, ph.name); renderPhases(); }
@@ -7224,6 +7235,36 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     });
     renderNotifPanel();
   }
+  /* SECURITY: notification.action is stored data -- any org member can insert a
+     notifications row addressed to any other member (see the "org members can
+     notify each other" RLS policy), and a task/profile name embedded in an
+     action string could contain characters that break out of a naive
+     concatenation. It must never be executed as code (no eval/new Function).
+     Instead, parse it as a sequence of plain `fnName('arg','arg')` calls with
+     no nested quotes/backslashes allowed in the arguments, and only dispatch
+     to a fixed whitelist of known-safe in-app navigation functions. Anything
+     that doesn't match this exact shape, or names a function outside the
+     whitelist, is silently dropped rather than partially executed. */
+  var NOTIF_ACTION_ALLOWED_FNS = [
+    'openTeamMember','openTaskDetailProject','openTaskDetailGeneral','openTaskDetailByTaskName',
+    'openDecisionQueueScreen','switchDecisionTab','openEventDetail','openEventByTitle',
+    'openMyTasksScreen','openJournalScreen','openProject','openDivision','switchDivTab'
+  ];
+  function runNotifAction(actionStr){
+    if(!actionStr) return;
+    var statements = actionStr.split(';').map(function(s){ return s.trim(); }).filter(Boolean);
+    var calls = [];
+    for(var i=0;i<statements.length;i++){
+      var m = statements[i].match(/^([A-Za-z_$][\w$]*)\(((?:'[^'\\]*'(?:\s*,\s*'[^'\\]*')*)?)\)$/);
+      if(!m) return;
+      var fnName = m[1];
+      if(NOTIF_ACTION_ALLOWED_FNS.indexOf(fnName)===-1) return;
+      var argsStr = m[2];
+      var args = argsStr ? argsStr.match(/'[^'\\]*'/g).map(function(s){ return s.slice(1,-1); }) : [];
+      calls.push({ fnName:fnName, args:args });
+    }
+    calls.forEach(function(c){ if(typeof window[c.fnName]==='function') window[c.fnName].apply(null, c.args); });
+  }
   function openNotifItem(id){
     var n = notifications.find(function(x){ return x.id===id; });
     if(!n) return;
@@ -7231,7 +7272,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(window.LovaDB) LovaDB.markNotificationRead(id, true);
     document.getElementById('notifPanel').classList.remove('active');
     renderNotifPanel();
-    if(n.action){ try{ new Function(n.action)(); }catch(err){} }
+    if(n.action){ try{ runNotifAction(n.action); }catch(err){} }
   }
   function renderNotifPanel(){
     var badge = document.getElementById('notifBadge');
@@ -7240,7 +7281,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     badge.style.display = unread>0 ? 'flex' : 'none';
     badge.textContent = unread>9 ? '9+' : unread;
     var html = notifications.slice(0,25).map(function(n){
-      return '<div class="notif-item'+(n.read?' read':' unread')+'" onclick="openNotifItem(\''+n.id+'\')"><div class="notif-item-icon" style="background:'+n.color+';"><i class="ti '+n.icon+'"></i></div><div class="notif-item-body"><div class="notif-item-title">'+n.title+'</div><div class="notif-item-meta">'+n.meta+'</div></div>'+(n.read?'<i class="ti ti-check notif-read-check"></i>':'')+'</div>';
+      return '<div class="notif-item'+(n.read?' read':' unread')+'" onclick="openNotifItem(\''+n.id+'\')"><div class="notif-item-icon" style="background:'+n.color+';"><i class="ti '+n.icon+'"></i></div><div class="notif-item-body"><div class="notif-item-title">'+escapeHtml(n.title)+'</div><div class="notif-item-meta">'+escapeHtml(n.meta)+'</div></div>'+(n.read?'<i class="ti ti-check notif-read-check"></i>':'')+'</div>';
     }).join('');
     document.getElementById('notifList').innerHTML = html || '<div class="notif-empty">'+t('notif.empty')+'</div>';
     hydrateIcons(document.getElementById('notifList'));
@@ -7382,9 +7423,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       showToast(t('account.avatarUploaded'));
     }
   }
+  var NAME_UNSAFE_CHARS = /[<>"'\\`]/;
   function saveAccountProfile(){
     var oldName = userProfile.name;
-    userProfile.name = document.getElementById('accName').value.trim() || userProfile.name;
+    var newNameInput = document.getElementById('accName').value.trim();
+    if(newNameInput && NAME_UNSAFE_CHARS.test(newNameInput)){ showToast(t('account.nameUnsafeChars')); return; }
+    userProfile.name = newNameInput || userProfile.name;
     if(userProfile.name !== oldName){
       CURRENT_USER_NAME = userProfile.name;
       if(typeof ME !== 'undefined') ME = userProfile.name;
@@ -7663,7 +7707,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var avatarStyle = info.avatarPhoto ? ' style="background-image:url('+info.avatarPhoto+');background-size:cover;background-position:center;"' : '';
       return '<div class="team-member-row" onclick="openTeamMember(\''+name+'\')">' +
         '<div class="avatar team-member-avatar"'+avatarStyle+'>'+(info.avatarPhoto?'':initials(name))+'</div>' +
-        '<div class="team-member-body"><div class="team-member-name">'+(name===CURRENT_USER_NAME?userProfile.name:name)+' '+attentionFlag+'</div><div class="team-member-role">'+info.role+' · '+divName+'</div></div>' +
+        '<div class="team-member-body"><div class="team-member-name">'+escapeHtml(name===CURRENT_USER_NAME?userProfile.name:name)+' '+attentionFlag+'</div><div class="team-member-role">'+escapeHtml(info.role)+' · '+divName+'</div></div>' +
         '<div class="team-row-mood-icon" style="color:'+m.color+';" title="'+m.label+'"><i class="ti '+m.icon+'"></i></div>' +
         '<div class="team-cap-dot" style="background:'+color+';" title="'+pct+'%"></div>' +
       '</div>';
@@ -7732,12 +7776,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     var tasks = getUserTasks(name);
     document.getElementById('tmAssignmentList').innerHTML = tasks.length ? tasks.map(function(tk){
-      return '<div class="tm-assign-row"><div class="tm-assign-dot" style="background:'+tk.color+';"></div><div class="tm-assign-body"><div class="tm-assign-title">'+tk.title+'</div><div class="tm-assign-meta">'+tk.meta+' · '+statusLabel(tk.status)+'</div></div></div>';
+      return '<div class="tm-assign-row"><div class="tm-assign-dot" style="background:'+tk.color+';"></div><div class="tm-assign-body"><div class="tm-assign-title">'+escapeHtml(tk.title)+'</div><div class="tm-assign-meta">'+escapeHtml(tk.meta)+' · '+statusLabel(tk.status)+'</div></div></div>';
     }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:10px 0;">'+t('team.noAssignment')+'</div>';
 
     var overrides = capacityOverrideLog.filter(function(o){ return o.assignedTo===name; });
     document.getElementById('tmOverrideLog').innerHTML = overrides.length ? overrides.map(function(o){
-      return '<div class="tm-assign-row"><div class="tm-assign-dot" style="background:var(--revisi);"></div><div class="tm-assign-body"><div class="tm-assign-title">'+(o.context||t('team.overrideNoContext'))+'</div><div class="tm-assign-meta">'+fmtDate(o.date)+' · '+t('team.overrideBy')+' '+o.assignedBy+' · '+o.pct+'%</div></div></div>';
+      return '<div class="tm-assign-row"><div class="tm-assign-dot" style="background:var(--revisi);"></div><div class="tm-assign-body"><div class="tm-assign-title">'+escapeHtml(o.context||t('team.overrideNoContext'))+'</div><div class="tm-assign-meta">'+fmtDate(o.date)+' · '+t('team.overrideBy')+' '+escapeHtml(o.assignedBy)+' · '+o.pct+'%</div></div></div>';
     }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:10px 0;">'+t('team.overrideNone')+'</div>';
 
     var factsHtml = '';
@@ -8201,7 +8245,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(results[key].length){
         html += '<div class="search-group-label">'+groupLabels[key]+'</div>';
         html += results[key].slice(0,8).map(function(r){
-          return '<div class="search-result-row" onclick="closeGlobalSearch(); '+r.action+'"><div class="search-result-dot" style="background:'+groupColors[key]+';"></div><div class="search-result-body"><div class="search-result-title">'+r.title+'</div><div class="search-result-meta">'+r.meta+'</div></div></div>';
+          return '<div class="search-result-row" onclick="closeGlobalSearch(); '+r.action+'"><div class="search-result-dot" style="background:'+groupColors[key]+';"></div><div class="search-result-body"><div class="search-result-title">'+escapeHtml(r.title)+'</div><div class="search-result-meta">'+escapeHtml(r.meta)+'</div></div></div>';
         }).join('');
       }
     });
@@ -8214,7 +8258,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   function populateAnalyticsFilters(p){
     var phaseSel = document.getElementById('anFilterPhase');
-    phaseSel.innerHTML = '<option value="all">Semua phase</option>' + p.phases.map(function(ph){ return '<option value="'+ph.id+'">'+ph.name+'</option>'; }).join('');
+    phaseSel.innerHTML = '<option value="all">Semua phase</option>' + p.phases.map(function(ph){ return '<option value="'+ph.id+'">'+escapeHtml(ph.name)+'</option>'; }).join('');
     var allAssignees = {};
     p.phases.forEach(function(ph){ ph.tasks.forEach(function(t){ allAssignees[t.pic]=1; (t.secondaryPic||[]).forEach(function(s){ allAssignees[s]=1; }); }); });
     var assigneeSel = document.getElementById('anFilterAssignee');
@@ -8437,7 +8481,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var editAction = m.isGeneral ? ("event.stopPropagation(); openEditGeneralTaskModal('"+tk.id+"')") : ("event.stopPropagation(); openEditTaskModal('"+m.projectId+"','"+m.phaseId+"','"+tk.id+"')");
     var deadlineStr = tk.deadline ? fmtDate(tk.deadline) : '';
     var pendingBadge = (tk.assignmentStatus==='pending' && tk.assignedBy && tk.assignedBy!==CURRENT_USER_NAME) ? '<span class="pending-assign-badge">'+t('taskdetail.pendingBadge')+'</span>' : '';
-    var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', tk.assignedBy) : '';
+    var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', escapeHtml(tk.assignedBy)) : '';
     var reorderHtml = '';
     if(opts.reorderable){
       reorderHtml = '<i class="ti ti-grip-vertical row-drag-handle" onclick="event.stopPropagation();"></i>' +
@@ -8450,7 +8494,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     return '<div class="list-row" data-task-id="'+tk.id+'" onclick="'+clickAction+'">' +
       reorderHtml +
       '<div class="list-icon" style="cursor:pointer;'+(isDone?'background:var(--teal-tint); color:var(--teal-deep);':'')+'" onclick="'+quickToggleAction+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+(isDone?'ti-check':'ti-clock')+'"></i></div>' +
-      '<div class="list-body"><div class="list-title'+(isDone?' done':'')+'">'+tk.name+'</div><div class="list-sub">'+priorityBadgeHtml(prio)+' via '+m.groupTitle+(deadlineStr?' · '+deadlineStr:'')+assignedByTag+pendingBadge+'</div></div>' +
+      '<div class="list-body"><div class="list-title'+(isDone?' done':'')+'">'+escapeHtml(tk.name)+'</div><div class="list-sub">'+priorityBadgeHtml(prio)+' via '+escapeHtml(m.groupTitle)+(deadlineStr?' · '+deadlineStr:'')+assignedByTag+pendingBadge+'</div></div>' +
       (opts.editable ? '<i class="ti ti-edit" style="color:var(--stone);font-size:15px;padding:6px;" onclick="'+editAction+'"></i>' : '<div class="list-time">'+statusLabel(tk.status)+'</div>') +
     '</div>';
   }
@@ -8501,9 +8545,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(ev.dateMulai && ev.dateSelesai && ev.dateMulai!==ev.dateSelesai){ dateStr = fmtDate(ev.dateMulai)+' – '+fmtDate(ev.dateSelesai); }
     else if(ev.dateMulai){ dateStr = fmtDate(ev.dateMulai); }
     var typeBadge = '<span class="event-loc-badge" style="background:'+(EVENT_TYPE_COLOR[ev.eventType]||'#8A9490')+'22;color:'+(EVENT_TYPE_COLOR[ev.eventType]||'#8A9490')+';">'+(EVENT_TYPE_LABEL[ev.eventType]||ev.eventType)+'</span>';
-    var scopeBadge = '<span class="event-loc-badge" style="background:var(--teal-tint);color:var(--teal-deep);">'+CAKUPAN_LABEL[ev.cakupan||'internal']+(ev.cakupan==='klien'&&ev.clientName?' · '+ev.clientName:'')+'</span>';
+    var scopeBadge = '<span class="event-loc-badge" style="background:var(--teal-tint);color:var(--teal-deep);">'+CAKUPAN_LABEL[ev.cakupan||'internal']+(ev.cakupan==='klien'&&ev.clientName?' · '+escapeHtml(ev.clientName):'')+'</span>';
     var linkedProj = ev.linkedProjectId ? projects.find(function(p){ return p.id===ev.linkedProjectId; }) : null;
-    var linkedTag = linkedProj ? '<span class="event-loc-badge" style="background:var(--purple-tint);color:var(--purple-deep);" onclick="openProject(\''+linkedProj.id+'\')"><i class="ti ti-folder"></i>'+linkedProj.title+'</span>' : '';
+    var linkedTag = linkedProj ? '<span class="event-loc-badge" style="background:var(--purple-tint);color:var(--purple-deep);" onclick="openProject(\''+linkedProj.id+'\')"><i class="ti ti-folder"></i>'+escapeHtml(linkedProj.title)+'</span>' : '';
     var attendeesHtml = (ev.attendees&&ev.attendees.length) ? ev.attendees.map(function(a){ return '<div class="mini-avatar" style="width:26px;height:26px;font-size:11px;cursor:pointer;" onclick="openTeamMember(\''+a+'\')">'+initials(a)+'</div>'; }).join('') : '<span class="td-meta-sub">'+t('event.noAttendees')+'</span>';
     var editAction = "openEditEventModal('"+ev.id+"')";
     var isOnline = ev.locationType!=='offline';
@@ -8512,12 +8556,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var href = /^https?:\/\//i.test(ev.locationDetail) ? ev.locationDetail : 'https://'+ev.locationDetail;
       locValueHtml = '<a class="ed-meeting-link" href="'+href.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="ti '+(EVENT_LOC_ICON[ev.locationType]||'ti-link')+'"></i>'+t('event.joinLink').replace('{platform}', EVENT_LOC_LABEL[ev.locationType]||'')+'<i class="ti ti-external-link"></i></a>';
     } else {
-      locValueHtml = (EVENT_LOC_LABEL[ev.locationType]||ev.locationType)+(ev.locationDetail?' · '+ev.locationDetail:'');
+      locValueHtml = (EVENT_LOC_LABEL[ev.locationType]||ev.locationType)+(ev.locationDetail?' · '+escapeHtml(ev.locationDetail):'');
     }
 
     body.innerHTML =
       '<div class="td-header">' +
-        '<div class="td-title">'+ev.title+'</div>' +
+        '<div class="td-title">'+escapeHtml(ev.title)+'</div>' +
         '<i class="ti ti-edit td-edit-icon" onclick="'+editAction+'"></i>' +
       '</div>' +
       '<div class="td-meta-row">'+typeBadge+scopeBadge+linkedTag+'</div>' +
@@ -8585,17 +8629,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<span class="td-meta-sub" style="font-weight:600;">'+t('delegate.historyLabel')+'</span>' +
         (tk.originalAssignedBy ? '<span class="td-meta-sub">'+t('delegate.originalAssigner').replace('{name}', tk.originalAssignedBy)+'</span>' : '') +
         tk.delegationHistory.map(function(h){
-          return '<span class="td-meta-sub">'+fmtDate(h.date)+' · '+h.from+' → '+h.to+(h.note?' ("'+h.note+'")':'')+'</span>';
+          return '<span class="td-meta-sub">'+fmtDate(h.date)+' · '+escapeHtml(h.from)+' → '+escapeHtml(h.to)+(h.note?' ("'+escapeHtml(h.note)+'")':'')+'</span>';
         }).join('') +
       '</div>';
     }
 
     body.innerHTML =
       '<div class="td-header">' +
-        '<div class="td-title">'+tk.name+'</div>' +
+        '<div class="td-title">'+escapeHtml(tk.name)+'</div>' +
         '<i class="ti ti-edit td-edit-icon" onclick="'+editAction+'"></i>' +
       '</div>' +
-      '<div class="td-meta-row">'+priorityBadgeHtml(prio)+'<span class="td-meta-sub">via '+taskDetailCtx.groupTitle+'</span></div>' +
+      '<div class="td-meta-row">'+priorityBadgeHtml(prio)+'<span class="td-meta-sub">via '+escapeHtml(taskDetailCtx.groupTitle)+'</span></div>' +
       assignmentHtml +
       delegationHtml +
       '<div class="td-info-grid">' +
@@ -8667,11 +8711,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         var quickToggleActionP = "quickToggleTaskDone("+(m.isGeneral?'true':'false')+",'"+(m.projectId||'')+"','"+(m.phaseId||'')+"','"+tk.id+"', event)";
         return '<div class="task-row-v2" style="cursor:pointer;" onclick="'+clickAction+'">' +
           '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionP+'" title="'+t('taskrow.quickToggle')+'">'+(tk.status==='done'?'✓':'')+'</div>' +
-          '<div class="task-name-input" style="pointer-events:none;">'+tk.name+'</div>' +
+          '<div class="task-name-input" style="pointer-events:none;">'+escapeHtml(tk.name)+'</div>' +
           '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
         '</div>';
       }).join('');
-      return '<div class="mytasks-group-title">'+group[0].groupTitle+'</div>' + rows;
+      return '<div class="mytasks-group-title">'+escapeHtml(group[0].groupTitle)+'</div>' + rows;
     }).join('');
     document.getElementById('personalTasksContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noMyTasks')+'</div>';
     hydrateIcons(document.getElementById('personalTasksContainer'));
@@ -8778,7 +8822,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var html = mine.map(function(m, idx){
       return '<div class="list-row" style="cursor:pointer;" onclick="pickExistingTaskAsFocus('+idx+')">' +
         '<div class="list-icon"><i class="ti ti-target"></i></div>' +
-        '<div class="list-body"><div class="list-title">'+m.task.name+'</div><div class="list-sub">via '+m.groupTitle+'</div></div>' +
+        '<div class="list-body"><div class="list-title">'+escapeHtml(m.task.name)+'</div><div class="list-sub">via '+escapeHtml(m.groupTitle)+'</div></div>' +
       '</div>';
     }).join('');
     document.getElementById('addFocusExistingList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('focus.noOtherTasks')+'</div>';
@@ -8855,7 +8899,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function renderPomodoroSetup(){
     var s = pomodoroState;
     var html = ''
-      + '<div class="pomo-phase-badge"><i class="ti ti-target"></i> '+(s.task ? s.task.task.name : t('pomodoro.setupTitle'))+'</div>'
+      + '<div class="pomo-phase-badge"><i class="ti ti-target"></i> '+(s.task ? escapeHtml(s.task.task.name) : t('pomodoro.setupTitle'))+'</div>'
       + (s.task ? '<div class="focus-task-name" style="font-size:15px;margin-bottom:18px;opacity:0.85;">'+t('pomodoro.setupTitle')+'</div>' : '')
       + '<div class="focus-sub">'+t('pomodoro.workLabel')+'</div>' + pomodoroPillRow('workMin',[15,25,45,60])
       + '<div class="focus-sub">'+t('pomodoro.shortBreakLabel')+'</div>' + pomodoroPillRow('shortBreakMin',[5,10,15])
@@ -8909,7 +8953,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var pct = s.remainingSeconds/s.totalSeconds;
     var html = ''
       + '<div class="pomo-minimize-btn" onclick="minimizePomodoro()" title="'+t('pomodoro.minimize')+'"><i class="ti ti-chevron-down"></i></div>'
-      + (s.task ? '<div class="focus-task-name" style="font-size:14px;max-width:280px;opacity:0.85;">'+s.task.task.name+'</div>' : '')
+      + (s.task ? '<div class="focus-task-name" style="font-size:14px;max-width:280px;opacity:0.85;">'+escapeHtml(s.task.task.name)+'</div>' : '')
       + '<div class="pomo-phase-badge"><i class="ti '+pomodoroPhaseIcon(s.phase)+'"></i> '+pomodoroPhaseLabel(s.phase)+'</div>'
       + '<div class="pomo-ring-wrap"><svg viewBox="0 0 120 120"><circle class="pomo-ring-bg" cx="60" cy="60" r="'+POMO_RING_R+'"></circle><circle class="pomo-ring-fg" id="pomodoroRingFg" cx="60" cy="60" r="'+POMO_RING_R+'" stroke-dasharray="'+POMO_RING_CIRC+'" stroke-dashoffset="'+(POMO_RING_CIRC*(1-pct))+'"></circle></svg>'
         + '<div class="pomo-ring-center"><div class="pomo-timer" id="pomodoroTimerDisplay">'+formatFocusTime(s.remainingSeconds)+'</div></div></div>'
@@ -9148,8 +9192,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var list = getDependenciesList();
     var html = list.map(function(item){
       return '<div class="missed-task-row">' +
-        '<div class="missed-task-name">'+item.taskName+'</div>' +
-        '<div class="missed-task-meta">via '+item.groupTitle+'</div>' +
+        '<div class="missed-task-name">'+escapeHtml(item.taskName)+'</div>' +
+        '<div class="missed-task-meta">via '+escapeHtml(item.groupTitle)+'</div>' +
         '<div class="dep-people-row">'+item.people.map(function(p){
           var displayName = p===CURRENT_USER_NAME ? userProfile.name : p;
           return '<span class="dep-person-chip" onclick="closeModal(\'dependenciesModal\'); openTeamMember(\''+p+'\');"><span class="mini-avatar" style="width:18px;height:18px;font-size:8px;">'+initials(p)+'</span>'+displayName+'</span>';
@@ -9289,7 +9333,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!recipientName || recipientName===CURRENT_USER_NAME) return;
     if(window.LovaDB){
       LovaDB.createNotification(recipientName, { id:LovaDB.newId(), title:title, meta:meta, icon:icon, color:color, read:false, action:action||null });
-      var bodyHtml = '<p>' + title + '</p>' + (meta ? '<p style="color:#8A9490;font-size:13px;">' + meta + '</p>' : '') +
+      var bodyHtml = '<p>' + escapeHtml(title) + '</p>' + (meta ? '<p style="color:#8A9490;font-size:13px;">' + escapeHtml(meta) + '</p>' : '') +
         '<p style="margin-top:16px;"><a href="' + location.origin + '/lenusa-flow-v65c-offline.html">Buka LOVA</a></p>';
       LovaDB.sendEmailNotification(recipientName, title, bodyHtml);
     }
@@ -9408,7 +9452,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var deadlineTag = tk.deadline ? ' · '+t('taskdetail.deadline')+' '+fmtDate(tk.deadline) : '';
       return '<div class="list-row" onclick="'+clickAction+'">' +
         '<div class="list-icon"><i class="ti ti-clock"></i></div>' +
-        '<div class="list-body"><div class="list-title">'+tk.name+'</div><div class="list-sub">via '+m.groupTitle+deadlineTag+'</div></div>' +
+        '<div class="list-body"><div class="list-title">'+escapeHtml(tk.name)+'</div><div class="list-sub">via '+escapeHtml(m.groupTitle)+deadlineTag+'</div></div>' +
       '</div>';
     }).join('');
     hydrateIcons(card);
@@ -9431,8 +9475,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var days = calcWaitDays(tk.deadline);
       var whenLabel = days===1 ? t('missed.oneDayAgo') : t('missed.daysAgo').replace('{n}', days);
       return '<div class="missed-task-row">' +
-        '<div class="missed-task-name clickable" onclick="goToMissedTaskDetail('+idx+')">'+tk.name+' <i class="ti ti-chevron-right"></i></div>' +
-        '<div class="missed-task-meta">via '+m.groupTitle+' · '+whenLabel+'</div>' +
+        '<div class="missed-task-name clickable" onclick="goToMissedTaskDetail('+idx+')">'+escapeHtml(tk.name)+' <i class="ti ti-chevron-right"></i></div>' +
+        '<div class="missed-task-meta">via '+escapeHtml(m.groupTitle)+' · '+whenLabel+'</div>' +
         '<div class="missed-task-actions">' +
           '<div class="btn-sm primary" onclick="focusMissedTask('+idx+')">'+t('missed.focusToday')+'</div>' +
           '<div class="btn-sm" onclick="openRescheduleModal('+idx+')">'+t('missed.reschedule')+'</div>' +
@@ -9581,7 +9625,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var isDone = tk.status==='done';
       var iconCls = isDone ? 'ti-check' : (tk.zone==='focus'?'ti-target': tk.zone==='upnext'?'ti-clipboard-list':'ti-clock');
       var clickAction = m.isGeneral ? ("openTaskDetailGeneral('"+m.divisionKey+"','"+tk.id+"')") : ("openTaskDetailProject('"+m.projectId+"','"+m.phaseId+"','"+tk.id+"')");
-      var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', tk.assignedBy) : '';
+      var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', escapeHtml(tk.assignedBy)) : '';
       var pendingBadge = (tk.assignmentStatus==='pending' && tk.assignedBy && tk.assignedBy!==CURRENT_USER_NAME) ? '<span class="pending-assign-badge">'+t('taskdetail.pendingBadge')+'</span>' : '';
       var sameZoneList = tk.zone==='focus' ? focusList : upnextList;
       var zi = sameZoneList.indexOf(m);
@@ -9594,7 +9638,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       return '<div class="list-row" data-task-id="'+tk.id+'" data-zone="'+tk.zone+'" onclick="'+clickAction+'">' +
         reorderHtml +
         '<div class="list-icon" style="cursor:pointer;'+(isDone?'background:var(--teal-tint); color:var(--teal-deep);':'')+'" onclick="'+quickToggleActionT+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+(isDone?'ti-check':iconCls)+'"></i></div>' +
-        '<div class="list-body"><div class="list-title'+(isDone?' done':'')+'">'+tk.name+'</div><div class="list-sub">via '+m.groupTitle+' · '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+pendingBadge+'</div></div>' +
+        '<div class="list-body"><div class="list-title'+(isDone?' done':'')+'">'+escapeHtml(tk.name)+'</div><div class="list-sub">via '+escapeHtml(m.groupTitle)+' · '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+pendingBadge+'</div></div>' +
         '<div class="list-time">'+statusLabel(tk.status)+'</div>' +
       '</div>';
     }).join('');
@@ -9661,12 +9705,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         var tk = m.task;
         var clickAction = m.isGeneral ? ("openTaskDetailGeneral('"+m.divisionKey+"','"+tk.id+"')") : ("openTaskDetailProject('"+m.projectId+"','"+m.phaseId+"','"+tk.id+"')");
         var pendingBadge = (tk.assignmentStatus==='pending' && tk.assignedBy && tk.assignedBy!==CURRENT_USER_NAME) ? '<span class="pending-assign-badge">'+t('taskdetail.pendingBadge')+'</span>' : '';
-        var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', tk.assignedBy) : '';
+        var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', escapeHtml(tk.assignedBy)) : '';
         var quickToggleActionM = "event.stopPropagation(); quickToggleTaskDone("+(m.isGeneral?'true':'false')+",'"+(m.projectId||'')+"','"+(m.phaseId||'')+"','"+tk.id+"', event)";
         return '<div class="task-row-v2" data-task-id="'+tk.id+'">' +
           '<div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="'+clickAction+'">' +
             '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionM+'" title="'+t('taskrow.quickToggle')+'">'+(tk.status==='done'?'✓':'')+'</div>' +
-            '<div class="task-name-input" style="pointer-events:none;">'+tk.name+' <span style="color:var(--stone);font-size:10.5px;">· '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+'</span>'+pendingBadge+'</div>' +
+            '<div class="task-name-input" style="pointer-events:none;">'+escapeHtml(tk.name)+' <span style="color:var(--stone);font-size:10.5px;">· '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+'</span>'+pendingBadge+'</div>' +
             '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:6px;padding-top:5px;border-top:1px dashed var(--glass-border);">' +
@@ -9677,7 +9721,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '</div>' +
         '</div>';
       }).join('');
-      return '<div class="mytasks-group-title">'+group[0].groupTitle+'</div><div class="mytasks-group-sortable" data-group-key="'+key+'">' + rows + '</div>';
+      return '<div class="mytasks-group-title">'+escapeHtml(group[0].groupTitle)+'</div><div class="mytasks-group-sortable" data-group-key="'+key+'">' + rows + '</div>';
     }).join('');
     document.getElementById('myTasksContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noMyTasks')+'</div>';
     hydrateIcons(document.getElementById('myTasksContainer'));
@@ -9751,12 +9795,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     p.phases.forEach(function(ph){
       ph.tasks.forEach(function(tk){
         if(!tk.start || !tk.deadline){
-          tlHtml += '<div class="timeline-row"><div class="timeline-label">'+tk.name+'</div><div class="timeline-track" style="width:'+trackWidth+'px;"><span style="font-size:9.5px;color:var(--stone);">belum berjadwal</span></div></div>';
+          tlHtml += '<div class="timeline-row"><div class="timeline-label">'+escapeHtml(tk.name)+'</div><div class="timeline-track" style="width:'+trackWidth+'px;"><span style="font-size:9.5px;color:var(--stone);">belum berjadwal</span></div></div>';
           return;
         }
         var offsetPx = daysBetween(minD, tk.start)*pxPerDay;
         var widthPx = Math.max(10, daysBetween(tk.start, tk.deadline)*pxPerDay);
-        tlHtml += '<div class="timeline-row"><div class="timeline-label">'+tk.name+'</div><div class="timeline-track" style="width:'+trackWidth+'px;"><div class="timeline-bar" style="left:'+offsetPx+'px;width:'+widthPx+'px;background:'+STATUS_COLOR[tk.status]+';" title="'+fmtDate(tk.start)+' – '+fmtDate(tk.deadline)+'"></div></div></div>';
+        tlHtml += '<div class="timeline-row"><div class="timeline-label">'+escapeHtml(tk.name)+'</div><div class="timeline-track" style="width:'+trackWidth+'px;"><div class="timeline-bar" style="left:'+offsetPx+'px;width:'+widthPx+'px;background:'+STATUS_COLOR[tk.status]+';" title="'+fmtDate(tk.start)+' – '+fmtDate(tk.deadline)+'"></div></div></div>';
         tlHtml += '<div class="timeline-daterange">'+fmtDate(tk.start)+' – '+fmtDate(tk.deadline)+'</div>';
       });
     });
@@ -9879,6 +9923,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "account.loveLang": {id:"Love Language", en:"Love language"}, "account.attachStyle": {id:"Attachment Style", en:"Attachment style"},
     "account.testBtn": {id:"Tes", en:"Test"}, "account.save": {id:"Simpan Perubahan", en:"Save changes"}, "account.saved": {id:"Perubahan tersimpan", en:"Changes saved"},
     "account.avatarUploaded": {id:"Foto profil diperbarui", en:"Profile photo updated"},
+    "account.nameUnsafeChars": {id:"Nama tidak boleh mengandung karakter < > \" ' \\ atau `", en:"Name can't contain the characters < > \" ' \\ or `"},
     "account.avatarUploadFailed": {id:"Gagal mengunggah foto, coba lagi", en:"Failed to upload photo, try again"},
     "account.loveLangReceiving": {id:"Love Language — Menerima", en:"Love language — receiving"},
     "account.loveLangGiving": {id:"Love Language — Memberi", en:"Love language — giving"},

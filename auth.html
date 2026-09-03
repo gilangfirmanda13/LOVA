@@ -260,11 +260,13 @@
     }
   }
 
+  var NAME_UNSAFE_CHARS = /[<>"'\\`]/;
   async function doCreateOrg(){
     clearMsg();
     var orgName = document.getElementById('orgName').value.trim();
     var ownerName = document.getElementById('orgOwnerName').value.trim();
     if(!orgName || !ownerName){ showMsg('Nama organisasi dan nama kamu wajib diisi.', 'error'); return; }
+    if(NAME_UNSAFE_CHARS.test(ownerName)){ showMsg('Nama tidak boleh mengandung karakter < > " \' \\ atau `.', 'error'); return; }
     setBusy('createOrgBtn', true);
     var { error } = await sb.rpc('create_organization', { org_name: orgName, owner_name: ownerName });
     setBusy('createOrgBtn', false, 'Buat Organisasi');
@@ -277,6 +279,7 @@
     clearMsg();
     var name = document.getElementById('acceptName').value.trim();
     if(!name){ showMsg('Nama wajib diisi.', 'error'); return; }
+    if(NAME_UNSAFE_CHARS.test(name)){ showMsg('Nama tidak boleh mengandung karakter < > " \' \\ atau `.', 'error'); return; }
     setBusy('acceptInviteBtn', true);
     var { error } = await sb.rpc('accept_invite', { invite_token: pendingInviteToken, member_name: name });
     setBusy('acceptInviteBtn', false, 'Gabung Sekarang');
