@@ -1894,7 +1894,7 @@
             <div class="section-head"><div class="section-title" data-i18n="more.accountTitle">Akun</div></div>
             <div class="more-list-row" onclick="openAccountScreen()">
               <div class="avatar" id="moreListAvatar" style="width:34px;height:34px;font-size:12px;">G</div>
-              <div class="more-list-body"><div class="more-list-title">Gilang</div><div class="more-list-sub" data-i18n="more.profileSub">Lihat & edit profil</div></div>
+              <div class="more-list-body"><div class="more-list-title" id="moreListUserName">Gilang</div><div class="more-list-sub" data-i18n="more.profileSub">Lihat & edit profil</div></div>
               <i class="ti ti-chevron-right"></i>
             </div>
           </div>
@@ -7387,6 +7387,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function updateAvatarDisplay(){
     var initial = (userProfile.name||'G').charAt(0).toUpperCase();
+    var moreListNameEl = document.getElementById('moreListUserName');
+    if(moreListNameEl) moreListNameEl.textContent = userProfile.name || 'Gilang';
     ['accountAvatarBig','topbarAvatar','sidebarAvatar','moreListAvatar'].forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
@@ -10786,6 +10788,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(typeof renderTodayFromProjects === 'function') renderTodayFromProjects();
     if(typeof renderDashGlance === 'function') renderDashGlance();
     if(typeof updateAvatarDisplay === 'function') updateAvatarDisplay();
+    if(typeof renderNotifPanel === 'function') renderNotifPanel();
+    if(typeof renderDashboardChart === 'function') renderDashboardChart();
+    if(typeof refreshEventBadge === 'function') refreshEventBadge();
+    if(typeof renderCalendarMonth === 'function') renderCalendarMonth();
+    if(typeof refreshDecisionQueueBadge === 'function') refreshDecisionQueueBadge();
+    if(typeof renderBlockerCard === 'function') renderBlockerCard();
+    if(typeof refreshCheckinBadge === 'function') refreshCheckinBadge();
+    if(typeof refreshIdeaBadge === 'function') refreshIdeaBadge();
+    if(typeof renderTeamList === 'function') renderTeamList();
+    if(typeof refreshVisibleScreens === 'function') refreshVisibleScreens();
     var nameEl = document.getElementById('sidebarUserName');
     if(nameEl) nameEl.textContent = CURRENT_USER_NAME;
     var wsEl = document.getElementById('sidebarWorkspaceName');
