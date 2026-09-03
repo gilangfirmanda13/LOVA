@@ -1,6 +1,6 @@
 # Jamalism
 
-**Jabatan:** -
+**Jabatan:** Graphic design intern
 **Divisi:** [[Creative Team]]
 **Peran:** staff
 
