@@ -1,11 +1,11 @@
 # Emir -🦖
 
-**Jabatan:** -
+**Jabatan:** Manager
 **Divisi:** [[Learning & Development]]
 **Peran:** manager
 
 ## Projects
-_Tidak ada_
+- [[Booklet 2027]]
 
 ## Tasks
-_Tidak ada_
+- [[tes burung]]

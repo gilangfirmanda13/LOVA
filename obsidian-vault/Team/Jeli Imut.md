@@ -5,7 +5,9 @@
 **Peran:** staff
 
 ## Projects
-_Tidak ada_
+- [[Software Renewal 2027]]
 
 ## Tasks
-_Tidak ada_
+- [[Tes]]
+- [[Present strat]]
+- [[Email untuk PT Perum Jasa Tirta]]

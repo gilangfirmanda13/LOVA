@@ -1,11 +1,11 @@
-# Dinda
+# Dinda 👽
 
 **Jabatan:** Account Executive
 **Divisi:** [[Learning & Development]]
 **Peran:** staff
 
 ## Projects
-_Tidak ada_
+- [[Booklet 2027]]
 
 ## Tasks
-_Tidak ada_
+- [[Brajnstorm]]

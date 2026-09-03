@@ -1,6 +1,6 @@
 # Sindy
 
-**Jabatan:** -
+**Jabatan:** Training Operations & Administrative Associate
 **Divisi:** [[Learning & Development]]
 **Peran:** finance_admin
 

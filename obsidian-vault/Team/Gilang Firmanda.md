@@ -5,7 +5,8 @@
 **Peran:** owner
 
 ## Projects
-_Tidak ada_
+- [[Booklet 2027]]
 
 ## Tasks
+- [[Brajnstorm]]
 - [[Tes 1 2 3]]
