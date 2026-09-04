@@ -898,6 +898,8 @@
   .nominal-tag{ font-family:var(--font-mono); font-size:11.5px; color:var(--stone); }
   .project-title{ font-family:var(--font-display); font-weight:600; font-size:15px; margin-top:10px; color:var(--ink); }
   .project-client{ font-size:11.5px; color:var(--stone); margin-top:2px; }
+  .project-client-tag{ display:inline-block; cursor:pointer; padding:2px 8px; border-radius:99px; background:var(--stone-10, rgba(120,120,120,.12)); transition:background .15s; }
+  .project-client-tag:hover{ background:var(--stone-20, rgba(120,120,120,.22)); }
   .project-meta-row{ display:flex; align-items:center; justify-content:space-between; margin-top:11px; flex-wrap:wrap; gap:8px; }
   .project-meta{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--stone); }
   .project-meta i{ font-size:14px; }
@@ -1451,7 +1453,7 @@
             </div>
 
             <div class="quick-access-row">
-              <div class="quick-link-card glass" onclick="renderMyTasksScreen(); showScreen('mytasks');">
+              <div class="quick-link-card glass" onclick="openMyTasksScreen();">
                 <div class="quick-link-icon" style="background:var(--orange-tint);color:var(--orange-deep);"><i class="ti ti-clipboard-list"></i></div>
                 <div class="quick-link-count" id="myTasksCount">0</div>
                 <div class="quick-link-label" data-i18n="mytasks.bannerLabel">Tugas Lintas Project</div>
@@ -1489,7 +1491,7 @@
             <div class="col-main">
               <div class="section-head">
                 <div class="section-title" data-i18n="section.today">Fokus hari ini</div>
-                <div class="section-link" onclick="renderMyTasksScreen(); showScreen('mytasks');" data-i18n="section.seeall">Lihat semua</div>
+                <div class="section-link" onclick="openMyTasksScreen();" data-i18n="section.seeall">Lihat semua</div>
               </div>
               <div class="block-row">
                 <div class="block-card solid" id="blockFocusCard" onclick="openFocusZoneScreen()">
@@ -1544,6 +1546,12 @@
             <div class="detail-topbar">
               <div class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></div>
               <div class="grow"><div class="ttl" data-i18n="mytasks.title">Tugas Saya</div><div class="sub" id="myTasksSub">0 tugas</div></div>
+            </div>
+            <div class="filter-pills" id="myTasksDivPills"></div>
+            <div class="filter-pills" id="myTasksSortPills">
+              <div class="filter-pill active" data-sort="default" data-i18n="sort.default">Default</div>
+              <div class="filter-pill" data-sort="priority" data-i18n="sort.priority">Prioritas</div>
+              <div class="filter-pill" data-sort="deadline" data-i18n="sort.deadline">Deadline</div>
             </div>
             <div id="myTasksContainer"></div>
           </div>
@@ -2424,6 +2432,12 @@
                   <option value="nominal" data-i18n="sort.nominal">Nominal project</option>
                 </select>
               </div>
+              <div class="sort-row">
+                <div class="lbl" data-i18n="project.clientFilterLabel">Klien:</div>
+                <select class="sort-select" id="projectClientFilter" onchange="renderProjectList()">
+                  <option value="" data-i18n="project.clientFilterAll">Semua klien</option>
+                </select>
+              </div>
               <div class="inactive-toggle-row" id="inactiveToggleRow" style="display:none;margin:-8px 2px 14px;">
                 <span class="inactive-toggle-link" id="inactiveToggleLink" onclick="toggleShowInactiveProjects()"></span>
               </div>
@@ -2925,10 +2939,20 @@
     <div class="modal-head"><div class="modal-title" id="newGeneralTaskModalTitle" data-i18n="general.modalTitle">Task cepat</div><div class="modal-close" onclick="closeModal('newGeneralTaskModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="general.name">Nama Task</label><input class="form-input" id="gtName" placeholder="cth. Buatkan desain brosur promosi"></div>
     <div class="form-error" id="gtNameError" data-i18n="general.nameError">Nama task wajib diisi.</div>
-    <div class="form-row" id="gtPicRow"><label class="form-label" data-i18n="form.picUtama">PIC</label>
+    <div class="form-row"><label class="form-label" data-i18n="form.division">Divisi</label>
+      <select class="form-select" id="gtDivision" onchange="onGtDivisionChange()"></select>
+    </div>
+    <div class="form-row" id="gtPicRow"><label class="form-label" data-i18n="form.picUtama">PIC Utama</label>
       <div class="assignee-picker-trigger" id="gtPicTrigger" onclick="openAssigneePopover(event,'generalPic')"><span class="assignee-placeholder">Pilih PIC…</span></div>
     </div>
     <div class="form-error" id="gtPicError" data-i18n="form.picUtamaError">PIC utama wajib dipilih.</div>
+    <div class="form-row" id="gtSecondaryRow"><label class="form-label" data-i18n="form.picSekunder">PIC Sekunder (opsional)</label>
+      <div class="assignee-picker-trigger" id="gtSecondaryTrigger" onclick="openAssigneePopover(event,'generalSecondary')"><span class="assignee-placeholder">Pilih PIC sekunder…</span></div>
+    </div>
+    <div class="form-row"><label class="form-label" data-i18n="general.linkedProject">Terkait Project (opsional)</label>
+      <select class="form-select" id="gtProject" onchange="onGtProjectChange()"><option value="">—</option></select>
+    </div>
+    <div class="form-row"><label class="form-label" data-i18n="general.client">Nama Klien (opsional)</label><input class="form-input" id="gtClient" placeholder="cth. PT Klien Sejahtera"></div>
     <div class="form-row"><label class="form-label" data-i18n="form.priority">Prioritas</label>
       <select class="form-select" id="gtPriority">
         <option value="tinggi" data-i18n="priority.tinggi">Tinggi</option>
@@ -3109,6 +3133,9 @@
     </div>
     <div class="form-row" id="rtPicRow"><label class="form-label" data-i18n="ritual.pic">Pemilik/PIC (opsional)</label>
       <div class="assignee-picker-trigger" id="rtPicTrigger" onclick="openAssigneePopover(event,'ritualPic')"><span class="assignee-placeholder" data-i18n="ritual.picPlaceholder">Siapa yang pegang ritual ini?</span></div>
+    </div>
+    <div class="form-row" id="rtSecondaryRow"><label class="form-label" data-i18n="form.picSekunder">PIC Sekunder (opsional)</label>
+      <div class="assignee-picker-trigger" id="rtSecondaryTrigger" onclick="openAssigneePopover(event,'ritualSecondary')"><span class="assignee-placeholder">Pilih PIC sekunder…</span></div>
     </div>
     <button class="modal-submit" onclick="submitNewRitual()" id="newRitualSubmitBtn" data-i18n="ritual.submit">Tambah Ritual</button>
     <button class="quiz-retake-btn" id="ritualDeleteBtn" style="display:none;color:var(--revisi);" onclick="deleteRitualFromEditModal()" data-i18n="ritual.deleteBtn">Hapus Ritual Ini</button>
@@ -4221,7 +4248,14 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       toggleRow.style.display = inactiveCount>0 ? 'block' : 'none';
       document.getElementById('inactiveToggleLink').textContent = showInactiveProjects ? t('project.hideInactive') : t('project.showInactive').replace('{n}', inactiveCount);
     }
-    var list = projects.filter(function(p){ return p.division===currentDivision && (showInactiveProjects || !p.inactive); }).slice();
+    var divProjects = projects.filter(function(p){ return p.division===currentDivision; });
+    var clients = Array.from(new Set(divProjects.map(function(p){ return p.client; }).filter(Boolean))).sort();
+    var clientSel = document.getElementById('projectClientFilter');
+    var prevClient = clientSel.value;
+    clientSel.innerHTML = '<option value="">'+t('project.clientFilterAll')+'</option>' + clients.map(function(c){ return '<option value="'+escapeHtml(c)+'">'+escapeHtml(c)+'</option>'; }).join('');
+    clientSel.value = clients.indexOf(prevClient)>-1 ? prevClient : '';
+    var clientFilter = clientSel.value;
+    var list = divProjects.filter(function(p){ return (showInactiveProjects || !p.inactive) && (!clientFilter || p.client===clientFilter); }).slice();
     var pOrder = {tinggi:0, sedang:1, rendah:2};
     if(sortKey==='priority'){ list.sort(function(a,b){ return pOrder[a.priority]-pOrder[b.priority]; }); }
     else if(sortKey==='newest'){ list.sort(function(a,b){ return b.order-a.order; }); }
@@ -4238,7 +4272,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div class="project-card'+(p.inactive?' project-inactive':'')+'" onclick="openProject(\''+p.id+'\')">' +
           '<div class="project-top"><span class="priority-tag priority-'+p.priority+'">'+priorityLabel(p.priority)+'</span><span class="nominal-tag">'+formatIDR(p.value)+'</span><button class="project-dots-btn" onclick="event.stopPropagation();openProjectMenu(event,\''+p.id+'\')" title="Opsi"><i class="ti ti-dots-vertical"></i></button></div>' +
           '<div class="project-title">'+escapeHtml(p.title)+'</div>' +
-          '<div class="project-client">'+escapeHtml(p.client)+'</div>' +
+          (p.client ? '<div class="project-client project-client-tag" onclick="event.stopPropagation(); filterProjectsByClient(\''+p.client.replace(/'/g,"\\'")+'\')">'+escapeHtml(p.client)+'</div>' : '') +
           '<div class="project-meta-row">' +
             '<div class="avatar-stack">'+avatars+'</div>' +
             '<div class="project-meta"><i class="ti ti-calendar"></i>'+fmtDate(p.deadline)+'</div>' +
@@ -4254,6 +4288,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     hydrateIcons(document.getElementById('projectListContainer'));
   }
 
+  function filterProjectsByClient(client){
+    document.getElementById('projectClientFilter').value = client;
+    renderProjectList();
+  }
   function openProjectMenu(e, pid){
     var p = projects.find(function(x){ return x.id===pid; });
     if(!p) return;
@@ -4390,6 +4428,29 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   var editingGeneralTaskId = null;
   var gtSelectedZone = 'later';
+  var GT_DIVISION_ORDER = ['pbd','lnd','creative','personal'];
+  function populateGtDivisionSelect(selected){
+    var sel = document.getElementById('gtDivision');
+    sel.innerHTML = GT_DIVISION_ORDER.map(function(k){ return '<option value="'+k+'">'+(divisions[k]?divisions[k].name:k)+'</option>'; }).join('');
+    sel.value = selected;
+  }
+  function populateGtProjectSelect(selected){
+    var sel = document.getElementById('gtProject');
+    var active = projects.filter(function(p){ return !p.inactive; });
+    sel.innerHTML = '<option value="">—</option>' + active.map(function(p){ return '<option value="'+p.id+'">'+(divisions[p.division]?divisions[p.division].name:p.division)+' · '+p.title+'</option>'; }).join('');
+    sel.value = selected || '';
+  }
+  function onGtDivisionChange(){
+    var isPersonal = document.getElementById('gtDivision').value==='personal';
+    document.getElementById('gtPicRow').style.display = isPersonal ? 'none' : '';
+  }
+  function onGtProjectChange(){
+    var pid = document.getElementById('gtProject').value;
+    var clientEl = document.getElementById('gtClient');
+    if(!pid) return;
+    var p = projects.find(function(x){ return x.id===pid; });
+    if(p && p.client && !clientEl.value.trim()) clientEl.value = p.client;
+  }
   function openNewGeneralTaskModal(){
     editingGeneralTaskId = null;
     document.getElementById('newGeneralTaskModalTitle').textContent = t('general.modalTitle');
@@ -4403,14 +4464,19 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtEndTime').value='';
     document.getElementById('gtPriority').value='sedang';
     document.getElementById('gtNotes').value='';
+    document.getElementById('gtClient').value='';
     gtSelectedZone = 'later';
     renderTaskZoneButtons('gtZoneRow', gtSelectedZone, 'selectGtZone');
     formGeneralPic='';
+    formGeneralSecondary=[];
     document.getElementById('gtPicTrigger').innerHTML = '<span class="assignee-placeholder">Pilih PIC…</span>';
+    document.getElementById('gtSecondaryTrigger').innerHTML = '<span class="assignee-placeholder">Pilih PIC sekunder…</span>';
     document.getElementById('gtNameError').classList.remove('active');
     document.getElementById('gtPicError').classList.remove('active');
     document.getElementById('gtDateError').classList.remove('active');
-    document.getElementById('gtPicRow').style.display = currentDivision==='personal' ? 'none' : '';
+    populateGtDivisionSelect(currentDivision);
+    populateGtProjectSelect('');
+    onGtDivisionChange();
     openModal('newGeneralTaskModal');
   }
   function openEditGeneralTaskModal(id){
@@ -4429,11 +4495,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtEndTime').value = g.endTime || '';
     document.getElementById('gtPriority').value = g.priority || 'sedang';
     document.getElementById('gtNotes').value = g.notes || '';
+    document.getElementById('gtClient').value = g.client || '';
     gtSelectedZone = g.zone || 'later';
     renderTaskZoneButtons('gtZoneRow', gtSelectedZone, 'selectGtZone');
-    var isPersonal = currentDivision==='personal';
+    populateGtDivisionSelect(g.division);
+    populateGtProjectSelect(g.projectId);
+    var isPersonal = g.division==='personal';
     formGeneralPic = g.pic || '';
+    formGeneralSecondary = (g.secondaryPic || []).slice();
     document.getElementById('gtPicTrigger').innerHTML = (formGeneralPic && !isPersonal) ? '<span class="assignee-chip"><span class="mini-avatar">'+initials(formGeneralPic)+'</span>'+formGeneralPic+'</span>' : '<span class="assignee-placeholder">Pilih PIC…</span>';
+    document.getElementById('gtSecondaryTrigger').innerHTML = formGeneralSecondary.length ? formGeneralSecondary.map(function(u){ return '<span class="assignee-chip"><span class="mini-avatar">'+initials(u)+'</span>'+u+'</span>'; }).join('') : '<span class="assignee-placeholder">Pilih PIC sekunder…</span>';
     document.getElementById('gtNameError').classList.remove('active');
     document.getElementById('gtPicError').classList.remove('active');
     document.getElementById('gtDateError').classList.remove('active');
@@ -4447,13 +4518,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtPicError').classList.remove('active');
     document.getElementById('gtDateError').classList.remove('active');
     if(!name){ document.getElementById('gtNameError').classList.add('active'); return; }
-    var isPersonal = currentDivision==='personal';
+    var divFinal = document.getElementById('gtDivision').value;
+    var isPersonal = divFinal==='personal';
     if(!isPersonal && !formGeneralPic){ document.getElementById('gtPicError').classList.add('active'); return; }
     var startDate = document.getElementById('gtStart').value;
     var deadlineDate = document.getElementById('gtDeadline').value;
     if((!isPersonal && !deadlineDate) || (startDate && deadlineDate && deadlineDate < startDate)){ document.getElementById('gtDateError').classList.add('active'); return; }
     var picFinal = isPersonal ? CURRENT_USER_NAME : formGeneralPic;
-    var divFinal = currentDivision;
+    var secondaryFinal = formGeneralSecondary.slice();
+    var projectIdFinal = document.getElementById('gtProject').value || null;
+    var clientFinal = document.getElementById('gtClient').value.trim();
     var priority = document.getElementById('gtPriority').value;
     var startTime = document.getElementById('gtStartTime').value;
     var endTime = document.getElementById('gtEndTime').value;
@@ -4464,23 +4538,27 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(newStatus==='done' && g.status!=='done'){ g.completedAt = todayISO(); }
       else if(newStatus!=='done'){ g.completedAt = null; }
       var oldNotes = g.notes; var oldPic = g.pic;
-      g.name = name; g.pic = picFinal; g.priority = priority; g.status = newStatus; g.start = startDate; g.startTime = startTime; g.deadline = deadlineDate; g.endTime = endTime; g.notes = notes; g.zone = gtSelectedZone;
+      var oldSecondary = (g.secondaryPic||[]).slice();
+      g.division = divFinal; g.name = name; g.pic = picFinal; g.secondaryPic = secondaryFinal; g.projectId = projectIdFinal; g.client = clientFinal; g.priority = priority; g.status = newStatus; g.start = startDate; g.startTime = startTime; g.deadline = deadlineDate; g.endTime = endTime; g.notes = notes; g.zone = gtSelectedZone;
       if(oldPic!==picFinal) g.assignedAt = todayISO();
       notifyNewMentions(oldNotes, notes, name, "openTaskDetailGeneral('"+divFinal+"','"+g.id+"')");
       if(window.LovaDB) LovaDB.updateGeneralTask(g);
+      var gtEditOpenAction = "openTaskDetailGeneral('"+divFinal+"','"+g.id+"')";
+      var gtEditMeta = (divisions[divFinal]?divisions[divFinal].name:divFinal)+' · '+t('divtab.general');
+      secondaryFinal.forEach(function(u){ if(u!==picFinal && oldSecondary.indexOf(u)===-1) notifyUser(u, t('notif.picSecondary')+': '+name, gtEditMeta, 'ti-user-plus', '#F7A433', gtEditOpenAction); });
       closeModal('newGeneralTaskModal');
       renderGeneralTaskList();
       showToast(t('account.saved'));
     } else {
-      var newTask = { id:(window.LovaDB?LovaDB.newId():uid('g')), division:divFinal, name:name, pic:picFinal, status:'todo', priority:priority, start:startDate, startTime:startTime, deadline:deadlineDate, endTime:endTime, notes:notes, zone:gtSelectedZone, order:generalTasks.filter(function(x){return x.division===divFinal;}).length, assignedAt:todayISO() };
+      var newTask = { id:(window.LovaDB?LovaDB.newId():uid('g')), division:divFinal, name:name, pic:picFinal, secondaryPic:secondaryFinal, projectId:projectIdFinal, client:clientFinal, status:'todo', priority:priority, start:startDate, startTime:startTime, deadline:deadlineDate, endTime:endTime, notes:notes, zone:gtSelectedZone, order:generalTasks.filter(function(x){return x.division===divFinal;}).length, assignedAt:todayISO() };
       generalTasks.push(newTask);
       if(window.LovaDB) LovaDB.createGeneralTask(newTask);
       notifyNewMentions('', notes, name, "openTaskDetailGeneral('"+divFinal+"','"+newTask.id+"')");
       closeModal('newGeneralTaskModal');
       renderGeneralTaskList();
+      var gtOpenAction = "openTaskDetailGeneral('"+divFinal+"','"+newTask.id+"')";
+      var gtMeta = (divisions[divFinal]?divisions[divFinal].name:divFinal)+' · '+t('divtab.general');
       if(!isPersonal){
-        var gtOpenAction = "openTaskDetailGeneral('"+divFinal+"','"+newTask.id+"')";
-        var gtMeta = (divisions[divFinal]?divisions[divFinal].name:divFinal)+' · '+t('divtab.general');
         if(picFinal===CURRENT_USER_NAME){
           markPendingAssignment(newTask, divFinal, false);
           pushNotification(t('notif.picGeneral')+': '+name, gtMeta, 'ti-user-plus', '#F7A433', gtOpenAction);
@@ -4490,6 +4568,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           notifyUser(picFinal, t('notif.picGeneral')+': '+name, gtMeta, 'ti-user-plus', '#F7A433', gtOpenAction);
         }
       }
+      secondaryFinal.forEach(function(u){ if(u!==picFinal) notifyUser(u, t('notif.picSecondary')+': '+name, gtMeta, 'ti-user-plus', '#F7A433', gtOpenAction); });
     }
   }
 
@@ -4603,7 +4682,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('rtNameError').classList.remove('active');
     document.getElementById('rtTimeError').classList.remove('active');
     formRitualPic = '';
+    formRitualSecondary = [];
     document.getElementById('rtPicTrigger').innerHTML = '<span class="assignee-placeholder">'+t('ritual.picPlaceholder')+'</span>';
+    document.getElementById('rtSecondaryTrigger').innerHTML = '<span class="assignee-placeholder">Pilih PIC sekunder…</span>';
     document.getElementById('rtPicRow').style.display = currentDivision==='personal' ? 'none' : '';
     renderDayCheckboxes(prefillDay);
     renderRitualDivisionCheckboxes();
@@ -4624,7 +4705,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('rtNameError').classList.remove('active');
     document.getElementById('rtTimeError').classList.remove('active');
     formRitualPic = r.pic || '';
+    formRitualSecondary = (r.secondaryPic || []).slice();
     document.getElementById('rtPicTrigger').innerHTML = formRitualPic ? '<span class="assignee-chip"><span class="mini-avatar">'+initials(formRitualPic)+'</span>'+formRitualPic+'</span>' : '<span class="assignee-placeholder">'+t('ritual.picPlaceholder')+'</span>';
+    document.getElementById('rtSecondaryTrigger').innerHTML = formRitualSecondary.length ? formRitualSecondary.map(function(u){ return '<span class="assignee-chip"><span class="mini-avatar">'+initials(u)+'</span>'+u+'</span>'; }).join('') : '<span class="assignee-placeholder">Pilih PIC sekunder…</span>';
     document.getElementById('rtPicRow').style.display = currentDivision==='personal' ? 'none' : '';
     renderDayCheckboxes();
     rtSelectedDays = r.days.slice();
@@ -4647,15 +4730,19 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var days = rtSelectedDays.length ? rtSelectedDays.slice() : [todayKey()];
     var divs = currentDivision==='personal' ? ['personal'] : (rtSelectedDivisions.length ? rtSelectedDivisions.slice() : [currentDivision]);
     var pic = currentDivision==='personal' ? '' : formRitualPic;
+    var secondary = formRitualSecondary.slice();
     var desc = document.getElementById('rtDesc').value.trim();
     if(editingRitualId){
       var r = rituals.find(function(x){ return x.id===editingRitualId; });
-      r.title = title; r.description = desc; r.startTime = start; r.endTime = end; r.days = days; r.divisions = divs; r.pic = pic;
+      var oldSecondary = (r.secondaryPic||[]).slice();
+      r.title = title; r.description = desc; r.startTime = start; r.endTime = end; r.days = days; r.divisions = divs; r.pic = pic; r.secondaryPic = secondary;
       if(window.LovaDB) LovaDB.updateRitual(r);
+      secondary.forEach(function(u){ if(u!==pic && oldSecondary.indexOf(u)===-1) notifyUser(u, t('notif.picSecondary')+': '+title, '', 'ti-user-plus', '#F7A433', ''); });
     } else {
-      var newRitual = { id:(window.LovaDB?LovaDB.newId():uid('r')), title:title, description:desc, startTime:start, endTime:end, days:days, divisions:divs, pic:pic, order:rituals.length };
+      var newRitual = { id:(window.LovaDB?LovaDB.newId():uid('r')), title:title, description:desc, startTime:start, endTime:end, days:days, divisions:divs, pic:pic, secondaryPic:secondary, order:rituals.length };
       rituals.push(newRitual);
       if(window.LovaDB) LovaDB.createRitual(newRitual);
+      secondary.forEach(function(u){ if(u!==pic) notifyUser(u, t('notif.picSecondary')+': '+title, '', 'ti-user-plus', '#F7A433', ''); });
     }
     closeModal('newRitualModal');
     renderRitualList();
@@ -5568,6 +5655,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       assignees: divSel==='personal' ? [CURRENT_USER_NAME] : popoverSelection.slice(), description: document.getElementById('fDesc').value.trim(), phases:[] };
     projects.push(np);
     if(window.LovaDB) LovaDB.createProject(np);
+    var npOpenAction = "openProject('"+np.id+"')";
+    np.assignees.forEach(function(u){ if(u!==CURRENT_USER_NAME) notifyUser(u, t('notif.projectAssignee')+': '+np.title, divisions[np.division]?divisions[np.division].name:np.division, 'ti-folder', '#F7A433', npOpenAction); });
     closeModal('newProjectModal');
     refreshDivisionBadges();
     if(document.getElementById('screen-division').classList.contains('active') && currentDivision===divSel){ renderProjectList(); }
@@ -5577,7 +5666,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   /* ================= ASSIGNEE POPOVER (reusable) ================= */
   var popoverCtx = null;
-  var formPicUtama = ''; var formPicSekunder = []; var formGeneralPic = '';
+  var formPicUtama = ''; var formPicSekunder = []; var formGeneralPic = ''; var formGeneralSecondary = []; var formRitualSecondary = [];
   function isSingleMode(){ return popoverTarget==='taskPic' || popoverTarget==='taskInline' || popoverTarget==='generalPic' || popoverTarget==='generalTaskInline' || popoverTarget==='ritualPic'; }
   function openAssigneePopover(evt, type, ctx){
     evt.stopPropagation();
@@ -5586,6 +5675,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     popoverCtx = ctx || null;
     if(type==='taskSecondary') popoverSelection = formPicSekunder.slice();
     else if(type==='approvalApprover') popoverSelection = formApprovers.slice();
+    else if(type==='generalSecondary') popoverSelection = formGeneralSecondary.slice();
+    else if(type==='ritualSecondary') popoverSelection = formRitualSecondary.slice();
     else if(type!=='edit' && !isSameContext) popoverSelection = [];
     var pop = document.getElementById('assigneePopover');
     var rows = USERS.map(function(u){
@@ -6114,14 +6205,20 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtNotes').value = n.content;
     showToast(t('notebook.makeTaskToast'));
   }
-  function openNotebookAsGoogle(id){
+  async function openNotebookAsGoogle(id){
     var n = notebookEntries.find(function(x){ return x.id===id; });
     if(!n) return;
     var text = n.title+'\n\n'+n.content;
-    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).catch(function(){}); }
+    var copied = false;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      // Must finish BEFORE window.open() below shifts focus to the new tab --
+      // most browsers silently fail a clipboard write once the page loses
+      // focus, which is exactly what left the doc blank for the user.
+      try { await navigator.clipboard.writeText(text); copied = true; } catch(e){ copied = false; }
+    }
     var url = n.type==='table' ? 'https://sheets.new' : 'https://docs.google.com/document/create';
     window.open(url, '_blank', 'noopener');
-    showToast(t('notebook.gdocToast'));
+    showToast(copied ? t('notebook.gdocToast') : t('notebook.gdocCopyFailedToast'));
   }
   function deleteNotebookEntry(id){
     customConfirm(t('notebook.confirmDelete'), function(){
@@ -6661,6 +6758,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       apTrig.innerHTML = formApprovers.length ? formApprovers.map(function(u){ return '<span class="assignee-chip"><span class="mini-avatar">'+initials(u)+'</span>'+u+'</span>'; }).join('') : '<span class="assignee-placeholder">'+t('decision.chooseApprover')+'</span>';
       if(formApprovers.length) document.getElementById('apApproverError').classList.remove('active');
     }
+    if(popoverTarget==='generalSecondary'){
+      formGeneralSecondary = popoverSelection.slice();
+      var gtsTrig = document.getElementById('gtSecondaryTrigger');
+      if(gtsTrig) gtsTrig.innerHTML = formGeneralSecondary.length ? formGeneralSecondary.map(function(u){ return '<span class="assignee-chip"><span class="mini-avatar">'+initials(u)+'</span>'+u+'</span>'; }).join('') : '<span class="assignee-placeholder">Pilih PIC sekunder…</span>';
+    }
+    if(popoverTarget==='ritualSecondary'){
+      formRitualSecondary = popoverSelection.slice();
+      var rtsTrig = document.getElementById('rtSecondaryTrigger');
+      if(rtsTrig) rtsTrig.innerHTML = formRitualSecondary.length ? formRitualSecondary.map(function(u){ return '<span class="assignee-chip"><span class="mini-avatar">'+initials(u)+'</span>'+u+'</span>'; }).join('') : '<span class="assignee-placeholder">Pilih PIC sekunder…</span>';
+    }
     if(popoverTarget==='taskInlineSecondary' && popoverCtx){
       var p = projects.find(function(x){ return x.id===popoverCtx.pid; });
       var ph = p.phases.find(function(x){ return x.id===popoverCtx.phId; });
@@ -6790,8 +6897,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     p.value = parseInt(document.getElementById('edValueRp').dataset.raw || document.getElementById('edValueRp').value.replace(/[^0-9]/g,'') || '0', 10);
     p.start = newStart; p.deadline = newDeadline;
     p.description = document.getElementById('edDesc').value.trim();
+    var oldAssignees = (p.assignees || []).slice();
     p.assignees = popoverSelection.slice();
     if(window.LovaDB) LovaDB.updateProject(p);
+    var edOpenAction = "openProject('"+p.id+"')";
+    p.assignees.forEach(function(u){ if(u!==CURRENT_USER_NAME && oldAssignees.indexOf(u)===-1) notifyUser(u, t('notif.projectAssignee')+': '+p.title, divisions[p.division]?divisions[p.division].name:p.division, 'ti-folder', '#F7A433', edOpenAction); });
     infoEditMode = false;
     renderProjectDetail();
   }
@@ -8462,9 +8572,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       p.phases.forEach(function(ph){
         ph.tasks.forEach(function(tk){
           if(tk.pic===ME){
-            results.push({ task:tk, groupKey:p.id, groupTitle:p.title, role:'pic', isGeneral:false, projectId:p.id, phaseId:ph.id });
+            results.push({ task:tk, groupKey:p.id, groupTitle:p.title, role:'pic', isGeneral:false, projectId:p.id, phaseId:ph.id, divisionKey:p.division });
           } else if(tk.secondaryPic && tk.secondaryPic.indexOf(ME)>-1){
-            results.push({ task:tk, groupKey:p.id, groupTitle:p.title, role:'secondary', isGeneral:false, projectId:p.id, phaseId:ph.id });
+            results.push({ task:tk, groupKey:p.id, groupTitle:p.title, role:'secondary', isGeneral:false, projectId:p.id, phaseId:ph.id, divisionKey:p.division });
           }
         });
       });
@@ -9736,8 +9846,34 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
 
   var myTasksSortables = [];
+  var myTasksDivFilter = 'all';
+  var myTasksSortMode = 'default';
+  function openMyTasksScreen(){
+    myTasksDivFilter = 'all';
+    myTasksSortMode = 'default';
+    var pillsEl = document.getElementById('myTasksDivPills');
+    pillsEl.innerHTML = '<div class="filter-pill active" data-div="all">'+t('filter.allScope')+'</div>' +
+      GT_DIVISION_ORDER.map(function(k){ return '<div class="filter-pill" data-div="'+k+'">'+(divisions[k]?divisions[k].name:k)+'</div>'; }).join('');
+    document.querySelectorAll('#myTasksSortPills .filter-pill').forEach(function(p){ p.classList.toggle('active', p.dataset.sort==='default'); });
+    renderMyTasksScreen();
+    showScreen('mytasks');
+  }
+  document.getElementById('myTasksDivPills').addEventListener('click', function(e){
+    var pill = e.target.closest('.filter-pill');
+    if(!pill) return;
+    myTasksDivFilter = pill.dataset.div;
+    document.querySelectorAll('#myTasksDivPills .filter-pill').forEach(function(p){ p.classList.toggle('active', p===pill); });
+    renderMyTasksScreen();
+  });
+  document.getElementById('myTasksSortPills').addEventListener('click', function(e){
+    var pill = e.target.closest('.filter-pill');
+    if(!pill) return;
+    myTasksSortMode = pill.dataset.sort;
+    document.querySelectorAll('#myTasksSortPills .filter-pill').forEach(function(p){ p.classList.toggle('active', p===pill); });
+    renderMyTasksScreen();
+  });
   function moveMyTaskInGroup(groupKey, taskId, dir){
-    var mine = getMyTasks().filter(function(m){ return m.groupKey===groupKey; }).sort(function(a,b){ return (a.task.focusOrder||0)-(b.task.focusOrder||0); });
+    var mine = getMyTasks(true).filter(function(m){ return m.groupKey===groupKey; }).sort(function(a,b){ return (a.task.focusOrder||0)-(b.task.focusOrder||0); });
     var idx = mine.findIndex(function(m){ return m.task.id===taskId; });
     var newIdx = idx + dir;
     if(idx<0 || newIdx<0 || newIdx>=mine.length) return;
@@ -9749,52 +9885,60 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     renderMyTasksScreen();
   }
   function renderMyTasksScreen(){
-    var mine = getMyTasks();
+    var mine = getMyTasks(true);
+    if(myTasksDivFilter!=='all') mine = mine.filter(function(m){ return m.divisionKey===myTasksDivFilter; });
     var groupCount = Object.keys(mine.reduce(function(a,m){ a[m.groupKey]=1; return a; },{})).length;
     document.getElementById('myTasksSub').textContent = t('mytasks.subCount').replace('{n}', mine.length).replace('{g}', groupCount);
     var byGroup = {};
     mine.forEach(function(m){ (byGroup[m.groupKey] = byGroup[m.groupKey]||[]).push(m); });
+    var reorderable = myTasksSortMode==='default';
     var html = Object.keys(byGroup).map(function(key){
-      var group = byGroup[key].slice().sort(function(a,b){ return (a.task.focusOrder||0)-(b.task.focusOrder||0); });
+      var group = sortTaskList(byGroup[key], myTasksSortMode);
+      var isProjectGroup = !group[0].isGeneral;
+      var titleAction = isProjectGroup ? " onclick=\"openProject('"+key+"','mytasks'); switchTab('task');\" style=\"cursor:pointer;\"" : '';
       var rows = group.map(function(m,i){
         var tk = m.task;
         var clickAction = m.isGeneral ? ("openTaskDetailGeneral('"+m.divisionKey+"','"+tk.id+"')") : ("openTaskDetailProject('"+m.projectId+"','"+m.phaseId+"','"+tk.id+"')");
         var pendingBadge = (tk.assignmentStatus==='pending' && tk.assignedBy && tk.assignedBy!==CURRENT_USER_NAME) ? '<span class="pending-assign-badge">'+t('taskdetail.pendingBadge')+'</span>' : '';
         var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', escapeHtml(tk.assignedBy)) : '';
         var quickToggleActionM = "event.stopPropagation(); quickToggleTaskDone("+(m.isGeneral?'true':'false')+",'"+(m.projectId||'')+"','"+(m.phaseId||'')+"','"+tk.id+"', event)";
+        var reorderControls = reorderable ?
+          '<div style="display:flex;align-items:center;gap:6px;padding-top:5px;border-top:1px dashed var(--glass-border);">' +
+            '<i class="ti ti-grip-vertical row-drag-handle"></i>' +
+            '<span style="flex:1;"></span>' +
+            '<i class="ti ti-chevron-up row-reorder-btn'+(i===0?' disabled':'')+'" onclick="moveMyTaskInGroup(\''+key+'\',\''+tk.id+'\',-1)"></i>' +
+            '<i class="ti ti-chevron-down row-reorder-btn'+(i===group.length-1?' disabled':'')+'" onclick="moveMyTaskInGroup(\''+key+'\',\''+tk.id+'\',1)"></i>' +
+          '</div>' : '';
         return '<div class="task-row-v2" data-task-id="'+tk.id+'">' +
           '<div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="'+clickAction+'">' +
             '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionM+'" title="'+t('taskrow.quickToggle')+'">'+(tk.status==='done'?'✓':'')+'</div>' +
             '<div class="task-name-input" style="pointer-events:none;">'+escapeHtml(tk.name)+' <span style="color:var(--stone);font-size:10.5px;">· '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+'</span>'+pendingBadge+'</div>' +
             '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
           '</div>' +
-          '<div style="display:flex;align-items:center;gap:6px;padding-top:5px;border-top:1px dashed var(--glass-border);">' +
-            '<i class="ti ti-grip-vertical row-drag-handle"></i>' +
-            '<span style="flex:1;"></span>' +
-            '<i class="ti ti-chevron-up row-reorder-btn'+(i===0?' disabled':'')+'" onclick="moveMyTaskInGroup(\''+key+'\',\''+tk.id+'\',-1)"></i>' +
-            '<i class="ti ti-chevron-down row-reorder-btn'+(i===group.length-1?' disabled':'')+'" onclick="moveMyTaskInGroup(\''+key+'\',\''+tk.id+'\',1)"></i>' +
-          '</div>' +
+          reorderControls +
         '</div>';
       }).join('');
-      return '<div class="mytasks-group-title">'+escapeHtml(group[0].groupTitle)+'</div><div class="mytasks-group-sortable" data-group-key="'+key+'">' + rows + '</div>';
+      return '<div class="mytasks-group-title"'+titleAction+'>'+escapeHtml(group[0].groupTitle)+(isProjectGroup?' <i class="ti ti-chevron-right" style="font-size:12px;"></i>':'')+'</div><div class="mytasks-group-sortable" data-group-key="'+key+'">' + rows + '</div>';
     }).join('');
     document.getElementById('myTasksContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noMyTasks')+'</div>';
     hydrateIcons(document.getElementById('myTasksContainer'));
     myTasksSortables.forEach(function(s){ s.destroy(); });
     myTasksSortables = [];
-    document.querySelectorAll('.mytasks-group-sortable').forEach(function(container){
-      var groupKey = container.dataset.groupKey;
-      myTasksSortables.push(new Sortable(container, {
-        handle:'.row-drag-handle', animation:150, ghostClass:'sortable-ghost', dragClass:'sortable-drag',
-        onEnd: function(evt){
-          var groupList = getMyTasks().filter(function(m){ return m.groupKey===groupKey; }).sort(function(a,b){ return (a.task.focusOrder||0)-(b.task.focusOrder||0); });
-          var moved = groupList.splice(evt.oldIndex,1)[0];
-          groupList.splice(evt.newIndex,0,moved);
-          groupList.forEach(function(m,i){ m.task.focusOrder = i; });
-          renderMyTasksScreen();
-        }
-      }));
-    });
+    if(reorderable){
+      document.querySelectorAll('.mytasks-group-sortable').forEach(function(container){
+        var groupKey = container.dataset.groupKey;
+        myTasksSortables.push(new Sortable(container, {
+          handle:'.row-drag-handle', animation:150, ghostClass:'sortable-ghost', dragClass:'sortable-drag',
+          onEnd: function(evt){
+            var groupList = getMyTasks(true).filter(function(m){ return m.groupKey===groupKey; }).sort(function(a,b){ return (a.task.focusOrder||0)-(b.task.focusOrder||0); });
+            var moved = groupList.splice(evt.oldIndex,1)[0];
+            groupList.splice(evt.newIndex,0,moved);
+            groupList.forEach(function(m,i){ m.task.focusOrder = i; });
+            renderMyTasksScreen();
+          }
+        }));
+      });
+    }
   }
 
   /* ---------- timeline v2 ---------- */
@@ -9892,6 +10036,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "notif.empty": {id:"Belum ada notifikasi", en:"No notifications yet"},
     "notif.picTask": {id:"Kamu jadi PIC", en:"You're now PIC"}, "notif.picSecondary": {id:"Kamu jadi PIC sekunder", en:"You're now secondary PIC"},
     "notif.picGeneral": {id:"Kamu jadi PIC", en:"You're now PIC"}, "notif.eventAttendee": {id:"Kamu diundang ke event", en:"You're invited to an event"},
+    "notif.projectAssignee": {id:"Kamu ditambahkan ke project", en:"You were added to a project"},
     "more.title": {id:"More", en:"More"}, "more.sub": {id:"Fitur tambahan Lenusa Flow", en:"Additional Lenusa Flow features"},
     "more.searchTitle": {id:"Cari", en:"Search"},
     "more.upcomingTitle": {id:"Segera hadir", en:"Coming soon"},
@@ -10195,6 +10340,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "general.modalTitle": {id:"Task cepat", en:"Quick task"},
     "general.name": {id:"Nama Task", en:"Task name"}, "general.nameError": {id:"Nama task wajib diisi.", en:"Task name is required."},
     "general.deadline": {id:"Deadline", en:"Deadline"}, "general.notes": {id:"Catatan (opsional)", en:"Notes (optional)"},
+    "general.linkedProject": {id:"Terkait Project (opsional)", en:"Linked project (optional)"}, "general.client": {id:"Nama Klien (opsional)", en:"Client name (optional)"},
+    "project.clientFilterLabel": {id:"Klien:", en:"Client:"}, "project.clientFilterAll": {id:"Semua klien", en:"All clients"},
     "general.submit": {id:"Tambah Task", en:"Add task"}, "general.editTitle": {id:"Edit Task Cepat", en:"Edit quick task"}, "general.deleteBtn": {id:"Hapus Task Ini", en:"Delete this task"}, "general.dueLabel": {id:"Deadline", en:"Due"},
     "mytasks.bannerLabel": {id:"Tugas Lintas Project", en:"Tasks Across Projects"},
     "personal.sectionTitle": {id:"Personal Project", en:"Personal Project"},
@@ -10233,6 +10380,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "notebook.makeTaskToast": {id:"Judul & isi catatan sudah disalin ke form task — lengkapi PIC dan deadline lalu simpan.", en:"Note title & content copied into the task form — fill in PIC and deadline, then save."},
     "notebook.openGDoc": {id:"Buka sebagai Google Doc", en:"Open as Google Doc"},
     "notebook.gdocToast": {id:"Isi catatan disalin ke clipboard — tab Google Docs baru sudah dibuka, tinggal Ctrl+V untuk tempel. (LOVA belum terhubung akun Google, jadi belum bisa auto-isi.)", en:"Note content copied to clipboard — a new Google Docs tab is open, just paste (Ctrl+V). (LOVA isn't connected to a Google account yet, so it can't auto-fill.)"},
+    "notebook.gdocCopyFailedToast": {id:"Gagal menyalin ke clipboard (browser menolak izin). Tab Google Docs sudah dibuka — salin manual isi catatan lalu tempel di sana.", en:"Couldn't copy to clipboard (browser denied permission). A Google Docs tab is open — copy the note manually and paste it there."},
     "notebook.deletedToast": {id:"Catatan dihapus", en:"Note deleted"},
     "personal.bannerLabel": {id:"Project Personal", en:"Personal Projects"},
     "personal.projectCount": {id:"project pribadi", en:"personal projects"},
@@ -10646,10 +10794,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
   function generalTaskToRow(g){
     var row = taskToRow(g);
-    delete row.effort; // general_tasks has neither effort nor secondary_pic —
-    delete row.secondary_pic; // those only exist on project tasks
+    delete row.effort; // general_tasks has no effort column (project tasks only)
     row.division_id = divKeyToId[g.division] || null;
     row.sort_order = g.order || 0;
+    row.project_id = g.projectId || null;
+    row.client = g.client || null;
     return row;
   }
 
@@ -10680,6 +10829,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     (rows || []).forEach(function(g){
       generalTasks.push({
         id: g.id, division: divIdToKey[g.division_id], name: g.name, status: g.status, pic: nameOf(g.pic_id),
+        secondaryPic: (g.secondary_pic || []).map(nameOf).filter(Boolean),
+        projectId: g.project_id || null, client: g.client || '',
         priority: g.priority, start: g.start_date, startTime: hhmm(g.start_time), deadline: g.deadline, endTime: hhmm(g.end_time),
         notes: g.notes || '', zone: g.zone, assignedBy: nameOf(g.assigned_by), originalAssignedBy: nameOf(g.original_assigned_by),
         assignmentStatus: g.assignment_status, assignedAt: g.assigned_at, preToggleStatus: g.pre_toggle_status,
@@ -10752,7 +10903,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     (rows || []).forEach(function(r){
       rituals.push({
         id: r.id, title: r.title, description: r.description || '', startTime: hhmm(r.start_time), endTime: hhmm(r.end_time),
-        days: r.days || [], divisions: divIdsToKeys(r.division_ids), pic: nameOf(r.pic_id), order: r.sort_order
+        days: r.days || [], divisions: divIdsToKeys(r.division_ids), pic: nameOf(r.pic_id),
+        secondaryPic: (r.secondary_pic_ids || []).map(nameOf).filter(Boolean), order: r.sort_order
       });
       (r.ritual_completions || []).forEach(function(c){
         ritualCompletions.push({ ritualId: r.id, user: nameOf(c.profile_id), date: c.date });
@@ -10762,7 +10914,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function ritualToRow(r){
     return {
       title: r.title, description: r.description || null, start_time: r.startTime, end_time: r.endTime,
-      days: r.days || [], division_ids: divKeysToIds(r.divisions), pic_id: idOf(r.pic), sort_order: r.order || 0
+      days: r.days || [], division_ids: divKeysToIds(r.divisions), pic_id: idOf(r.pic),
+      secondary_pic_ids: (r.secondaryPic || []).map(idOf).filter(Boolean), sort_order: r.order || 0
     };
   }
 
