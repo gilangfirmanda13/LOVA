@@ -5,8 +5,9 @@
 **Peran:** owner
 
 ## Projects
-_Tidak ada_
+- [[Cross-Division Visibility Test]]
 
 ## Tasks
+- [[Staff Assigns To Owner]]
 - [[Review kontrak fasilitator BNSP dan siapkan dokumen pendukung untuk klien]]
 - [[Siapkan materi training K3 minggu ini]]
