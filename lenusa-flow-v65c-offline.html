@@ -1547,6 +1547,10 @@
               <div class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></div>
               <div class="grow"><div class="ttl" data-i18n="mytasks.title">Tugas Saya</div><div class="sub" id="myTasksSub">0 tugas</div></div>
             </div>
+            <div class="filter-pills" id="myTasksViewPills">
+              <div class="filter-pill active" data-view="tasks" data-i18n="mytasks.viewTasks">Tugas</div>
+              <div class="filter-pill" data-view="projects" data-i18n="mytasks.viewProjects">Project</div>
+            </div>
             <div class="filter-pills" id="myTasksDivPills"></div>
             <div class="filter-pills" id="myTasksSortPills">
               <div class="filter-pill active" data-sort="default" data-i18n="sort.default">Default</div>
@@ -4434,15 +4438,19 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     sel.innerHTML = GT_DIVISION_ORDER.map(function(k){ return '<option value="'+k+'">'+(divisions[k]?divisions[k].name:k)+'</option>'; }).join('');
     sel.value = selected;
   }
-  function populateGtProjectSelect(selected){
+  function populateGtProjectSelect(selected, divisionKey){
     var sel = document.getElementById('gtProject');
-    var active = projects.filter(function(p){ return !p.inactive; });
-    sel.innerHTML = '<option value="">—</option>' + active.map(function(p){ return '<option value="'+p.id+'">'+(divisions[p.division]?divisions[p.division].name:p.division)+' · '+p.title+'</option>'; }).join('');
-    sel.value = selected || '';
+    var inDiv = projects.filter(function(p){ return !p.inactive && p.division===divisionKey; });
+    sel.innerHTML = '<option value="">—</option>' + inDiv.map(function(p){ return '<option value="'+p.id+'">'+p.title+'</option>'; }).join('');
+    sel.value = inDiv.some(function(p){ return p.id===selected; }) ? selected : '';
   }
   function onGtDivisionChange(){
-    var isPersonal = document.getElementById('gtDivision').value==='personal';
+    var divisionKey = document.getElementById('gtDivision').value;
+    var isPersonal = divisionKey==='personal';
     document.getElementById('gtPicRow').style.display = isPersonal ? 'none' : '';
+    // Re-scope "Terkait Project" to the newly picked division -- a project
+    // from the old division wouldn't make sense to keep linked here.
+    populateGtProjectSelect('', divisionKey);
   }
   function onGtProjectChange(){
     var pid = document.getElementById('gtProject').value;
@@ -4475,7 +4483,6 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtPicError').classList.remove('active');
     document.getElementById('gtDateError').classList.remove('active');
     populateGtDivisionSelect(currentDivision);
-    populateGtProjectSelect('');
     onGtDivisionChange();
     openModal('newGeneralTaskModal');
   }
@@ -4499,7 +4506,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     gtSelectedZone = g.zone || 'later';
     renderTaskZoneButtons('gtZoneRow', gtSelectedZone, 'selectGtZone');
     populateGtDivisionSelect(g.division);
-    populateGtProjectSelect(g.projectId);
+    populateGtProjectSelect(g.projectId, g.division);
     var isPersonal = g.division==='personal';
     formGeneralPic = g.pic || '';
     formGeneralSecondary = (g.secondaryPic || []).slice();
@@ -9848,16 +9855,26 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var myTasksSortables = [];
   var myTasksDivFilter = 'all';
   var myTasksSortMode = 'default';
+  var myTasksView = 'tasks';
   function openMyTasksScreen(){
     myTasksDivFilter = 'all';
     myTasksSortMode = 'default';
+    myTasksView = 'tasks';
     var pillsEl = document.getElementById('myTasksDivPills');
     pillsEl.innerHTML = '<div class="filter-pill active" data-div="all">'+t('filter.allScope')+'</div>' +
       GT_DIVISION_ORDER.map(function(k){ return '<div class="filter-pill" data-div="'+k+'">'+(divisions[k]?divisions[k].name:k)+'</div>'; }).join('');
     document.querySelectorAll('#myTasksSortPills .filter-pill').forEach(function(p){ p.classList.toggle('active', p.dataset.sort==='default'); });
+    document.querySelectorAll('#myTasksViewPills .filter-pill').forEach(function(p){ p.classList.toggle('active', p.dataset.view==='tasks'); });
     renderMyTasksScreen();
     showScreen('mytasks');
   }
+  document.getElementById('myTasksViewPills').addEventListener('click', function(e){
+    var pill = e.target.closest('.filter-pill');
+    if(!pill) return;
+    myTasksView = pill.dataset.view;
+    document.querySelectorAll('#myTasksViewPills .filter-pill').forEach(function(p){ p.classList.toggle('active', p===pill); });
+    renderMyTasksScreen();
+  });
   document.getElementById('myTasksDivPills').addEventListener('click', function(e){
     var pill = e.target.closest('.filter-pill');
     if(!pill) return;
@@ -9884,7 +9901,46 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     });
     renderMyTasksScreen();
   }
+  function getMyProjects(){
+    return projects.filter(function(p){ return !p.inactive && p.assignees && p.assignees.indexOf(ME)>-1; });
+  }
   function renderMyTasksScreen(){
+    if(myTasksView==='projects') renderMyProjectsView(); else renderMyTasksTaskView();
+  }
+  function renderMyProjectsView(){
+    myTasksSortables.forEach(function(s){ s.destroy(); });
+    myTasksSortables = [];
+    var mine = getMyProjects();
+    if(myTasksDivFilter!=='all') mine = mine.filter(function(p){ return p.division===myTasksDivFilter; });
+    var sorted = mine.slice();
+    if(myTasksSortMode==='priority') sorted.sort(function(a,b){ return (PRIORITY_WEIGHT[a.priority]==null?1:PRIORITY_WEIGHT[a.priority]) - (PRIORITY_WEIGHT[b.priority]==null?1:PRIORITY_WEIGHT[b.priority]); });
+    else if(myTasksSortMode==='deadline') sorted.sort(function(a,b){ return (a.deadline||'9999-99-99').localeCompare(b.deadline||'9999-99-99'); });
+    else sorted.sort(function(a,b){ return (a.order||0)-(b.order||0); });
+    document.getElementById('myTasksSub').textContent = t('mytasks.subCountProjects').replace('{n}', sorted.length);
+    var html = sorted.map(function(p){
+      var prog = projectProgress(p);
+      var tt = totalTasks(p);
+      var done = p.phases.reduce(function(a,ph){ return a+ph.tasks.filter(function(t){return t.status==='done';}).length; },0);
+      var avatars = p.assignees.map(function(a){ return '<div class="mini-avatar" onclick="event.stopPropagation(); openTeamMember(\''+a+'\')">'+initials(a)+'</div>'; }).join('');
+      return '' +
+        '<div class="project-card" onclick="openProject(\''+p.id+'\',\'mytasks\'); switchTab(\'task\');">' +
+          '<div class="project-top"><span class="priority-tag priority-'+p.priority+'">'+priorityLabel(p.priority)+'</span><span class="nominal-tag">'+formatIDR(p.value)+'</span></div>' +
+          '<div class="project-title">'+escapeHtml(p.title)+' <span style="font-size:10.5px;font-weight:500;color:var(--stone);">· '+(divisions[p.division]?divisions[p.division].name:p.division)+'</span></div>' +
+          (p.client ? '<div class="project-client">'+escapeHtml(p.client)+'</div>' : '') +
+          '<div class="project-meta-row">' +
+            '<div class="avatar-stack">'+avatars+'</div>' +
+            '<div class="project-meta"><i class="ti ti-calendar"></i>'+fmtDate(p.deadline)+'</div>' +
+          '</div>' +
+          (tt===0
+            ? '<div class="project-task-count">'+t('project.noTasksYet')+'</div>'
+            : '<div class="project-task-count">'+done+'/'+tt+' task selesai</div>' +
+              '<div class="project-progress-row"><div class="project-bar"><div class="project-bar-fill" style="width:'+prog+'%"></div></div><div class="project-pct">'+prog+'%</div></div>') +
+        '</div>';
+    }).join('');
+    document.getElementById('myTasksContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noMyProjects')+'</div>';
+    hydrateIcons(document.getElementById('myTasksContainer'));
+  }
+  function renderMyTasksTaskView(){
     var mine = getMyTasks(true);
     if(myTasksDivFilter!=='all') mine = mine.filter(function(m){ return m.divisionKey===myTasksDivFilter; });
     var groupCount = Object.keys(mine.reduce(function(a,m){ a[m.groupKey]=1; return a; },{})).length;
@@ -10172,6 +10228,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "block.next.title": {id:"Up next", en:"Up next"}, "block.next.sub": {id:"{n} tugas · menyusul", en:"{n} tasks · coming up"},
     "upnext.subCount": {id:"{n} tugas", en:"{n} tasks"}, "focuszone.subCount": {id:"{n} tugas", en:"{n} tasks"},
     "mytasks.subCount": {id:"{n} tugas · {g} grup", en:"{n} tasks · {g} groups"},
+    "mytasks.subCountProjects": {id:"{n} project", en:"{n} projects"},
+    "mytasks.viewTasks": {id:"Tugas", en:"Tasks"}, "mytasks.viewProjects": {id:"Project", en:"Projects"},
     "personaltasks.title": {id:"Tugas Personal", en:"Personal Tasks"},
     "taskdetail.title": {id:"Detail Tugas", en:"Task Detail"},
     "taskdetail.pendingBadge": {id:"Menunggu konfirmasi", en:"Awaiting response"},
@@ -10679,6 +10737,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "analytics.exportHint": {id:"Teks sudah otomatis diseleksi — tinggal salin, atau tap tombol di bawah.", en:"Text is auto-selected — just copy, or tap the button below."},
     "analytics.copyBtn": {id:"Salin ke Clipboard", en:"Copy to clipboard"},
     "empty.noMyTasks": {id:"Belum ada tugas ditugaskan ke kamu.", en:"No tasks assigned to you yet."},
+    "empty.noMyProjects": {id:"Kamu belum terlibat di project manapun.", en:"You're not part of any project yet."},
     "empty.noFocusToday": {id:"Tidak ada tugas fokus/up next hari ini. Cek 'Tugas Saya' untuk lihat semua.", en:"No focus or up-next tasks today. Check 'My Tasks' to see everything."},
     "mytasks.title": {id:"Tugas Saya", en:"My Tasks"},
   };
