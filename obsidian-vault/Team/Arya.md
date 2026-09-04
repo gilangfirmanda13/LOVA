@@ -8,4 +8,4 @@
 _Tidak ada_
 
 ## Tasks
-- [[ngerjain apa ya @arya]]
+_Tidak ada_
