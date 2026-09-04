@@ -55,7 +55,7 @@
     --lavender:#9C90FC; --lavender-deep:#6C5FD6; --lavender-tint:#EFEDFF;
     --teal2:#344C4B; --teal2-deep:#22322F; --teal2-tint:#E4E9E8;
     --sage:#A9AE7E; --sage-deep:#767A52; --sage-tint:#EEF0E6;
-    --ink:#26302B; --stone:#8A9490;
+    --ink:#26302B; --stone:#646D69;
     --bg:#FBFBF8;
     --surface:#ffffff;
     --glass-bg:rgba(255,255,255,0.9); --glass-border:rgba(0,0,0,0.06);
@@ -96,11 +96,17 @@
     z-index:-1;
     pointer-events:none;
     background:
-      radial-gradient(560px 380px at 92% -4%, rgba(247,164,51,0.10), transparent 62%),
-      radial-gradient(520px 420px at -8% 22%, rgba(0,159,141,0.10), transparent 60%);
+      radial-gradient(480px 360px at 96% -6%, rgba(247,164,51,0.34), transparent 68%),
+      radial-gradient(440px 400px at -10% 16%, rgba(0,159,141,0.32), transparent 66%),
+      radial-gradient(360px 300px at 60% 106%, rgba(0,159,141,0.16), transparent 72%);
   }
   body, button, input, select, textarea{ font-family:var(--font-body); }
   ::selection{background:var(--orange-tint);}
+
+  /* Keyboard-focus indicator — the file previously had none (only two rules that
+     actively strip :focus outline), so tabbing through the app was invisible. */
+  :focus-visible{ outline:2px solid var(--teal-deep); outline-offset:2px; border-radius:6px; }
+  [data-theme="dark"] :focus-visible{ outline-color:var(--teal); }
 
   .app{ min-height:100vh; display:flex; flex-direction:column; }
   .layout{ display:flex; flex:1; min-height:0; }
@@ -153,12 +159,19 @@
   .lang-toggle span{ font-size:11px; font-weight:500; padding:5px 9px; border-radius:99px; color:var(--stone); transition:all 0.2s ease; }
   .lang-toggle span.active{ background:var(--teal); color:#ffffff; }
 
-  .content{ padding:6px 18px 128px; }
+  .content{ padding:6px 18px 152px; } /* clears the FAB (bottom:92px + 54px height) with a small buffer, fixes it overlapping the last card on-screen */
   .content-inner{ max-width:1020px; margin:0 auto; }
   .page{ max-width:1020px; margin:0 auto; padding-bottom:110px; }
 
   .screen{ display:none; }
   .screen.active{ display:block; }
+
+  /* Shared empty-state treatment — previously every list/card rendered its "nothing here
+     yet" text as bare centered gray text floating in an otherwise blank area (Aesthetic &
+     Minimalist heuristic gap, and easy to mistake for a rendering bug on first load). */
+  .empty-note{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; color:var(--stone); font-size:13px; padding:38px 20px; }
+  .empty-note i{ font-size:26px; color:var(--stone); opacity:0.5; }
+  .empty-note span{ max-width:280px; }
 
   .greeting-eyebrow{ font-family:var(--font-body); font-size:12.5px; color:var(--stone); margin-bottom:4px; }
   .greeting-title{ font-family:var(--font-display); font-weight:700; font-size:23px; color:var(--ink); line-height:1.25; margin-bottom:16px; }
@@ -194,7 +207,8 @@
   .today-filter-hint{ display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--stone); margin:10px 2px 4px; }
   .today-filter-hint .reset-link{ color:var(--teal-deep); font-weight:600; cursor:pointer; }
   .block-card:active{ transform:scale(0.98); }
-  .block-card.solid{ background:linear-gradient(150deg, var(--teal) 0%, var(--teal-deep) 100%); color:#ffffff; box-shadow:0 12px 26px rgba(0,105,92,0.28); }
+  .block-card.solid{ background:linear-gradient(150deg, #008071 0%, var(--teal-deep) 100%); color:#ffffff; box-shadow:0 12px 26px rgba(0,105,92,0.28); } /* stop darkened from --teal so the 14.5px title clears 4.5:1 */
+  .block-card.solid .block-sub{ opacity:1; color:rgba(255,255,255,0.95); }
   .block-card.light{ background:var(--surface); border:1px solid var(--glass-border); color:var(--ink); box-shadow:var(--shadow); }
   .block-icon{ width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; }
   .block-card.solid .block-icon{ background:rgba(255,255,255,0.2); color:#ffffff; }
@@ -409,11 +423,14 @@
   .hero-ring-box .rbg.lg{ stroke:rgba(255,255,255,0.25); }
   .hero-ring-box .rfg.lg{ stroke:#ffffff !important; }
 
-  .quick-access-row .quick-link-card:nth-child(1){ background:linear-gradient(150deg, var(--orange) 0%, var(--orange-deep) 100%); border:none; box-shadow:0 10px 20px rgba(185,118,30,0.22); }
-  .quick-access-row .quick-link-card:nth-child(2){ background:linear-gradient(150deg, var(--lavender) 0%, var(--lavender-deep) 100%); border:none; box-shadow:0 10px 20px rgba(108,95,214,0.22); }
+  /* Stops darkened from the raw --orange/--lavender tokens so the white label text
+     (11px, not "large text" under WCAG) reaches 4.5:1 contrast at every point of the
+     gradient, not just near the deep end. */
+  .quick-access-row .quick-link-card:nth-child(1){ background:linear-gradient(150deg, #9E651A 0%, #7A4E13 100%); border:none; box-shadow:0 10px 20px rgba(185,118,30,0.22); }
+  .quick-access-row .quick-link-card:nth-child(2){ background:linear-gradient(150deg, #6254D3 0%, var(--lavender-deep) 100%); border:none; box-shadow:0 10px 20px rgba(108,95,214,0.22); }
   .quick-access-row .quick-link-card .quick-link-icon{ background:rgba(255,255,255,0.24) !important; color:#ffffff !important; }
   .quick-access-row .quick-link-card .quick-link-count{ color:#ffffff; }
-  .quick-access-row .quick-link-card .quick-link-label{ color:rgba(255,255,255,0.85); }
+  .quick-access-row .quick-link-card .quick-link-label{ color:rgba(255,255,255,0.95); }
 
   .action-needed-card{ background:linear-gradient(150deg, var(--sage) 0%, var(--sage-deep) 100%); border:none; box-shadow:0 10px 22px rgba(118,122,82,0.24); }
   .action-needed-title{ color:rgba(255,255,255,0.88); }
@@ -960,7 +977,8 @@
   .modal-close{ width:32px; height:32px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; color:var(--stone); font-size:15px; cursor:pointer; }
   .form-row{ margin-bottom:12px; }
   .form-label{ font-size:12px; font-weight:500; color:var(--stone); margin-bottom:5px; display:block; }
-  .form-input, .form-select, .form-textarea{ width:100%; border:1px solid var(--glass-border); border-radius:12px; padding:10px 12px; font-family:var(--font-body); font-size:13.5px; color:var(--ink); background:var(--bg); }
+  .form-input, .form-select, .form-textarea{ width:100%; min-height:44px; border:1px solid var(--glass-border); border-radius:12px; padding:10px 12px; font-family:var(--font-body); font-size:13.5px; color:var(--ink); background:var(--bg); }
+  .form-textarea{ min-height:88px; } /* multi-line fields shouldn't be forced to the same 44px as a single-line input */
   .form-input.field-error, .form-select.field-error, .form-textarea.field-error{ border-color:var(--revisi); }
   .mention-dropdown{ position:fixed; z-index:10000; background:var(--surface); border:1px solid var(--glass-border); border-radius:12px; box-shadow:var(--shadow); max-height:180px; overflow-y:auto; min-width:170px; }
   .mention-item{ padding:8px 12px; font-size:13px; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px; }
@@ -1104,7 +1122,7 @@
     .bottom-nav{ display:none; }
     .fab-btn{ right:40px; bottom:40px; }
     .topbar .brand{ display:none; }
-    .content{ padding:14px 48px 60px; }
+    .content{ padding:14px 48px 104px; } /* clears the FAB at bottom:40px + 54px height */
     .content-inner{ display:grid; grid-template-columns:1fr 360px; gap:28px; align-items:start; max-width:1320px; }
     .greeting-eyebrow, .greeting-title{ grid-column:1/-1; }
     .greeting-eyebrow{ font-size:14px; }
@@ -1412,7 +1430,7 @@
             <span data-lang-opt="en">EN</span>
           </div>
           <div class="notif-bell-wrap">
-            <div class="notif-bell" onclick="toggleNotifPanel(event)"><i class="ti ti-bell"></i><span class="notif-badge" id="notifBadge" style="display:none;">0</span></div>
+            <div class="notif-bell" aria-label="Notifikasi" onclick="toggleNotifPanel(event)"><i class="ti ti-bell"></i><span class="notif-badge" id="notifBadge" style="display:none;">0</span></div>
             <div class="notif-panel" id="notifPanel">
               <div class="notif-panel-head">
                 <span data-i18n="notif.title">Notifikasi</span>
@@ -2616,7 +2634,7 @@
   <div class="modal-sheet">
     <div class="modal-head">
       <div class="modal-title" data-i18n="modal.newProject">Project baru</div>
-      <div class="modal-close" onclick="closeModal('newProjectModal')"><i class="ti ti-x"></i></div>
+      <div class="modal-close" aria-label="Tutup" onclick="closeModal('newProjectModal')"><i class="ti ti-x"></i></div>
     </div>
     <div class="form-row"><label class="form-label" data-i18n="form.client">Nama Client</label><input class="form-input" id="fClient" placeholder="cth. PT Bara Kaltim" oninput="clearNewProjectFieldError(this)"></div>
     <div class="form-row"><label class="form-label" data-i18n="form.title">Judul Project</label><input class="form-input" id="fTitle" placeholder="cth. Ekspansi Klien Tambang" oninput="clearNewProjectFieldError(this)"></div>
@@ -2664,7 +2682,7 @@
 <!-- ===================== ADD PHASE MODAL ===================== -->
 <div class="modal-overlay" id="addPhaseModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="modal.addPhase">Tambah phase</div><div class="modal-close" onclick="closeModal('addPhaseModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="modal.addPhase">Tambah phase</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('addPhaseModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="form.phaseName">Nama Phase</label><input class="form-input" id="apName" placeholder="cth. Riset pasar"></div>
     <div class="form-error" id="apError" data-i18n="form.phaseNameError">Nama phase wajib diisi.</div>
     <div class="form-row" id="apAssigneesRow"><label class="form-label" data-i18n="form.assignees">Assigned Members (opsional)</label>
@@ -2677,7 +2695,7 @@
 <!-- ===================== ADD TASK MODAL ===================== -->
 <div class="modal-overlay" id="addTaskModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="modal.addTask">Tambah task</div><div class="modal-close" onclick="closeModal('addTaskModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="modal.addTask">Tambah task</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('addTaskModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="form.taskName">Nama Task</label><input class="form-input" id="atName" placeholder="cth. Survey lokasi"></div>
     <div class="form-error" id="atError" data-i18n="form.taskNameError">Nama task wajib diisi.</div>
     <div class="form-grid-2">
@@ -2716,7 +2734,7 @@
 <!-- ===================== EDIT TASK MODAL ===================== -->
 <div class="modal-overlay" id="editTaskModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="modal.editTask">Edit Task</div><div class="modal-close" onclick="closeModal('editTaskModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="modal.editTask">Edit Task</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('editTaskModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="form.taskName">Nama Task</label><input class="form-input" id="etName" placeholder="cth. Survey lokasi"></div>
     <div class="form-error" id="etError" data-i18n="form.taskNameError">Nama task wajib diisi.</div>
     <div class="form-grid-2">
@@ -2749,7 +2767,7 @@
 <!-- ===================== CONFIRM MODAL ===================== -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-sheet small">
-    <div class="modal-head"><div class="modal-title" data-i18n="modal.confirm">Konfirmasi</div><div class="modal-close" onclick="closeModal('confirmModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="modal.confirm">Konfirmasi</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('confirmModal')"><i class="ti ti-x"></i></div></div>
     <div class="confirm-msg" id="confirmMsg"></div>
     <div class="confirm-btn-row"><div class="btn-sm" onclick="closeModal('confirmModal')" data-i18n="confirm.cancel">Batal</div><div class="btn-sm btn-danger" id="confirmActionBtn" onclick="runConfirm()" data-i18n="confirm.delete">Hapus</div></div>
   </div>
@@ -2758,7 +2776,7 @@
 <!-- ===================== CAPACITY CHECK MODAL ===================== -->
 <div class="modal-overlay" id="capacityModal">
   <div class="modal-sheet small">
-    <div class="modal-head"><div class="modal-title" data-i18n="capacity.modalTitle">Cek Kapasitas</div><div class="modal-close" onclick="closeModal('capacityModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="capacity.modalTitle">Cek Kapasitas</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('capacityModal')"><i class="ti ti-x"></i></div></div>
     <div class="confirm-msg" id="capacityModalMsg"></div>
     <div class="capacity-modal-actions">
       <div class="btn-sm" onclick="capacityModalPickOther()" data-i18n="capacity.pickOther">Pilih orang lain</div>
@@ -2770,7 +2788,7 @@
 <!-- ===================== MISSED TASKS MODAL ===================== -->
 <div class="modal-overlay" id="missedTasksModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="missed.modalTitle">Perlu Diselesaikan</div><div class="modal-close" onclick="closeModal('missedTasksModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="missed.modalTitle">Perlu Diselesaikan</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('missedTasksModal')"><i class="ti ti-x"></i></div></div>
     <div id="missedTasksList"></div>
   </div>
 </div>
@@ -2778,7 +2796,7 @@
 <!-- ===================== RESCHEDULE MODAL ===================== -->
 <div class="modal-overlay" id="rescheduleModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="reschedule.title">Jadwalkan Ulang</div><div class="modal-close" onclick="closeModal('rescheduleModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="reschedule.title">Jadwalkan Ulang</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('rescheduleModal')"><i class="ti ti-x"></i></div></div>
     <div id="rescheduleTaskName" style="font-family:var(--font-display);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:14px;"></div>
     <div class="form-row"><label class="form-label" data-i18n="form.startOpt">Tanggal Mulai (opsional)</label><input class="form-input" type="date" id="rescheduleStartDate"></div>
     <div class="form-row"><label class="form-label" data-i18n="form.startTimeOpt">Jam Mulai (opsional)</label><input class="form-input" type="time" id="rescheduleStartTime"></div>
@@ -2793,7 +2811,7 @@
   <div class="modal-sheet">
     <div class="modal-head">
       <div class="modal-title" id="notebookModalTitle" data-i18n="notebook.new">Catatan Baru</div>
-      <div class="modal-close" onclick="closeModal('notebookModal')"><i class="ti ti-x"></i></div>
+      <div class="modal-close" aria-label="Tutup" onclick="closeModal('notebookModal')"><i class="ti ti-x"></i></div>
     </div>
     <div class="form-row"><label class="form-label" data-i18n="notebook.titleLabel">Judul</label><input class="form-input" id="nbTitle" placeholder="cth. Rangkuman meeting klien"></div>
     <div class="form-error" id="nbTitleError" data-i18n="notebook.titleError">Judul wajib diisi.</div>
@@ -2833,7 +2851,7 @@
 <!-- ===================== DELEGATE MODAL ===================== -->
 <div class="modal-overlay" id="delegateModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="delegate.title">Delegasikan Tugas</div><div class="modal-close" onclick="closeModal('delegateModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="delegate.title">Delegasikan Tugas</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('delegateModal')"><i class="ti ti-x"></i></div></div>
     <div id="delegateTaskName" style="font-family:var(--font-display);font-weight:600;font-size:14px;color:var(--ink);margin-bottom:14px;"></div>
     <div class="form-label" data-i18n="delegate.pickLabel" style="margin-bottom:8px;display:block;">Pilih anggota tim pengganti</div>
     <div id="delegatePickerList" style="max-height:260px;overflow-y:auto;margin-bottom:14px;"></div>
@@ -2845,7 +2863,7 @@
 <!-- ===================== TEAM ATTENTION MODAL ===================== -->
 <div class="modal-overlay" id="teamAttentionModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="team.attentionModalTitle">Butuh Perhatian</div><div class="modal-close" onclick="closeModal('teamAttentionModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="team.attentionModalTitle">Butuh Perhatian</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('teamAttentionModal')"><i class="ti ti-x"></i></div></div>
     <div class="filter-pills" id="teamAttentionDivFilter" style="margin-bottom:12px;">
       <div class="filter-pill active" data-div="all" onclick="setTeamAttentionDivFilter('all')" data-i18n="filter.all">Semua divisi</div>
       <div class="filter-pill" data-div="pbd" onclick="setTeamAttentionDivFilter('pbd')">Project & BD</div>
@@ -2868,7 +2886,7 @@
 <!-- ===================== DEPENDENCIES MODAL ===================== -->
 <div class="modal-overlay" id="dependenciesModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="tool.dependencies">Dependencies</div><div class="modal-close" onclick="closeModal('dependenciesModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="tool.dependencies">Dependencies</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('dependenciesModal')"><i class="ti ti-x"></i></div></div>
     <div id="dependenciesList"></div>
   </div>
 </div>
@@ -2876,7 +2894,7 @@
 <!-- ===================== KPI OVERDUE MODAL ===================== -->
 <div class="modal-overlay" id="kpiOverdueModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" id="kpiOverdueModalTitle" data-i18n="kpi.overdue">Overdue</div><div class="modal-close" onclick="closeModal('kpiOverdueModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" id="kpiOverdueModalTitle" data-i18n="kpi.overdue">Overdue</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('kpiOverdueModal')"><i class="ti ti-x"></i></div></div>
     <div id="kpiOverdueModalList"></div>
   </div>
 </div>
@@ -2884,7 +2902,7 @@
 <!-- ===================== ADD FOCUS MODAL ===================== -->
 <div class="modal-overlay" id="addFocusModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="focus.addTitle">Add Focus</div><div class="modal-close" onclick="closeModal('addFocusModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="focus.addTitle">Add Focus</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('addFocusModal')"><i class="ti ti-x"></i></div></div>
     <div class="filter-pills" style="margin-bottom:14px;">
       <div class="filter-pill active" id="addFocusTabExisting" onclick="switchAddFocusTab('existing')" data-i18n="focus.addExisting">Pilih Task</div>
       <div class="filter-pill" id="addFocusTabNew" onclick="switchAddFocusTab('new')" data-i18n="focus.addNew">Task Baru</div>
@@ -2910,7 +2928,7 @@
 <!-- ===================== ADD KONSEKUENSI MODAL ===================== -->
 <div class="modal-overlay" id="addKonsekuensiModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" id="konsekuensiModalTitle" data-i18n="konsekuensi.add">Tambah Konsekuensi</div><div class="modal-close" onclick="closeModal('addKonsekuensiModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" id="konsekuensiModalTitle" data-i18n="konsekuensi.add">Tambah Konsekuensi</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('addKonsekuensiModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="konsekuensi.scopeLabel">Berlaku untuk</label>
       <div class="focus-duration-pills" id="kScopeRow"></div>
     </div>
@@ -2940,7 +2958,7 @@
 <!-- ===================== NEW GENERAL TASK MODAL ===================== -->
 <div class="modal-overlay" id="newGeneralTaskModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" id="newGeneralTaskModalTitle" data-i18n="general.modalTitle">Task cepat</div><div class="modal-close" onclick="closeModal('newGeneralTaskModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" id="newGeneralTaskModalTitle" data-i18n="general.modalTitle">Task cepat</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('newGeneralTaskModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="general.name">Nama Task</label><input class="form-input" id="gtName" placeholder="cth. Buatkan desain brosur promosi"></div>
     <div class="form-error" id="gtNameError" data-i18n="general.nameError">Nama task wajib diisi.</div>
     <div class="form-row"><label class="form-label" data-i18n="form.division">Divisi</label>
@@ -2994,7 +3012,7 @@
 <!-- ===================== INVITE TEAM MEMBER MODAL ===================== -->
 <div class="modal-overlay" id="inviteTeamModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="team.inviteModalTitle">Undang Anggota Tim</div><div class="modal-close" onclick="closeModal('inviteTeamModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="team.inviteModalTitle">Undang Anggota Tim</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('inviteTeamModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="team.inviteEmail">Email</label><input class="form-input" type="email" id="inviteTeamEmail" placeholder="email@lenusa.co.id"></div>
     <div class="form-error" id="inviteTeamEmailError" data-i18n="team.inviteEmailError">Email wajib diisi.</div>
     <div class="form-row"><label class="form-label" data-i18n="team.inviteRole">Role</label>
@@ -3015,7 +3033,7 @@
 <!-- ===================== NEW APPROVAL MODAL ===================== -->
 <div class="modal-overlay" id="newApprovalModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="decision.modalTitle">Ajukan Approval</div><div class="modal-close" onclick="closeModal('newApprovalModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="decision.modalTitle">Ajukan Approval</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('newApprovalModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="decision.type">Jenis Pengajuan</label>
       <div class="loc-type-row" id="apTypeRow"></div>
     </div>
@@ -3050,7 +3068,7 @@
 <!-- ===================== APPROVAL DETAIL MODAL ===================== -->
 <div class="modal-overlay" id="approvalDetailModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="decision.detailTitle">Detail Pengajuan</div><div class="modal-close" onclick="closeModal('approvalDetailModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="decision.detailTitle">Detail Pengajuan</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('approvalDetailModal')"><i class="ti ti-x"></i></div></div>
     <div id="approvalDetailBody"></div>
   </div>
 </div>
@@ -3058,7 +3076,7 @@
 <!-- ===================== NEW BLOCKER MODAL ===================== -->
 <div class="modal-overlay" id="newBlockerModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="blocker.modalTitle">Lapor Kendala</div><div class="modal-close" onclick="closeModal('newBlockerModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="blocker.modalTitle">Lapor Kendala</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('newBlockerModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="blocker.scope">Terkait Apa?</label>
       <div class="loc-type-row" id="blScopeRow"></div>
     </div>
@@ -3087,7 +3105,7 @@
 <!-- ===================== NEW IDEA MODAL ===================== -->
 <div class="modal-overlay" id="newIdeaModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="idea.modalTitle">Ide Baru</div><div class="modal-close" onclick="closeModal('newIdeaModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="idea.modalTitle">Ide Baru</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('newIdeaModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="idea.ideaTitle">Judul Ide</label><input class="form-input" id="idTitle" placeholder="cth. Rencana bisnis unit baru"></div>
     <div class="form-error" id="idTitleError" data-i18n="idea.titleError">Judul wajib diisi.</div>
     <div class="form-row"><label class="form-label" data-i18n="idea.desc">Detail (opsional)</label><textarea class="form-textarea" id="idDesc" placeholder="cth. Muncul dari diskusi sama klien X"></textarea></div>
@@ -3098,7 +3116,7 @@
 <!-- ===================== EXPORT TEXT MODAL ===================== -->
 <div class="modal-overlay" id="exportTextModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="analytics.exportModalTitle">Ringkasan Project</div><div class="modal-close" onclick="closeModal('exportTextModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="analytics.exportModalTitle">Ringkasan Project</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('exportTextModal')"><i class="ti ti-x"></i></div></div>
     <div class="account-hint" data-i18n="analytics.exportHint">Teks sudah otomatis diseleksi — tinggal salin, atau tap tombol di bawah.</div>
     <textarea class="form-textarea" id="exportTextArea" style="min-height:220px;font-family:var(--font-mono);font-size:11.5px;" readonly></textarea>
     <button class="modal-submit" onclick="copyExportText()"><i class="ti ti-copy"></i> <span data-i18n="analytics.copyBtn">Salin ke Clipboard</span></button>
@@ -3108,7 +3126,7 @@
 <!-- ===================== CALENDAR RESCHEDULE MODAL ===================== -->
 <div class="modal-overlay" id="calRescheduleModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" data-i18n="calendar.reschedule">Pindahkan Tanggal</div><div class="modal-close" onclick="closeModal('calRescheduleModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" data-i18n="calendar.reschedule">Pindahkan Tanggal</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('calRescheduleModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" id="calRescheduleItemName">—</label><input class="form-input" type="date" id="calRescheduleDateInput"></div>
     <div class="form-row" id="calRescheduleTimeRow"><label class="form-label" data-i18n="form.startTimeOpt">Jam Mulai (opsional)</label><input class="form-input" type="time" id="calRescheduleTimeInput"></div>
     <button class="modal-submit" onclick="submitCalReschedule()" data-i18n="calendar.rescheduleSubmit">Pindahkan</button>
@@ -3118,7 +3136,7 @@
 <!-- ===================== NEW RITUAL MODAL ===================== -->
 <div class="modal-overlay" id="newRitualModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" id="newRitualModalTitle" data-i18n="ritual.modalTitle">Ritual baru</div><div class="modal-close" onclick="closeModal('newRitualModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" id="newRitualModalTitle" data-i18n="ritual.modalTitle">Ritual baru</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('newRitualModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="ritual.name">Judul Ritual</label><input class="form-input" id="rtName" placeholder="cth. Briefing pagi"></div>
     <div class="form-error" id="rtNameError" data-i18n="ritual.nameError">Judul ritual wajib diisi.</div>
     <div class="form-row"><label class="form-label" data-i18n="ritual.desc">Deskripsi (opsional)</label><textarea class="form-textarea" id="rtDesc" placeholder="cth. Sinkronisasi rencana tim hari ini"></textarea></div>
@@ -3149,7 +3167,7 @@
 <!-- ===================== NEW EVENT MODAL ===================== -->
 <div class="modal-overlay" id="newEventModal">
   <div class="modal-sheet">
-    <div class="modal-head"><div class="modal-title" id="newEventModalTitle" data-i18n="event.modalTitle">Event baru</div><div class="modal-close" onclick="closeModal('newEventModal')"><i class="ti ti-x"></i></div></div>
+    <div class="modal-head"><div class="modal-title" id="newEventModalTitle" data-i18n="event.modalTitle">Event baru</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('newEventModal')"><i class="ti ti-x"></i></div></div>
     <div class="form-row"><label class="form-label" data-i18n="event.name">Judul Event</label><input class="form-input" id="evTitle" placeholder="cth. Demo produk ke klien"></div>
     <div class="form-error" id="evTitleError" data-i18n="event.nameError">Judul event wajib diisi.</div>
     <div class="form-row"><label class="form-label" data-i18n="event.date">Tanggal</label><input class="form-input" type="date" id="evDate"></div>
@@ -3295,6 +3313,39 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   updateClock(); setInterval(updateClock, 60000);
 
   hydrateIcons(document);
+
+  /* ---------------- keyboard accessibility for onclick divs ----------------
+     The whole app drives interaction through `<div onclick="...">` rather than
+     `<button>`/`<a>`, which means none of it was reachable or operable by
+     keyboard, and screen readers had no idea these were controls (0 role/
+     tabindex/aria-* anywhere in the file). Rewriting every one of the ~82
+     render functions to emit real <button> markup is a large, risky change to
+     make blind across a file this size. This is the safe alternative: a
+     progressive enhancement that finds every onclick-bearing div/span at any
+     point (including content re-rendered later) and gives it the missing
+     keyboard semantics, without touching any existing render function or
+     click logic. */
+  /* Covers both inline onclick="" elements AND the handful of containers that use
+     event delegation instead (bottom-nav/sidebar nav items, and .filter-pill /
+     [data-lang-opt] rows whose click handler lives on a parent, not on themselves). */
+  function enhanceInteractiveDivs(root){
+    (root || document).querySelectorAll('[onclick], .bn-item, .nav-item, .filter-pill, [data-lang-opt]').forEach(function(el){
+      var tag = el.tagName;
+      if(tag==='BUTTON' || tag==='A' || tag==='INPUT' || tag==='SELECT' || tag==='TEXTAREA') return;
+      if(el.classList.contains('a11y-skip')) return;
+      if(!el.hasAttribute('tabindex')) el.setAttribute('tabindex','0');
+      if(!el.hasAttribute('role')) el.setAttribute('role','button');
+      if(!el.dataset.a11yKeyBound){
+        el.dataset.a11yKeyBound = '1';
+        el.addEventListener('keydown', function(e){
+          if(e.target !== el) return; // don't refire for a nested focusable child's own Enter/Space
+          if(e.key==='Enter' || e.key===' ' || e.key==='Spacebar'){ e.preventDefault(); el.click(); }
+        });
+      }
+    });
+  }
+  enhanceInteractiveDivs();
+  new MutationObserver(function(){ enhanceInteractiveDivs(); }).observe(document.body, {childList:true, subtree:true});
 
   /* ---------------- nav / screen router ---------------- */
   var screenHistory = [];
@@ -4288,7 +4339,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           (p.inactive ? '<div style="font-size:10px;color:var(--stone);margin-top:5px;text-align:center;">⏸ Nonaktif</div>' : '') +
         '</div>';
     }).join('');
-    document.getElementById('projectListContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noProjects')+'</div>';
+    document.getElementById('projectListContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noProjects')+'</span></div>';
     hydrateIcons(document.getElementById('projectListContainer'));
   }
 
@@ -4376,7 +4427,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '</div>' +
       '</div>';
     }).join('');
-    document.getElementById('generalTaskListContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:24px 0;">'+t('general.empty')+'</div>';
+    document.getElementById('generalTaskListContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('general.empty')+'</span></div>';
     hydrateIcons(document.getElementById('generalTaskListContainer'));
     setupGeneralTaskDragDrop();
   }
@@ -4832,7 +4883,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     refreshEventCategoryBadges();
     var upcoming = events.filter(function(m){ return m.date>=todayISO(); }).slice().sort(function(a,b){ return (a.date+a.startTime).localeCompare(b.date+b.startTime); }).slice(0,4);
     var html = groupEventsByDate(upcoming);
-    document.getElementById('eventUpcomingContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('event.empty')+'</div>';
+    document.getElementById('eventUpcomingContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('event.empty')+'</span></div>';
     hydrateIcons(document.getElementById('eventUpcomingContainer'));
   }
 
@@ -4878,7 +4929,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     }).slice().sort(function(a,b){ return (a.date+a.startTime).localeCompare(b.date+b.startTime); });
     document.getElementById('evcatSub').textContent = list.length+' event';
     var html = groupEventsByDate(list);
-    document.getElementById('eventsContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('event.empty')+'</div>';
+    document.getElementById('eventsContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('event.empty')+'</span></div>';
     hydrateIcons(document.getElementById('eventsContainer'));
   }
   document.getElementById('evcatScopeFilterPills').addEventListener('click', function(e){
@@ -5293,7 +5344,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var rescheduleBtn = canReschedule ? '<div class="cal-item-reschedule" onclick="event.stopPropagation(); openCalRescheduleModal('+idx+')" title="'+t('calendar.reschedule')+'"><i class="ti ti-calendar-time"></i></div>' : '';
       return '<div class="cal-item-row" style="background:'+it.color+';"><div class="cal-item-body"><div class="cal-item-title">'+escapeHtml(it.title)+'</div><div class="cal-item-meta">'+(it.time?it.time+' · ':'')+CAL_TYPE_LABEL[it.type]+'</div></div>'+rescheduleBtn+'</div>';
     }).join('');
-    document.getElementById('calDayDetailContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('calendar.empty')+'</div>';
+    document.getElementById('calDayDetailContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('calendar.empty')+'</span></div>';
     hydrateIcons(document.getElementById('calDayDetailContainer'));
   }
   var calRescheduleIdx = null;
@@ -5840,7 +5891,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div class="missed-task-meta">'+item.pic+' · via '+item.via+' · '+whenLabel+'</div>' +
       '</div>';
     }).join('');
-    document.getElementById('kpiOverdueModalList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('missed.empty')+'</div>';
+    document.getElementById('kpiOverdueModalList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('missed.empty')+'</span></div>';
     openModal('kpiOverdueModal');
   }
   function openKpiRollupScreen(){
@@ -5953,7 +6004,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         (c.today?'<div class="checkin-line"><span class="checkin-label">'+t('checkin.todayShort')+'</span>'+c.today+'</div>':'') +
         (c.blocker?'<div class="checkin-line blocker"><span class="checkin-label">'+t('checkin.blockerShort')+'</span>'+c.blocker+'</div>':'') +
       '</div>';
-    }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:20px 0;">'+t('checkin.empty')+'</div>';
+    }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('checkin.empty')+'</span></div>';
   }
   function refreshCheckinBadge(){
     var el = document.getElementById('moreCheckinCount');
@@ -6007,12 +6058,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(checkinFilterDate && c.date!==checkinFilterDate) return false;
       return true;
     }).slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
-    document.getElementById('checkinHistoryList').innerHTML = list.length ? list.map(function(c){ return checkinRowHtml(c, false); }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:20px 0;">'+t('checkin.empty')+'</div>';
+    document.getElementById('checkinHistoryList').innerHTML = list.length ? list.map(function(c){ return checkinRowHtml(c, false); }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('checkin.empty')+'</span></div>';
     hydrateIcons(document.getElementById('checkinHistoryList'));
   }
   function renderCheckinArchiveList(){
     var list = dailyCheckins.filter(function(c){ return c.archived; }).slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
-    document.getElementById('checkinArchiveList').innerHTML = list.length ? list.map(function(c){ return checkinRowHtml(c, true); }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:20px 0;">'+t('checkin.archiveEmpty')+'</div>';
+    document.getElementById('checkinArchiveList').innerHTML = list.length ? list.map(function(c){ return checkinRowHtml(c, true); }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('checkin.archiveEmpty')+'</span></div>';
     hydrateIcons(document.getElementById('checkinArchiveList'));
   }
   function archiveCheckin(id){
@@ -6093,7 +6144,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     }).sort(function(a,b){ return b.date.localeCompare(a.date); });
     document.getElementById('notebookSub').textContent = t('notebook.countLabel').replace('{n}', list.length);
     document.getElementById('notebookListContainer').innerHTML = list.map(notebookRowHtml).join('') ||
-      '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('notebook.empty')+'</div>';
+      '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('notebook.empty')+'</span></div>';
     hydrateIcons(document.getElementById('notebookListContainer'));
     refreshNotebookBadge();
   }
@@ -6252,7 +6303,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div class="idea-card-meta">'+displayName+' · '+fmtDate(i.date)+'</div>' +
         '<div class="idea-card-actions"><span class="idea-archive-btn" onclick="archiveIdea(\''+i.id+'\')">'+t('idea.archive')+'</span></div>' +
       '</div>';
-    }).join('') : '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('idea.empty')+'</div>';
+    }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('idea.empty')+'</span></div>';
     refreshIdeaBadge();
   }
   function openNewIdeaModal(){
@@ -6416,7 +6467,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       else { scopeLabel = t('blocker.scope.general'); }
       var divName = divisions[b.division] ? divisions[b.division].name : b.division;
       return '<div class="blocker-row"><div class="blocker-row-dot" style="background:'+BLOCKER_CATEGORY_COLOR[b.category]+';"></div><div class="blocker-row-body"><div class="blocker-row-title">'+BLOCKER_CATEGORY_LABEL[b.category]+' · '+scopeLabel+'</div><div class="blocker-row-meta">'+divName+' · '+b.reportedBy+' · '+fmtDate(b.date)+'</div>'+(b.description?'<div class="blocker-row-desc">'+renderMentions(b.description)+'</div>':'')+'</div><i class="ti ti-check blocker-resolve-btn" onclick="resolveBlocker(\''+b.id+'\')" title="'+t('blocker.markResolved')+'"></i><i class="ti ti-trash blocker-delete-btn" onclick="deleteBlocker(\''+b.id+'\')" title="'+t('confirm.delete')+'"></i></div>';
-    }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12px;padding:16px 0;">'+t('blocker.empty')+'</div>';
+    }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('blocker.empty')+'</span></div>';
     hydrateIcons(document.getElementById('blockerList'));
     renderBlockerHistory();
   }
@@ -6438,7 +6489,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(sub) sub.textContent = t('blocker.historyCount').replace('{n}', resolved.length);
     var html = resolved.map(blockerRowHtml).join('');
     var target = document.getElementById('blockerHistoryScreenList');
-    if(target) target.innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:12px;padding:24px 0;">'+t('blocker.noHistory')+'</div>';
+    if(target) target.innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('blocker.noHistory')+'</span></div>';
     if(target) hydrateIcons(target);
   }
   function unresolveBlocker(id){
@@ -6531,7 +6582,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         actionsHtml +
       '</div>';
     }).join('');
-    document.getElementById('decisionQueueList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('decision.empty')+'</div>';
+    document.getElementById('decisionQueueList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('decision.empty')+'</span></div>';
     hydrateIcons(document.getElementById('decisionQueueList'));
   }
   function openApprovalDetail(id){
@@ -6974,7 +7025,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '</div>' +
         '</div>';
     }).join('');
-    document.getElementById('phaseContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('empty.noPhases')+'</div>';
+    document.getElementById('phaseContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noPhases')+'</span></div>';
     hydrateIcons(document.getElementById('phaseContainer'));
     setupDragDrop(p);
   }
@@ -7809,7 +7860,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '</div>' +
       '</div>';
     }).join('');
-    document.getElementById('teamAttentionList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('missed.empty')+'</div>';
+    document.getElementById('teamAttentionList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('missed.empty')+'</span></div>';
   }
   function populateTeamFilterDivisions(){
     var sel = document.getElementById('teamFilterDivision');
@@ -7871,7 +7922,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div class="team-cap-dot" style="background:'+color+';" title="'+pct+'%"></div>' +
       '</div>';
     }).join('');
-    document.getElementById('teamListContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('team.filterNoResults')+'</div>';
+    document.getElementById('teamListContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('team.filterNoResults')+'</span></div>';
     hydrateIcons(document.getElementById('teamListContainer'));
   }
   document.getElementById('teamSortRow').addEventListener('click', function(e){
@@ -7936,12 +7987,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var tasks = getUserTasks(name);
     document.getElementById('tmAssignmentList').innerHTML = tasks.length ? tasks.map(function(tk){
       return '<div class="tm-assign-row"><div class="tm-assign-dot" style="background:'+tk.color+';"></div><div class="tm-assign-body"><div class="tm-assign-title">'+escapeHtml(tk.title)+'</div><div class="tm-assign-meta">'+escapeHtml(tk.meta)+' · '+statusLabel(tk.status)+'</div></div></div>';
-    }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:10px 0;">'+t('team.noAssignment')+'</div>';
+    }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('team.noAssignment')+'</span></div>';
 
     var overrides = capacityOverrideLog.filter(function(o){ return o.assignedTo===name; });
     document.getElementById('tmOverrideLog').innerHTML = overrides.length ? overrides.map(function(o){
       return '<div class="tm-assign-row"><div class="tm-assign-dot" style="background:var(--revisi);"></div><div class="tm-assign-body"><div class="tm-assign-title">'+escapeHtml(o.context||t('team.overrideNoContext'))+'</div><div class="tm-assign-meta">'+fmtDate(o.date)+' · '+t('team.overrideBy')+' '+escapeHtml(o.assignedBy)+' · '+o.pct+'%</div></div></div>';
-    }).join('') : '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:10px 0;">'+t('team.overrideNone')+'</div>';
+    }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('team.overrideNone')+'</span></div>';
 
     var factsHtml = '';
     if(info.hobbies && info.hobbies.length){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.hobbies')+'</span><span class="tm-fact-value">'+info.hobbies.join(', ')+'</span></div>'; }
@@ -8347,7 +8398,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       }
       return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-note">'+e.note+'</div></div>';
     }).join('');
-    document.getElementById('journalHistoryList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:20px 0;">'+t('journal.empty')+'</div>';
+    document.getElementById('journalHistoryList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('journal.empty')+'</span></div>';
   }
 
   /* ================= GLOBAL SEARCH ================= */
@@ -8889,7 +8940,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       }).join('');
       return '<div class="mytasks-group-title">'+escapeHtml(group[0].groupTitle)+'</div>' + rows;
     }).join('');
-    document.getElementById('personalTasksContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noMyTasks')+'</div>';
+    document.getElementById('personalTasksContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyTasks')+'</span></div>';
     hydrateIcons(document.getElementById('personalTasksContainer'));
   }
 
@@ -8908,7 +8959,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var reorderable = upnextSortMode==='default';
     document.getElementById('upnextSub').textContent = t('upnext.subCount').replace('{n}', mine.length);
     document.getElementById('upnextContainer').innerHTML = mine.map(function(m,i){ return taskRowHtml(m,{editable:false, returnScreen:'upnext', reorderable:reorderable, isFirst:i===0, isLast:i===mine.length-1}); }).join('') ||
-      '<div style="padding:24px;text-align:center;color:var(--stone);font-size:13px;">'+t('empty.noMyTasks')+'</div>';
+      '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyTasks')+'</span></div>';
     hydrateIcons(document.getElementById('upnextContainer'));
     if(upnextSortable){ upnextSortable.destroy(); upnextSortable = null; }
     if(reorderable && mine.length>1){
@@ -8946,7 +8997,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var reorderable = focusZoneSortMode==='default';
     document.getElementById('focusZoneSub').textContent = t('focuszone.subCount').replace('{n}', mine.length);
     document.getElementById('focusZoneContainer').innerHTML = mine.map(function(m,i){ return taskRowHtml(m,{editable:true, returnScreen:'focus-zone', reorderable:reorderable, isFirst:i===0, isLast:i===mine.length-1}); }).join('') ||
-      '<div style="padding:24px;text-align:center;color:var(--stone);font-size:13px;">'+t('empty.noFocusToday')+'</div>';
+      '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noFocusToday')+'</span></div>';
     hydrateIcons(document.getElementById('focusZoneContainer'));
     if(focusZoneSortable){ focusZoneSortable.destroy(); focusZoneSortable = null; }
     if(reorderable && mine.length>1){
@@ -8997,7 +9048,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div class="list-body"><div class="list-title">'+escapeHtml(m.task.name)+'</div><div class="list-sub">via '+escapeHtml(m.groupTitle)+'</div></div>' +
       '</div>';
     }).join('');
-    document.getElementById('addFocusExistingList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('focus.noOtherTasks')+'</div>';
+    document.getElementById('addFocusExistingList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('focus.noOtherTasks')+'</span></div>';
     hydrateIcons(document.getElementById('addFocusExistingList'));
   }
   function pickExistingTaskAsFocus(idx){
@@ -9257,7 +9308,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div style="font-size:13px;color:var(--ink);line-height:1.5;">'+k.text+'</div>' +
       '</div>';
     }).join('');
-    document.getElementById('konsekuensiContainer').innerHTML = html || '<div style="padding:24px;text-align:center;color:var(--stone);font-size:13px;">'+t('konsekuensi.empty')+'</div>';
+    document.getElementById('konsekuensiContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('konsekuensi.empty')+'</span></div>';
   }
   var konsekuensiFormScope = 'project';
   var editingKonsekuensiId = null;
@@ -9372,7 +9423,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         }).join('')+'</div>' +
       '</div>';
     }).join('');
-    document.getElementById('dependenciesList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('deps.empty')+'</div>';
+    document.getElementById('dependenciesList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('deps.empty')+'</span></div>';
     openModal('dependenciesModal');
   }
 
@@ -9656,7 +9707,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '</div>' +
       '</div>';
     }).join('');
-    document.getElementById('missedTasksList').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:20px 0;">'+t('missed.empty')+'</div>';
+    document.getElementById('missedTasksList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('missed.empty')+'</span></div>';
     hydrateIcons(document.getElementById('missedTasksList'));
   }
   function applyToMissedTask(idx, mutator){
@@ -9815,7 +9866,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       '</div>';
     }).join('');
     var emptyMsg = mine.length===0 ? t('empty.noMyTasks') : t('empty.noFocusToday');
-    document.getElementById('todayTaskList').innerHTML = html || '<div style="padding:24px;text-align:center;color:var(--stone);font-size:13px;">'+emptyMsg+'</div>';
+    document.getElementById('todayTaskList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+emptyMsg+'</span></div>';
     hydrateIcons(document.getElementById('todayTaskList'));
     if(todayTaskSortable){ todayTaskSortable.destroy(); todayTaskSortable = null; }
     if(todayOnly.length>1){
@@ -9937,7 +9988,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
               '<div class="project-progress-row"><div class="project-bar"><div class="project-bar-fill" style="width:'+prog+'%"></div></div><div class="project-pct">'+prog+'%</div></div>') +
         '</div>';
     }).join('');
-    document.getElementById('myTasksContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noMyProjects')+'</div>';
+    document.getElementById('myTasksContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyProjects')+'</span></div>';
     hydrateIcons(document.getElementById('myTasksContainer'));
   }
   function renderMyTasksTaskView(){
@@ -9976,7 +10027,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       }).join('');
       return '<div class="mytasks-group-title"'+titleAction+'>'+escapeHtml(group[0].groupTitle)+(isProjectGroup?' <i class="ti ti-chevron-right" style="font-size:12px;"></i>':'')+'</div><div class="mytasks-group-sortable" data-group-key="'+key+'">' + rows + '</div>';
     }).join('');
-    document.getElementById('myTasksContainer').innerHTML = html || '<div style="text-align:center;color:var(--stone);font-size:13px;padding:30px 0;">'+t('empty.noMyTasks')+'</div>';
+    document.getElementById('myTasksContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyTasks')+'</span></div>';
     hydrateIcons(document.getElementById('myTasksContainer'));
     myTasksSortables.forEach(function(s){ s.destroy(); });
     myTasksSortables = [];
