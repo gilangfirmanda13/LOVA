@@ -9,4 +9,3 @@
 
 ## Tasks
 - [[Brajnstorm]]
-- [[Tes 1 2 3]]
