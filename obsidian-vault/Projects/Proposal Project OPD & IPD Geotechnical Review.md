@@ -8,7 +8,12 @@
 **Mulai:** 2026-09-04 · **Deadline:** 2026-09-06
 
 ## Tasks
-_Belum ada task_
+- [[Drafting via Claude]]
+- [[QaQc hasil draft]]
+- [[Buat alur isi proposal]]
+- [[Hitung Biaya Project]]
+- [[Buat Timeline Project]]
+- [[Kurasi Workflow & Gambar yang mau ditampilkan]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
