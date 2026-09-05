@@ -5,7 +5,8 @@
 **Peran:** staff
 
 ## Projects
-_Tidak ada_
+- [[Proposal Project OPD & IPD Geotechnical Review]]
 
 ## Tasks
+- [[Final QaQc]]
 - [[Isi form survey Yola]]
