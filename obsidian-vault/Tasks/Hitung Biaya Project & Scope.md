@@ -1,8 +1,8 @@
-# Hitung Biaya Project
+# Hitung Biaya Project & Scope
 
 **Assigned to:** [[Gilang Firmanda]]
 **Project:** [[Proposal Project OPD & IPD Geotechnical Review]]
 **Phase:** Drafting
-**Status:** Belum Dikerjakan
+**Status:** Sedang Dikerjakan
 **Deadline:** 2026-09-05
 
