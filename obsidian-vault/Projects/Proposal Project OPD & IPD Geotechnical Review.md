@@ -9,10 +9,10 @@
 
 ## Tasks
 - [[Drafting via Claude]]
-- [[Buat Timeline Project]]
 - [[QaQc hasil draft]]
 - [[Buat alur isi proposal]]
 - [[Hitung Biaya Project & Scope]]
+- [[Buat Timeline Project]]
 - [[Kurasi Workflow & Gambar yang mau ditampilkan]]
 - [[Buat metode penelitian terbaik di proposal]]
 - [[Selesaikan semua copywriting proposal]]

@@ -16,7 +16,6 @@
 - [[Final QaQc]]
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Drafting via Claude]]
-- [[Buat Timeline Project]]
 - [[Kurasi Workflow & Gambar yang mau ditampilkan]]
 - [[Buat metode penelitian terbaik di proposal]]
 - [[Selesaikan semua copywriting proposal]]
@@ -25,3 +24,4 @@
 - [[QaQc hasil draft]]
 - [[Buat alur isi proposal]]
 - [[Hitung Biaya Project & Scope]]
+- [[Buat Timeline Project]]
