@@ -1,9 +1,8 @@
 # kirim.email (Introduction to Groundwater Modeling for Open Pit Mining)
 
 **Assigned to:** [[riwangdu swarovski]]
-**Project:** [[Brand & Digital Strategist]]
-**Phase:** Kirim.Email Broadcasting
-**Status:** Sedang Dikerjakan
+**Divisi:** [[Learning & Development]]
+**Status:** Belum Dikerjakan
 **Deadline:** 2026-09-07
 
 ## Catatan

@@ -5,7 +5,9 @@
 **Peran:** staff
 
 ## Projects
-_Tidak ada_
+- [[PDP - LISTRIK & ELEKTRONIKA BATCH 1]]
+- [[PDP - MANAJEMEN PERAWATAN BATCH 1]]
 
 ## Tasks
-_Tidak ada_
+- [[LAPORAN - MECHANICAL MAINTENANCE]]
+- [[reimburse & fee sunardi]]

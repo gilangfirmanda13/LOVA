@@ -10,5 +10,5 @@
 
 ## Tasks
 - [[Present strat]]
-- [[Approval strategi]]
 - [[Email untuk PT Perum Jasa Tirta]]
+- [[Approval strategi]]
