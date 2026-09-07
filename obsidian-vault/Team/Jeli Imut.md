@@ -6,7 +6,17 @@
 
 ## Projects
 - [[Marketing RAB 2027]]
+- [[Software Renewal 2027]]
 
 ## Tasks
 - [[Approval strategi]]
 - [[Cold Email (75 perusahaan)]]
+- [[PT Riung Mitra Lestari]]
+- [[PT Asmin Bara Bronang]]
+- [[PT Mega Global Energy]]
+- [[UPN Veteran Yogyakarta]]
+- [[PT Amman Mineral Nusa Tenggara (Aquachem)]]
+- [[PT Amman Mineral Nusa Tenggara (Visual Modflow Team Pre)]]
+- [[PT Meares Soputan Mining]]
+- [[PT Citra Lampia Mandiri]]
+- [[PT Trimegah Bangun Persada]]

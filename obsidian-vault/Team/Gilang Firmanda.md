@@ -5,12 +5,10 @@
 **Peran:** owner
 
 ## Projects
-- [[Proposal Project OPD & IPD Geotechnical Review]]
 - [[Booklet 2027]]
+- [[Proposal Project OPD & IPD Geotechnical Review]]
 
 ## Tasks
-- [[Import PDF]]
-- [[QaQc Proposal]]
 - [[Brajnstorm]]
 - [[Kirim proposal ke Yola]]
 - [[Final QaQc]]
@@ -18,10 +16,12 @@
 - [[Drafting via Claude]]
 - [[Kurasi Workflow & Gambar yang mau ditampilkan]]
 - [[Buat metode penelitian terbaik di proposal]]
-- [[Selesaikan semua copywriting proposal]]
-- [[Input semua copywriting ke template design]]
-- [[Layouting]]
 - [[QaQc hasil draft]]
 - [[Buat alur isi proposal]]
+- [[Import PDF]]
+- [[QaQc Proposal]]
+- [[Input semua copywriting ke template design]]
 - [[Hitung Biaya Project & Scope]]
+- [[Selesaikan semua copywriting proposal]]
+- [[Layouting]]
 - [[Buat Timeline Project]]

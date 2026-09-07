@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-04 · **Deadline:** 2026-09-18
 
 ## Tasks
-_Belum ada task_
+- [[LEM FK B Bar]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

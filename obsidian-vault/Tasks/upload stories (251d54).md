@@ -2,7 +2,9 @@
 
 **Assigned to:** [[riwangdu swarovski]]
 **Project:** [[Brand & Digital Strategist]]
-**Phase:** Instagram Management
-**Status:** Sedang Dikerjakan
+**Phase:** Whatsapp Management
+**Status:** Selesai
 **Deadline:** 2026-09-07
 
+## Catatan
+uploaded stories

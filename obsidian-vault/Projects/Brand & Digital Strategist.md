@@ -10,10 +10,10 @@
 ## Tasks
 - [[berkomunikasi dengan mbak ana perihal mengikuti bootcamp digital marketing]]
 - [[kirim.email (Introduction to Groundwater Modeling for Open Pit Mining)]]
-- [[upload stories]]
+- [[upload stories (251d54)]]
 - [[mengucapkan ulang tahun]]
 - [[katalog whatsapp]]
-- [[upload stories (c9b543)]]
+- [[upload stories]]
 - [[Infografis dari training online Strategic Hydrology, Hydrogeology dan Geotech Planning in Laterite Nickel Mine]]
 - [[Interview Driver 2]]
 - [[menghubungi beberapa fasilitator]]

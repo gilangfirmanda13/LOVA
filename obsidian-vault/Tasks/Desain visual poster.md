@@ -1,10 +1,10 @@
-# 4. Desain visual poster
+# Desain visual poster
 
 **Assigned to:** [[Arya]]
 **Project:** [[Mining Development Program]]
-**Phase:** Design - Program
+**Phase:** Develop - Draft MDP
 **Status:** Selesai
-**Deadline:** 2026-08-07
+**Deadline:** 2026-08-14
 
 ## Catatan
 notes

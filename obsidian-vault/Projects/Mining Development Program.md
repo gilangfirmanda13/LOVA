@@ -8,11 +8,19 @@
 **Mulai:** 2026-07-27 · **Deadline:** -
 
 ## Tasks
+- [[Draft booklet]]
+- [[Desain visual poster]]
+- [[Desain slides deck]]
+- [[Desain visual booklet]]
 - [[Diskusi ide dan konsep program]]
 - [[1. Pengembangan Rumpun]]
-- [[2. Draft booklet]]
-- [[3. Desain visual booklet]]
-- [[4. Desain visual poster]]
+- [[Rumpun 1 - Mining Economic]]
+- [[Rumpun 2 - Mining and Coal Handling]]
+- [[Rumpun 3 - Risk Based Geotechnical]]
+- [[Rumpun 4 - Safety Health Environment]]
+- [[Rumpun 5 - Electrical]]
+- [[Rumpun 6 - Maintenance Management]]
+- [[Rumpun 7 - Machine and Mechanical]]
 
 ## Deskripsi
 Produk unggulan Litologi: In - House Training yang dirancang untuk program pengembangan SDM sistematis lebih dari 50+ modul dalam 7 rumpun kompetensi yang menjawab seluruh spektrum kebutuhan industri pertambangan modern Indonesia, dari fondasi teknis hingga keputusan strategis.
