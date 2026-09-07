@@ -6,6 +6,8 @@
 
 ## Projects
 - [[PDP - MANAJEMEN PERAWATAN BATCH 1]]
+- [[Mining Development Program]]
 
 ## Tasks
 - [[reimburse & fee sunardi]]
+- [[Sheduling Demo MDP]]
