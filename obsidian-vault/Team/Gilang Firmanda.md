@@ -10,7 +10,6 @@
 
 ## Tasks
 - [[Buat metode penelitian terbaik di proposal]]
-- [[Layouting]]
 - [[Brajnstorm]]
 - [[Drafting via Claude]]
 - [[Hitung Biaya Project & Scope]]
@@ -20,7 +19,8 @@
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Import PDF]]
 - [[Selesaikan semua copywriting proposal]]
+- [[QaQc Proposal]]
+- [[Layouting]]
 - [[Kurasi Workflow & Gambar yang mau ditampilkan]]
 - [[Buat Timeline Project]]
-- [[QaQc Proposal]]
 - [[Input semua copywriting ke template design]]
