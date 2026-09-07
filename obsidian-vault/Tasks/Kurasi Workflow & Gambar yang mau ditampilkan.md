@@ -3,6 +3,6 @@
 **Assigned to:** [[Gilang Firmanda]]
 **Project:** [[Proposal Project OPD & IPD Geotechnical Review]]
 **Phase:** Fiksasi Proposal
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-07
 
