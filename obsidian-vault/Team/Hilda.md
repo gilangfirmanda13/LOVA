@@ -32,6 +32,7 @@
 - [[Demo MDP - PT Riung Mitra Lestari]]
 - [[Riset rumpun Logistik]]
 - [[Timeline demo mdp]]
-- [[manajemen all docs tim dalam drive]]
 - [[SOP Training Development]]
+- [[manajemen all docs tim dalam drive]]
+- [[Proposal Skema Reklamasi]]
 - [[Workshop 2027]]

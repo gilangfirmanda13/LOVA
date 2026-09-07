@@ -23,5 +23,5 @@
 - [[Demo MDP - PT Cipta Kridatama]]
 - [[Demo MDP - PT BIB x Learning]]
 - [[Demo MDP - PT Riung Mitra Lestari]]
-- [[sop alur training development]]
 - [[FU bu alice - bu aini - bu helda PTBA]]
+- [[sop alur training development]]
