@@ -15,3 +15,4 @@
 - [[Desain visual poster]]
 - [[Desain slides deck]]
 - [[Desain visual booklet]]
+- [[QaQc & Rapihin Desain Proposal]]
