@@ -1,7 +1,8 @@
-# berkomunikasi dengan beberapa fasilitator perihal online training yang akan mereka adakan di Q4
+# menghubungi beberapa fasilitator
 
 **Assigned to:** [[riwangdu swarovski]]
-**Divisi:** [[Learning & Development]]
+**Project:** [[Brand & Digital Strategist]]
+**Phase:** Online Training
 **Status:** Belum Dikerjakan
 **Deadline:** 2026-09-07
 

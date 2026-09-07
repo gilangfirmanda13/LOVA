@@ -5,10 +5,8 @@
 **Peran:** staff
 
 ## Projects
-- [[Software Renewal 2027]]
 - [[Marketing RAB 2027]]
 
 ## Tasks
-- [[Present strat]]
-- [[Email untuk PT Perum Jasa Tirta]]
 - [[Approval strategi]]
+- [[Cold Email (75 perusahaan)]]

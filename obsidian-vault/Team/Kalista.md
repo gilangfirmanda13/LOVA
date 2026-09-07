@@ -5,11 +5,11 @@
 **Peran:** finance_admin
 
 ## Projects
-- [[Software Renewal 2027]]
 - [[Proposal Project OPD & IPD Geotechnical Review]]
+- [[Marketing RAB 2027]]
 
 ## Tasks
-- [[Perhitungan PT Perum Jasa Tirta]]
 - [[Final QaQc]]
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
+- [[Cold Email (75 perusahaan)]]
 - [[Proposal PT. ITM]]

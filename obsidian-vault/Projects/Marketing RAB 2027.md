@@ -9,6 +9,7 @@
 
 ## Tasks
 - [[Approval strategi]]
+- [[Cold Email (75 perusahaan)]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

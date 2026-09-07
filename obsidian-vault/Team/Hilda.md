@@ -17,3 +17,4 @@
 - [[Diskusi ide dan konsep program]]
 - [[manajemen all docs tim dalam drive]]
 - [[SOP Training Development]]
+- [[Workshop 2027]]

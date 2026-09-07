@@ -5,10 +5,9 @@
 **Peran:** staff
 
 ## Projects
-- [[Software Renewal 2027]]
 - [[Marketing RAB 2027]]
 
 ## Tasks
-- [[PT Asmin Bara Bronang]]
 - [[Approval strategi]]
+- [[Cold Email (75 perusahaan)]]
 - [[Kirim Proposal PTBA]]

@@ -8,10 +8,7 @@
 **Mulai:** 2026-09-02 · **Deadline:** 2026-09-09
 
 ## Tasks
-- [[Present strat]]
-- [[Perhitungan PT Perum Jasa Tirta]]
-- [[PT Asmin Bara Bronang]]
-- [[Email untuk PT Perum Jasa Tirta]]
+_Belum ada task_
 
 ## Deskripsi
 _Tidak ada deskripsi_
