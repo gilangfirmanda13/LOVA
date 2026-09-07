@@ -8,4 +8,4 @@
 _Tidak ada_
 
 ## Tasks
-- [[keur naon gin @regina]]
+_Tidak ada_

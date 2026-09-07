@@ -9,7 +9,7 @@
 
 ## Tasks
 - [[Brajnstorm]]
-- [[tes burung]]
+- [[desain]]
 
 ## Deskripsi
 booklet 2027

@@ -8,6 +8,6 @@
 - [[Booklet 2027]]
 
 ## Tasks
-- [[tes burung]]
 - [[Brajnstorm]]
+- [[manajemen all docs tim dalam drive]]
 - [[SOP Training Development]]

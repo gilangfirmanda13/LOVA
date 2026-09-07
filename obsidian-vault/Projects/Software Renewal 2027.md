@@ -8,7 +8,6 @@
 **Mulai:** 2026-09-02 · **Deadline:** 2026-09-09
 
 ## Tasks
-- [[Tes]]
 - [[Present strat]]
 - [[Perhitungan PT Perum Jasa Tirta]]
 - [[PT Asmin Bara Bronang]]
