@@ -9,7 +9,7 @@
 - [[Marketing RAB 2027]]
 
 ## Tasks
-- [[Kirim proposal ke Yola]]
 - [[Final QaQc]]
+- [[Kirim proposal ke Yola]]
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Approval strategi]]

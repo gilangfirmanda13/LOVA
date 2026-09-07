@@ -30,6 +30,8 @@
 - [[Demo MDP - PT Cipta Kridatama]]
 - [[Demo MDP - PT BIB x Learning]]
 - [[Demo MDP - PT Riung Mitra Lestari]]
+- [[Timeline demo mdp]]
+- [[Undangan untuk demo klien]]
 
 ## Deskripsi
 Produk unggulan Litologi: In - House Training yang dirancang untuk program pengembangan SDM sistematis lebih dari 50+ modul dalam 7 rumpun kompetensi yang menjawab seluruh spektrum kebutuhan industri pertambangan modern Indonesia, dari fondasi teknis hingga keputusan strategis.

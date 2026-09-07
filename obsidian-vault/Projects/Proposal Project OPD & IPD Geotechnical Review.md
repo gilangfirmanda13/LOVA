@@ -20,8 +20,8 @@
 - [[QaQc Proposal]]
 - [[Input semua copywriting ke template design]]
 - [[Layouting]]
-- [[Kirim proposal ke Yola]]
 - [[Final QaQc]]
+- [[Kirim proposal ke Yola]]
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 
 ## Deskripsi

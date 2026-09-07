@@ -10,14 +10,14 @@
 
 ## Tasks
 - [[Brajnstorm]]
-- [[Kirim proposal ke Yola]]
 - [[Final QaQc]]
-- [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Drafting via Claude]]
 - [[Kurasi Workflow & Gambar yang mau ditampilkan]]
 - [[Buat metode penelitian terbaik di proposal]]
 - [[QaQc hasil draft]]
 - [[Buat alur isi proposal]]
+- [[Kirim proposal ke Yola]]
+- [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Import PDF]]
 - [[QaQc Proposal]]
 - [[Input semua copywriting ke template design]]
