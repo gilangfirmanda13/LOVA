@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Arya]]
 **Divisi:** [[Creative Team]]
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-08
 
 ## Catatan

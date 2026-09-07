@@ -12,7 +12,6 @@
 - [[Buat metode penelitian terbaik di proposal]]
 - [[Layouting]]
 - [[Brajnstorm]]
-- [[Final QaQc]]
 - [[Drafting via Claude]]
 - [[Hitung Biaya Project & Scope]]
 - [[QaQc hasil draft]]

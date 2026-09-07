@@ -9,7 +9,6 @@
 - [[Marketing RAB 2027]]
 
 ## Tasks
-- [[Final QaQc]]
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Cold Email (75 perusahaan)]]
 - [[Proposal PT. ITM]]

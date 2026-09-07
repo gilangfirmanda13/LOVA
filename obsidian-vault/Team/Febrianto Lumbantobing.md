@@ -5,11 +5,9 @@
 **Peran:** staff
 
 ## Projects
-- [[Proposal Project OPD & IPD Geotechnical Review]]
 - [[PT. BIB - In-pit Dump Geotechnical Analysis]]
 
 ## Tasks
-- [[Final QaQc]]
 - [[draft final laporan BIB]]
 - [[LEM FK B Bar]]
 - [[canva material settlement]]
