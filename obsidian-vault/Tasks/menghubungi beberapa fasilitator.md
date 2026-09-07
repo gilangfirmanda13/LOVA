@@ -3,7 +3,7 @@
 **Assigned to:** [[riwangdu swarovski]]
 **Project:** [[Brand & Digital Strategist]]
 **Phase:** Online Training
-**Status:** Belum Dikerjakan
+**Status:** Review
 **Deadline:** 2026-09-07
 
 ## Catatan

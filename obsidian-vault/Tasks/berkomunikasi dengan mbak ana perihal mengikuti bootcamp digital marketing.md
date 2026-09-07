@@ -3,7 +3,7 @@
 **Assigned to:** [[riwangdu swarovski]]
 **Project:** [[Brand & Digital Strategist]]
 **Phase:** Memperdalam mengenai Digital Marketing
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-07
 
 ## Catatan
