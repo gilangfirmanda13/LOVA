@@ -8,4 +8,4 @@
 _Tidak ada_
 
 ## Tasks
-- [[Ppt]]
+_Tidak ada_

@@ -15,4 +15,6 @@
 - [[Desain visual poster]]
 - [[Desain slides deck]]
 - [[Desain visual booklet]]
-- [[QaQc & Rapihin Desain Proposal]]
+- [[Event Calender - LND]]
+- [[Booklet Public Training - LND]]
+- [[Proposal Project - PSD]]
