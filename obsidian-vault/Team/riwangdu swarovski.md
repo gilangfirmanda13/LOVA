@@ -25,4 +25,5 @@
 - [[Demo MDP - PT Riung Mitra Lestari]]
 - [[Infografis dari training online Strategic Hydrology, Hydrogeology dan Geotech Planning in Laterite Nickel Mine]]
 - [[Interview Driver 2]]
+- [[Build a Digital Marketing Strategy]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]

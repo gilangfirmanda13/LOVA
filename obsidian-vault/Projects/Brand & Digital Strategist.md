@@ -9,6 +9,7 @@
 
 ## Tasks
 - [[berkomunikasi dengan mbak ana perihal mengikuti bootcamp digital marketing]]
+- [[Build a Digital Marketing Strategy]]
 - [[kirim.email (Introduction to Groundwater Modeling for Open Pit Mining)]]
 - [[upload stories (251d54)]]
 - [[mengucapkan ulang tahun]]

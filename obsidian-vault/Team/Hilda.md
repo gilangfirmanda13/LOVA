@@ -33,7 +33,7 @@
 - [[Riset rumpun Logistik]]
 - [[Timeline demo mdp]]
 - [[Proposal Skema Reklamasi]]
-- [[SOP Training Development]]
 - [[manajemen all docs tim dalam drive]]
+- [[SOP Training Development]]
 - [[Workshop 2027]]
 - [[Workshop 2027 (e51fbe)]]
