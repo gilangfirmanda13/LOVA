@@ -3,6 +3,6 @@
 **Assigned to:** [[riwangdu swarovski]]
 **Project:** [[Brand & Digital Strategist]]
 **Phase:** LinkedIn Management
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-08
 
