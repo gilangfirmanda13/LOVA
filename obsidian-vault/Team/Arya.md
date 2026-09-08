@@ -22,3 +22,5 @@
 - [[Poster Diklat dan Sertifikasi]]
 - [[Sertifikat Diklat]]
 - [[Booklet Public Training - Cetak - LND]]
+- [[Template Word - Proposal]]
+- [[Poster - Booklet Online Training]]
