@@ -10,6 +10,6 @@
 
 ## Tasks
 - [[Final QaQc]]
-- [[Kirim proposal ke Yola]]
-- [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Approval strategi]]
+- [[Kirim proposal ke PT. Bukit Asam, Tbk]]
+- [[Kirim proposal ke Yola]]

@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-04 · **Deadline:** 2026-09-11
 
 ## Tasks
-_Belum ada task_
+- [[Brainstorm apa yang dibutuhkan untuk membangun MHTI]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

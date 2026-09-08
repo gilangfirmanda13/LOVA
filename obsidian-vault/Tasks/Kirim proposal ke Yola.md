@@ -3,6 +3,6 @@
 **Assigned to:** [[Yolla]]
 **Project:** [[Proposal Project OPD & IPD Geotechnical Review]]
 **Phase:** Pengiriman Proposal
-**Status:** Sedang Dikerjakan
-**Deadline:** 2026-09-07
+**Status:** Selesai
+**Deadline:** 2026-09-08
 

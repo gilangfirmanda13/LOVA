@@ -7,6 +7,7 @@
 ## Projects
 - [[Proposal Project OPD & IPD Geotechnical Review]]
 - [[Booklet 2027]]
+- [[Proposal Pembentukan MHTI (Masyarakat Hidrogeologi Tambang Indonesia)]]
 
 ## Tasks
 - [[Buat metode penelitian terbaik di proposal]]
@@ -15,12 +16,13 @@
 - [[Hitung Biaya Project & Scope]]
 - [[QaQc hasil draft]]
 - [[Buat alur isi proposal]]
-- [[Kirim proposal ke Yola]]
-- [[Kirim proposal ke PT. Bukit Asam, Tbk]]
-- [[Import PDF]]
 - [[Selesaikan semua copywriting proposal]]
 - [[QaQc Proposal]]
-- [[Layouting]]
 - [[Kurasi Workflow & Gambar yang mau ditampilkan]]
 - [[Buat Timeline Project]]
+- [[Kirim proposal ke PT. Bukit Asam, Tbk]]
+- [[Import PDF]]
 - [[Input semua copywriting ke template design]]
+- [[Layouting]]
+- [[Kirim proposal ke Yola]]
+- [[Brainstorm apa yang dibutuhkan untuk membangun MHTI]]

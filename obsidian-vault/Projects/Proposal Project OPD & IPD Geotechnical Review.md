@@ -16,13 +16,13 @@
 - [[Buat metode penelitian terbaik di proposal]]
 - [[Selesaikan semua copywriting proposal]]
 - [[Kurasi Workflow & Gambar yang mau ditampilkan]]
-- [[Import PDF]]
 - [[QaQc Proposal]]
-- [[Layouting]]
+- [[Import PDF]]
 - [[Input semua copywriting ke template design]]
+- [[Layouting]]
 - [[Final QaQc]]
-- [[Kirim proposal ke Yola]]
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
+- [[Kirim proposal ke Yola]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
