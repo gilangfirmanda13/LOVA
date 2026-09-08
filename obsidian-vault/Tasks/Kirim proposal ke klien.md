@@ -3,6 +3,6 @@
 **Assigned to:** [[Yolla]]
 **Project:** [[Geotechnical Review]]
 **Phase:** Pengiriman Proposal
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-08
 

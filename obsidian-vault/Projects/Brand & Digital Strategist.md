@@ -22,6 +22,7 @@
 - [[Promotion Planning (Inhouse Akhir Tahun)]]
 - [[Kumpulkan & filter semua pertanyaan dari social media]]
 - [[menghubungi beberapa fasilitator]]
+- [[pemberian sertifikat kontributor]]
 - [[Berinteraksi dengan orang-orang yang DM LinkedIn]]
 - [[Setup Pixel → Landing pagecheckout link]]
 - [[Review & atur ulang permissionaccess di setting]]

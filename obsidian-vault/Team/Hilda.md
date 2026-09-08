@@ -7,6 +7,7 @@
 ## Projects
 - [[Booklet 2027]]
 - [[Mining Development Program]]
+- [[Brand & Digital Strategist]]
 
 ## Tasks
 - [[Brajnstorm]]
@@ -32,6 +33,7 @@
 - [[Demo MDP - PT Riung Mitra Lestari]]
 - [[Riset rumpun Logistik]]
 - [[Timeline demo mdp]]
+- [[pemberian sertifikat kontributor]]
 - [[Proposal Skema Reklamasi]]
 - [[manajemen all docs tim dalam drive]]
 - [[SOP Training Development]]

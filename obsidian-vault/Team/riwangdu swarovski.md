@@ -33,4 +33,5 @@
 - [[Review & atur ulang permissionaccess di setting]]
 - [[Infografis dari training Judul Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]
 - [[Kumpulkan & filter semua pertanyaan dari social media]]
+- [[pemberian sertifikat kontributor]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]
