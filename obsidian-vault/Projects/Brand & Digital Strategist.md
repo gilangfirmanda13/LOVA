@@ -16,15 +16,15 @@
 - [[mengucapkan ulang tahun]]
 - [[katalog whatsapp]]
 - [[upload stories]]
-- [[Infografis dari training Judul Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]
 - [[Infografis dari training online Strategic Hydrology, Hydrogeology dan Geotech Planning in Laterite Nickel Mine]]
+- [[Infografis dari training Judul Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]
 - [[Interview Driver 2]]
 - [[Promotion Planning (Inhouse Akhir Tahun)]]
 - [[Kumpulkan & filter semua pertanyaan dari social media]]
 - [[menghubungi beberapa fasilitator]]
 - [[Berinteraksi dengan orang-orang yang DM LinkedIn]]
-- [[Review & atur ulang permissionaccess di setting]]
 - [[Setup Pixel → Landing pagecheckout link]]
+- [[Review & atur ulang permissionaccess di setting]]
 
 ## Deskripsi
 **Brand & Digital Strategist** adalah profesional yang merancang dan mengeksekusi strategi merek secara menyeluruh — mulai dari positioning, identitas visual, hingga eksekusi di kanal digital (media sosial, konten, iklan, dan kolaborasi) — dengan tujuan membangun kesadaran merek yang konsisten sekaligus mendorong pertumbuhan bisnis secara terukur.
