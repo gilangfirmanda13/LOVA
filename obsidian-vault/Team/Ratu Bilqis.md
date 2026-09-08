@@ -7,6 +7,7 @@
 ## Projects
 - [[Marketing RAB 2027]]
 - [[Software Renewal 2027]]
+- [[Geotechnical Review]]
 
 ## Tasks
 - [[Approval strategi]]
@@ -20,4 +21,5 @@
 - [[PT Meares Soputan Mining]]
 - [[PT Citra Lampia Mandiri]]
 - [[PT Trimegah Bangun Persada]]
+- [[Kirim proposal ke klien]]
 - [[Kirim Proposal PTBA]]
