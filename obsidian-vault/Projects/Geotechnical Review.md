@@ -11,10 +11,10 @@
 - [[Buat In-scope & Out-scope]]
 - [[Cek notulensi terkait scope of work]]
 - [[Buat timeline pekerjaan]]
-- [[Pembuatan RAB]]
 - [[Pembuatan Latar Belakang Masalah]]
 - [[Metodologi Penelitian]]
 - [[Deliverable]]
+- [[Pembuatan RAB]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
