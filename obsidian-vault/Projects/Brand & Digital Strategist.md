@@ -18,6 +18,7 @@
 - [[Infografis dari training online Strategic Hydrology, Hydrogeology dan Geotech Planning in Laterite Nickel Mine]]
 - [[Interview Driver 2]]
 - [[menghubungi beberapa fasilitator]]
+- [[Berinteraksi dengan orang-orang yang DM LinkedIn]]
 
 ## Deskripsi
 **Brand & Digital Strategist** adalah profesional yang merancang dan mengeksekusi strategi merek secara menyeluruh — mulai dari positioning, identitas visual, hingga eksekusi di kanal digital (media sosial, konten, iklan, dan kolaborasi) — dengan tujuan membangun kesadaran merek yang konsisten sekaligus mendorong pertumbuhan bisnis secara terukur.

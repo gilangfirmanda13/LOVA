@@ -26,4 +26,5 @@
 - [[Infografis dari training online Strategic Hydrology, Hydrogeology dan Geotech Planning in Laterite Nickel Mine]]
 - [[Interview Driver 2]]
 - [[Build a Digital Marketing Strategy]]
+- [[Berinteraksi dengan orang-orang yang DM LinkedIn]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]

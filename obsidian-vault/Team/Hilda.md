@@ -37,3 +37,6 @@
 - [[SOP Training Development]]
 - [[Workshop 2027]]
 - [[Workshop 2027 (e51fbe)]]
+- [[Proposal ahli estimasi]]
+- [[Inventarisasi judul training by request]]
+- [[Standarisasi proposal diklat dan sertifikasi]]

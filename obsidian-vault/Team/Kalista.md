@@ -12,3 +12,4 @@
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
 - [[Cold Email (75 perusahaan)]]
 - [[Proposal PT. ITM]]
+- [[Daftar Vendor]]
