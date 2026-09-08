@@ -1,7 +1,7 @@
-# Proposal Project - PSD
+# Poster Online Training
 
 **Assigned to:** [[Arya]]
 **Divisi:** [[Creative Team]]
 **Status:** Selesai
-**Deadline:** 2026-07-09
+**Deadline:** 2026-09-09
 
