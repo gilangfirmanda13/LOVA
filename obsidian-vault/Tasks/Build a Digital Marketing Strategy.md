@@ -10,3 +10,6 @@
 https://www.udemy.com/course/digital-marketing-guide/learn/lecture/48946679#overview
 
 Digital Marketing, Social Media, ChatGPT, Prompt Engineering, Google Ads, Facebook, SEO, WordPress, Instagram, YouTube.
+
+Learning & Development
+ Cek Udemy (saat waktu senggang)
