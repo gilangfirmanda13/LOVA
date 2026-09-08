@@ -13,3 +13,4 @@
 - [[Cold Email (75 perusahaan)]]
 - [[Proposal PT. ITM]]
 - [[Daftar Vendor]]
+- [[Reminder Pembayaran Seequent (End UPN Veteran)]]
