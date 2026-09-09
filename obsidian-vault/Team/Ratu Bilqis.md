@@ -23,4 +23,5 @@
 - [[PT Trimegah Bangun Persada]]
 - [[FU Cold Account (PIC)]]
 - [[Kirim proposal ke klien]]
+- [[Koneksi PIC by Linked]]
 - [[Kirim Proposal PTBA]]

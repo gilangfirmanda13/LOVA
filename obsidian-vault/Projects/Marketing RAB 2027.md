@@ -11,6 +11,7 @@
 - [[Approval strategi]]
 - [[Cold Email (75 perusahaan)]]
 - [[FU Cold Account (PIC)]]
+- [[Koneksi PIC by Linked]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
