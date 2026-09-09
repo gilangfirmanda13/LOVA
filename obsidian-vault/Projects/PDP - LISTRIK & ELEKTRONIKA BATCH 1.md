@@ -10,6 +10,7 @@
 ## Tasks
 - [[LAPORAN - MECHANICAL MAINTENANCE]]
 - [[LAPORAN - LISTRIK & ELEKTRONIKA]]
+- [[Buat Post-Test - Occupational Safety Management]]
 - [[Rekap absensi dan pre-test lvl 1]]
 
 ## Deskripsi

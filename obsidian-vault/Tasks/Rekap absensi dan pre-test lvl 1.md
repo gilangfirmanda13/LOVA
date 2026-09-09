@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Ayu ✨]]
 **Project:** [[PDP - LISTRIK & ELEKTRONIKA BATCH 1]]
-**Phase:** Operasional - Ayu
-**Status:** Belum Dikerjakan
+**Phase:** Operational
+**Status:** Sedang Dikerjakan
 **Deadline:** 2026-09-09
 
