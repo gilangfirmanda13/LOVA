@@ -21,5 +21,6 @@
 - [[PT Meares Soputan Mining]]
 - [[PT Citra Lampia Mandiri]]
 - [[PT Trimegah Bangun Persada]]
+- [[FU Cold Account (PIC)]]
 - [[Kirim proposal ke klien]]
 - [[Kirim Proposal PTBA]]

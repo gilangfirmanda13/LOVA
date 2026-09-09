@@ -3,7 +3,7 @@
 **Assigned to:** [[Ratu Bilqis]]
 **Project:** [[Marketing RAB 2027]]
 **Phase:** Tracker Cold Account
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-08
 
 ## Catatan
