@@ -3,6 +3,6 @@
 **Assigned to:** [[riwangdu swarovski]]
 **Project:** [[Brand & Digital Strategist]]
 **Phase:** Meta Ads
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-08
 
