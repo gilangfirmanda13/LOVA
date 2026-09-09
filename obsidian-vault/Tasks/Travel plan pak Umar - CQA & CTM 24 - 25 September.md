@@ -1,0 +1,8 @@
+# Travel plan pak Umar - CQA & CTM 24 - 25 September
+
+**Assigned to:** [[Ayu ✨]]
+**Project:** [[PDP - MINING AND COAL HANDLING BATCH 3]]
+**Phase:** Operational
+**Status:** Selesai
+**Deadline:** 2026-09-09
+

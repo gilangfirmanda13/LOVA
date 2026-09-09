@@ -16,3 +16,4 @@
 - [[Proposal PT. ITM]]
 - [[Reminder Pembayaran Seequent (End UPN Veteran)]]
 - [[Daftar Vendor]]
+- [[Buat Quotation Diskon 3%]]

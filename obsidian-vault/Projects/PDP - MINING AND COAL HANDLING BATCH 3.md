@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-07 · **Deadline:** 2026-12-31
 
 ## Tasks
-_Belum ada task_
+- [[Travel plan pak Umar - CQA & CTM 24 - 25 September]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
