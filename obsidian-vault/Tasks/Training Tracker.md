@@ -7,3 +7,5 @@
 
 ## Catatan
 Progress di https://docs.google.com/spreadsheets/d/1JUh8TGy-3YBNaRjnhCYq7_E2Ox_gvU3D/edit?gid=1049963171#gid=1049963171
+
+- insert materi dan proposal

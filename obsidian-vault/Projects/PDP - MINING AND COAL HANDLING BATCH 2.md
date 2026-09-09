@@ -9,9 +9,9 @@
 
 ## Tasks
 - [[Rekap absensi dan pre-test lvl 3]]
-- [[Online training jam 13.00-17.00 WIB]]
-- [[Laporan dokumentasi ke grp LND dan Arya]]
 - [[Siapkan absensi lvl 3]]
+- [[Laporan dokumentasi ke grp LND dan Arya]]
+- [[Online training jam 13.00-17.00 WIB]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
