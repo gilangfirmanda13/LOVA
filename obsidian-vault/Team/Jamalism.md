@@ -7,11 +7,14 @@
 ## Projects
 - [[PDP - LISTRIK & ELEKTRONIKA BATCH 1]]
 - [[Event Calender 2027]]
+- [[2027 LENUSA PUBLIC TRAINING]]
 
 ## Tasks
 - [[LAPORAN - LISTRIK & ELEKTRONIKA]]
 - [[Logo]]
 - [[Tahapan penyusunan training]]
+- [[POSTER PUBLIC TRAINING]]
+- [[POSTER PUBLIC TRAINING ( FORMAT A4 )]]
 - [[Event Calender - LND]]
 - [[Booklet Public Training - LND]]
 - [[Template Word - Proposal]]
