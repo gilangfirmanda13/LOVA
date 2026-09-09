@@ -10,8 +10,8 @@
 
 ## Tasks
 - [[1. Pengembangan Rumpun]]
-- [[desain]]
 - [[Diskusi ide dan konsep program]]
+- [[desain]]
 - [[Draft booklet]]
 - [[Demo MDP - ITM Group]]
 - [[Desain visual poster]]

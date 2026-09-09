@@ -1,0 +1,8 @@
+# upload infografis training "Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan"
+
+**Assigned to:** [[riwangdu swarovski]]
+**Project:** [[Brand & Digital Strategist]]
+**Phase:** Instagram Management
+**Status:** Belum Dikerjakan
+**Deadline:** 2026-09-09
+

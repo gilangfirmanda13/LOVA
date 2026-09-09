@@ -5,7 +5,14 @@
 **Peran:** staff
 
 ## Projects
-_Tidak ada_
+- [[Event Calender 2027]]
+- [[PDP - LISTRIK & ELEKTRONIKA BATCH 1]]
 
 ## Tasks
-_Tidak ada_
+- [[Logo]]
+- [[Tahapan penyusunan training]]
+- [[LAPORAN - LISTRIK & ELEKTRONIKA]]
+- [[Event Calender - LND]]
+- [[Booklet Public Training - LND]]
+- [[Template Word - Proposal]]
+- [[Poster - Booklet Online Training]]

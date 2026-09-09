@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Hilda]]
 **Divisi:** [[Ruang Personal]]
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-06
 
 ## Catatan

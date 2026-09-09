@@ -19,6 +19,6 @@
 - [[Demo MDP - PT Cipta Kridatama]]
 - [[Demo MDP - PT BIB x Learning]]
 - [[Demo MDP - PT Riung Mitra Lestari]]
-- [[Timeline demo mdp]]
 - [[Undangan untuk demo klien]]
+- [[Timeline demo mdp]]
 - [[Sheduling Demo MDP]]

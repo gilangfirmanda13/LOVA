@@ -12,3 +12,7 @@ Document ID
 Metadata
 Search & Filter
 Document Status: Draft / Review / Final / Archive
+
+feedback:
+- sertfikasi lengkapi materi dan pra diklat cc dinda
+- MDP -> dibuat folder rumpun

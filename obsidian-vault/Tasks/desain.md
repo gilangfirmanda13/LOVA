@@ -3,7 +3,7 @@
 **Assigned to:** [[Emir -🦖]]
 **Project:** [[Booklet 2027]]
 **Phase:** desain
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-11
 
 ## Catatan

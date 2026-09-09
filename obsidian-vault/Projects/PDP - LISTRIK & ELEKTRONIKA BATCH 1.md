@@ -9,6 +9,8 @@
 
 ## Tasks
 - [[LAPORAN - MECHANICAL MAINTENANCE]]
+- [[LAPORAN - LISTRIK & ELEKTRONIKA]]
+- [[Rekap absensi dan pre-test lvl 1]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
