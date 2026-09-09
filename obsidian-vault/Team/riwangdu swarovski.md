@@ -41,4 +41,5 @@
 - [[upload infografis training Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]
 - [[upload training Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]
 - [[penjadwalan kirim.email, untuk publik training STRATEGIC MINE SLOPE DESIGN]]
+- [[menyiapkan Mayar untuk online training Slope Stability Monitoring for Safe and Sustainable Mining Operations]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]

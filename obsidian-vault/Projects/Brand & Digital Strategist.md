@@ -30,6 +30,7 @@
 - [[Kumpulkan & filter semua pertanyaan dari social media]]
 - [[menghubungi beberapa fasilitator]]
 - [[pemberian sertifikat kontributor]]
+- [[menyiapkan Mayar untuk online training Slope Stability Monitoring for Safe and Sustainable Mining Operations]]
 - [[Berinteraksi dengan orang-orang yang DM LinkedIn]]
 - [[Setup Pixel → Landing pagecheckout link]]
 - [[Review & atur ulang permissionaccess di setting]]
