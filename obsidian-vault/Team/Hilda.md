@@ -44,6 +44,6 @@
 - [[Workshop 2027 (e51fbe)]]
 - [[Standarisasi proposal diklat dan sertifikasi]]
 - [[Inventarisasi judul training by request]]
-- [[Analisis program training]]
 - [[Proposal ahli estimasi]]
 - [[Training Tracker]]
+- [[Analisis program training]]

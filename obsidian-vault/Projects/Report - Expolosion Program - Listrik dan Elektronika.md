@@ -1,4 +1,4 @@
-# Report - Expolosion Program - Listrisk adan elektronika
+# Report - Expolosion Program - Listrik dan Elektronika
 
 **Klien:** Learning  & Development Division
 **Divisi:** [[Creative Team]]
