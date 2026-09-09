@@ -34,4 +34,5 @@
 - [[Infografis dari training Judul Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]
 - [[Kumpulkan & filter semua pertanyaan dari social media]]
 - [[pemberian sertifikat kontributor]]
+- [[melanjutkan permintaan yola dalam hal creative brand strategi Software]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]

@@ -10,6 +10,7 @@
 ## Tasks
 - [[berkomunikasi dengan mbak ana perihal mengikuti bootcamp digital marketing]]
 - [[Build a Digital Marketing Strategy]]
+- [[melanjutkan permintaan yola dalam hal creative brand strategi Software]]
 - [[kirim.email (Introduction to Groundwater Modeling for Open Pit Mining)]]
 - [[training publik STRATEGIC MINE SLOPE DESIGN (Pra-Preparasi Sertifikasi)]]
 - [[upload stories (251d54)]]
