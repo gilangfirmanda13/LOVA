@@ -3,7 +3,7 @@
 **Assigned to:** [[Ayu ✨]]
 **Project:** [[PDP - MEKANIKAL PERMESINAN BATCH 1]]
 **Phase:** Operational
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-15
 
 ## Catatan
