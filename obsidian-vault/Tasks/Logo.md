@@ -3,7 +3,7 @@
 **Assigned to:** [[Jamalism]]
 **Project:** [[Event Calender 2027]]
 **Phase:** Desain
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-09
 
 ## Catatan

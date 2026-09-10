@@ -3,7 +3,7 @@
 **Assigned to:** [[Febrianto Lumbantobing]]
 **Project:** [[PT. BIB - In-pit Dump Geotechnical Analysis]]
 **Phase:** pembuatan laporan
-**Status:** Sedang Dikerjakan
+**Status:** Review
 **Deadline:** 2026-09-11
 
 ## Catatan

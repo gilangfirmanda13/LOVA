@@ -12,6 +12,7 @@
 - [[LAPORAN - LISTRIK & ELEKTRONIKA]]
 - [[Buat Post-Test - Occupational Safety Management]]
 - [[Rekap absensi dan pre-test lvl 1]]
+- [[Rekap absensi OSM - lvl 2]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

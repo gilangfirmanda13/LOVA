@@ -16,6 +16,7 @@
 - [[Desain slides deck]]
 - [[Desain visual booklet]]
 - [[LAPORAN - LISTRIK & ELEKTRONIKA]]
+- [[Public Training]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]

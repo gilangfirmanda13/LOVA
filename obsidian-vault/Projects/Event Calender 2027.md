@@ -8,8 +8,8 @@
 **Mulai:** 2026-09-07 · **Deadline:** 2026-09-14
 
 ## Tasks
-- [[Logo]]
 - [[Tahapan penyusunan training]]
+- [[Logo]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

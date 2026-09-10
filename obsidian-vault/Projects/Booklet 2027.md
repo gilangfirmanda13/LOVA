@@ -10,6 +10,8 @@
 ## Tasks
 - [[Brajnstorm]]
 - [[desain]]
+- [[Public Training]]
+- [[Online Training]]
 
 ## Deskripsi
 booklet 2027
