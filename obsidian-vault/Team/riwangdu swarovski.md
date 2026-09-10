@@ -42,4 +42,5 @@
 - [[upload training Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]
 - [[merapikan highlight intagram, update dan make it good. khususnya untuk program pdp yang selama ini sudah berjalan.]]
 - [[re-sending publik training Introduction to Groundwater Modeling for Open Pit Mining dengan jadwal update terbaru November dikirim email]]
+- [[- broadcasting online training Slope Stability Monitoring for Safe and Sustainable Mining Operations]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]

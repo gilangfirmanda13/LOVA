@@ -5,7 +5,7 @@
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** extreme
 **Status:** Aktif
-**Mulai:** 2026-01-09 · **Deadline:** 2026-12-31
+**Mulai:** 2026-01-09 · **Deadline:** 2026-09-15
 
 ## Tasks
 _Belum ada task_
