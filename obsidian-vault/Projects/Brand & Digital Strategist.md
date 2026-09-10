@@ -32,6 +32,7 @@
 - [[Kumpulkan & filter semua pertanyaan dari social media]]
 - [[- updating mayar hal link Slope Stability Monitoring for Safe and Sustainable Mining Operations dan Introduction to Groundwater Modeling for Open Pit Mining]]
 - [[mempelajari e-book di mayar]]
+- [[promotion book Kajian Lereng Tambang]]
 - [[pemberian sertifikat kontributor]]
 - [[menyiapkan Mayar untuk online training Slope Stability Monitoring for Safe and Sustainable Mining Operations]]
 - [[- broadcasting online training Slope Stability Monitoring for Safe and Sustainable Mining Operations]]
