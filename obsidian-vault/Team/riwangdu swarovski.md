@@ -49,4 +49,5 @@
 - [[updating fasilitator untuk mengirimkan ulang form online training]]
 - [[- updating katalog whatsapp Slope Stability Monitoring for Safe and Sustainable Mining Operations dan Introduction to Groundwater Modeling for Open Pit Mining]]
 - [[- updating mayar hal link Slope Stability Monitoring for Safe and Sustainable Mining Operations dan Introduction to Groundwater Modeling for Open Pit Mining]]
+- [[mempelajari e-book di mayar]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]
