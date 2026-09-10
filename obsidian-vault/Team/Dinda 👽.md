@@ -22,3 +22,4 @@
 - [[Undangan untuk demo klien]]
 - [[Timeline demo mdp]]
 - [[Sheduling Demo MDP]]
+- [[Review Portofolio Peserta Sertifikasi Geoteknik]]
