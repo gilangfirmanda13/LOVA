@@ -11,8 +11,8 @@
 - [[PDP - MEKANIKAL PERMESINAN BATCH 1]]
 
 ## Tasks
-- [[Rekap absensi dan pre-test - CQA lvl 1]]
 - [[Reminder online training - CQA lvl 1]]
+- [[Rekap absensi dan pre-test - CQA lvl 1]]
 - [[Siapkan absensi - CQA lvl 1]]
 - [[Sort dokumentasi - CQA lvl 1]]
 - [[Buat Post-Test - Occupational Safety Management]]
