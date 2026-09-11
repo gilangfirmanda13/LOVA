@@ -2,25 +2,24 @@
 
 **Assigned to:** [[Hilda]]
 **Divisi:** [[Ruang Personal]]
-**Status:** Belum Dikerjakan
+**Status:** Sedang Dikerjakan
 **Deadline:** 2026-09-16
 
 ## Catatan
-1. Mechanical QA/QC Fundamentals for Reliable Construction Quality
-item
+- Mechanical QA/QC Fundamentals for Reliable Construction Quality
 Membahas prinsip dasar QA/QC pada pekerjaan mechanical, mulai dari quality planning, inspection, acceptance criteria, hingga pengendalian ketidaksesuaian untuk memastikan pekerjaan memenuhi standar dan spesifikasi proyek.
 
-2. Mechanical Drawing and Specification Reading for Accurate Inspection
+- Mechanical Drawing and Specification Reading for Accurate Inspection
 Membekali peserta dengan kemampuan membaca dan memahami mechanical drawing, datasheet, toleransi, serta project specification sebagai dasar melakukan inspeksi yang akurat dan sesuai requirement.
 
-Inspection and Test Plan for Mechanical Construction Works
+- Inspection and Test Plan for Mechanical Construction Works
 Membahas penyusunan dan penerapan Inspection and Test Plan (ITP), termasuk inspection point, hold point, witness point, acceptance criteria, serta dokumentasi hasil inspeksi pekerjaan mechanical.
 
-3. Mechanical Installation Inspection for Equipment Reliability
+- Mechanical Installation Inspection for Equipment Reliability
 Membahas metode inspeksi pemasangan equipment mechanical untuk memastikan instalasi, posisi, foundation, fastening, connection, dan kondisi equipment telah sesuai drawing dan spesifikasi teknis.
 
-4. Mechanical Equipment Alignment and Installation for Reliable Operation
+- Mechanical Equipment Alignment and Installation for Reliable Operation
 Membahas prinsip alignment, leveling, positioning, dan installation tolerance pada rotating maupun static equipment untuk mendukung keandalan operasi dan mengurangi risiko kerusakan akibat kesalahan instalasi.
 
-5. QA/QC Documentation and Reporting for Mechanical Projects
+- QA/QC Documentation and Reporting for Mechanical Projects
 Membahas pengelolaan dokumen QA/QC seperti inspection report, checklist, NCR, punch list, material record, dan quality dossier agar seluruh proses quality control dapat ditelusuri dan dipertanggungjawabkan.
