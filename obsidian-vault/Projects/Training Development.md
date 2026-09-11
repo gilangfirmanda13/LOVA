@@ -13,6 +13,8 @@
 - [[Competitor Benchmark]]
 - [[Training QAQC]]
 - [[Identifikasi Training Gap]]
+- [[Database Trainer]]
+- [[Database Training]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
