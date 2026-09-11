@@ -8,7 +8,9 @@
 **Mulai:** 2026-09-11 · **Deadline:** -
 
 ## Tasks
+- [[Market Research]]
 - [[Training QAQC]]
+- [[Identifikasi Training Gap]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
