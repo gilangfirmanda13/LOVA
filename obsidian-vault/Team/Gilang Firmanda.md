@@ -34,3 +34,4 @@
 - [[Pembuatan Latar Belakang Masalah]]
 - [[Metodologi Penelitian]]
 - [[Cek notulensi terkait scope of work]]
+- [[Bayar tagihan]]
