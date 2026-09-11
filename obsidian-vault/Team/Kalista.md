@@ -18,3 +18,4 @@
 - [[Daftar Vendor]]
 - [[Buat Quotation Diskon 3%]]
 - [[Daftar Ulang Tender]]
+- [[Infokan mengenai Bupot ke Grup Admin]]
