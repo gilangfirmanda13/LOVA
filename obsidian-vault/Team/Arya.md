@@ -8,6 +8,7 @@
 - [[PDP - LISTRIK & ELEKTRONIKA BATCH 1]]
 - [[Booklet 2027]]
 - [[Mining Development Program]]
+- [[Campaign - Year-End In-House Training Promotion 2027]]
 - [[Brand & Digital Strategist]]
 
 ## Tasks
@@ -18,9 +19,10 @@
 - [[Desain visual booklet]]
 - [[LAPORAN - LISTRIK & ELEKTRONIKA]]
 - [[Public Training]]
+- [[Membaut kv desain - ukuran feed]]
+- [[- updating jamal hal infografis training Introduction to Groundwater Modeling for Open Pit Mining]]
 - [[updating tim desain hal Booklet 2027 untuk dijadikan versin stories, feed, dan booklet]]
 - [[updating tim desain hal prmotion akhir tahun in-house trianing]]
-- [[- updating jamal hal infografis training Introduction to Groundwater Modeling for Open Pit Mining]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]
