@@ -41,6 +41,8 @@
 - [[Logo]]
 - [[Public Training]]
 - [[Market Research]]
+- [[Industry Trend]]
+- [[Competitor Benchmark]]
 - [[Training QAQC]]
 - [[Identifikasi Training Gap]]
 - [[Proposal Skema Reklamasi]]

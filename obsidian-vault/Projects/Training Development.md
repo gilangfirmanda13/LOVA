@@ -9,6 +9,8 @@
 
 ## Tasks
 - [[Market Research]]
+- [[Industry Trend]]
+- [[Competitor Benchmark]]
 - [[Training QAQC]]
 - [[Identifikasi Training Gap]]
 
