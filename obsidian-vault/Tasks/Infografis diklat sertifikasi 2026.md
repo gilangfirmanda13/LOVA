@@ -3,7 +3,7 @@
 **Assigned to:** [[Hilda]]
 **Project:** [[Booklet 2027]]
 **Phase:** Diklat dan Sertifikasi
-**Status:** Sedang Dikerjakan
+**Status:** Review
 **Deadline:** 2026-09-14
 
 ## Catatan
@@ -24,3 +24,11 @@
 8. "2026-Sept-POTB-Diklat dan Sertifikasi Eksplorasi Sumber Daya dan Cadangan Bali-Batch 1" (5 peserta)
 
 9. 2026-SEP-POTB-Diklat dan Sertifikasi Perencanaan Operasional Tambang Bali Batch 2 (4 peserta)
+
+batubara 2+3+3
+mineral 11+10+12+5+2+2+1
+TOTAL
+- Geotek: RGT (2+3+3+2+1), LGT (6+9+1), TPG (9+1+2), TUG (), TAG (2)
+- Reklamasi (4)
+- eksplorasi 5
+- pts 3, ptl 1
