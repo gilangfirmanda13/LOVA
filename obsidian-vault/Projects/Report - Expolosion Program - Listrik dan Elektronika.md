@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-09 · **Deadline:** 2026-10-09
 
 ## Tasks
-_Belum ada task_
+- [[Pengerjaan Tamplate Report]]
 
 ## Deskripsi
 Link Deskripsi: 

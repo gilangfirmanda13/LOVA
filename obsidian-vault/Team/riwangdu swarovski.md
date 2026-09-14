@@ -54,7 +54,7 @@
 - [[membantu dinda untuk katalog whatsapp]]
 - [[merapikan linkedIn rosdiana umakaapa]]
 - [[- uploading infografis ke-dua-nya Slope Stability Monitoring for Safe and Sustainable Mining Operations]]
-- [[2 training online → Lukman dan Indra Bagus, pembuatan flyer]]
 - [[Meeting Diklat dan Sertifikasi]]
 - [[content plan Infografis → Training Lukman dan Indra Bagus]]
+- [[2 training online → Lukman dan Indra Bagus, pembuatan flyer]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]

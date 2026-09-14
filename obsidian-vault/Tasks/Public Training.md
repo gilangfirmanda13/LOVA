@@ -3,7 +3,7 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Booklet 2027]]
 **Phase:** Training
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-11
 
 ## Catatan
