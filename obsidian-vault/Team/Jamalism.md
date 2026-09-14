@@ -27,3 +27,4 @@
 - [[Event Calender - LND]]
 - [[Booklet Public Training - LND]]
 - [[Template Word - Proposal]]
+- [[Poster Online Training - Practical Long-Term & Short-Term Mine Planning for Mining Operations]]
