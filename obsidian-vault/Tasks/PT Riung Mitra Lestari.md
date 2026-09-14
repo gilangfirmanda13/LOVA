@@ -3,7 +3,7 @@
 **Assigned to:** [[Jeli Imut]]
 **Project:** [[Software Renewal 2027]]
 **Phase:** Follow Up
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-09
 
 ## Catatan

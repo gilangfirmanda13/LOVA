@@ -12,11 +12,11 @@
 ## Tasks
 - [[Approval strategi]]
 - [[Cold Email (75 perusahaan)]]
-- [[PT Riung Mitra Lestari]]
+- [[PT Amman Mineral Nusa Tenggara (Aquachem)]]
 - [[PT Asmin Bara Bronang]]
 - [[PT Mega Global Energy]]
 - [[UPN Veteran Yogyakarta]]
-- [[PT Amman Mineral Nusa Tenggara (Aquachem)]]
+- [[PT Riung Mitra Lestari]]
 - [[PT Amman Mineral Nusa Tenggara (Visual Modflow Team Pre)]]
 - [[PT Meares Soputan Mining]]
 - [[PT Citra Lampia Mandiri]]
