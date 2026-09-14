@@ -8,13 +8,13 @@
 **Mulai:** 2026-09-11 · **Deadline:** -
 
 ## Tasks
-- [[Market Research]]
 - [[Industry Trend]]
 - [[Competitor Benchmark]]
 - [[Training QAQC]]
 - [[Identifikasi Training Gap]]
-- [[Database Trainer]]
+- [[Market Research]]
 - [[Database Training]]
+- [[Database Trainer]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

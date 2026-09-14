@@ -23,6 +23,8 @@
 - [[- updating jamal hal infografis training Introduction to Groundwater Modeling for Open Pit Mining]]
 - [[updating tim desain hal Booklet 2027 untuk dijadikan versin stories, feed, dan booklet]]
 - [[updating tim desain hal prmotion akhir tahun in-house trianing]]
+- [[2 training online → Lukman dan Indra Bagus, pembuatan flyer]]
+- [[content plan Infografis → Training Lukman dan Indra Bagus]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]
