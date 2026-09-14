@@ -8,7 +8,4 @@
 _Tidak ada_
 
 ## Tasks
-- [[Review kontrak klien PT Sejahtera]]
-- [[Update database klien lama]]
-- [[Kirim proposal training BNSP]]
-- [[Follow up invoice bulan lalu]]
+_Tidak ada_
