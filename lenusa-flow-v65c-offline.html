@@ -659,14 +659,19 @@
   .cal-allday-chip{ font-size:9px; font-weight:700; color:#fff; border-radius:9px; padding:3px 6px; margin-bottom:3px; cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .cal-allday-chip.dragging-chip{ opacity:0.85; box-shadow:0 8px 20px rgba(0,0,0,0.3); position:relative; z-index:20; }
 
-  .cal-timegrid-wrap{ display:flex; max-height:560px; overflow-y:auto; border:1px solid var(--glass-border); border-radius:14px; background:var(--surface); }
+  /* overflow-x is explicit (not left to auto-from-content) on purpose: the day-of-week
+     header (.cal-week-daylabels) and all-day strip above this grid are separate elements
+     that never scroll, so letting this grid scroll horizontally on its own desynced them
+     from the header -- events appeared to land under the wrong date as soon as the grid
+     had to scroll sideways to fit. Columns compress instead of overflowing. */
+  .cal-timegrid-wrap{ display:flex; max-height:560px; overflow-y:auto; overflow-x:hidden; border:1px solid var(--glass-border); border-radius:14px; background:var(--surface); }
   .cal-time-axis{ width:46px; flex-shrink:0; position:relative; border-right:1px solid var(--glass-border); }
   .cal-time-axis .tlabel{ position:absolute; right:5px; font-size:10.5px; color:var(--stone); font-family:var(--font-mono); transform:translateY(-50%); font-weight:500; }
   .cal-timegrid{ flex:1; display:grid; grid-template-columns:repeat(7,1fr); position:relative; }
   .cal-timegrid-single{ display:block; position:relative; }
   .cal-hourline{ position:absolute; left:0; right:0; border-top:1px solid var(--glass-border); }
   .cal-daycol{ position:relative; border-right:1px solid var(--glass-border); }
-  .cal-timeblock{ position:absolute; left:2px; right:2px; border-radius:12px; padding:6px 8px; color:#fff; font-size:11.5px; overflow:hidden; cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; box-shadow:0 3px 10px rgba(0,0,0,0.18); }
+  .cal-timeblock{ position:absolute; left:2px; right:2px; border-radius:12px; padding:6px 8px; color:#fff; font-size:11.5px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; box-shadow:0 3px 10px rgba(0,0,0,0.18); }
   .cal-timeblock.readonly{ cursor:default; opacity:0.85; }
   .cal-timeblock.dragging{ opacity:0.85; z-index:20; box-shadow:0 8px 20px rgba(0,0,0,0.3); }
   .cal-timeblock-title{ font-weight:600; line-height:1.3; }
@@ -1061,11 +1066,16 @@
   .task-name-input{ flex:1; min-width:0; border:none; background:transparent; font-size:13px; color:var(--ink); font-family:var(--font-body); font-weight:500; }
   .task-name-input:focus{ outline:none; }
   .task-status-select{ font-size:10px; font-weight:600; padding:5px 7px; border-radius:99px; border:none; flex-shrink:0; -webkit-appearance:none; appearance:none; background-position:right 6px center; padding-right:16px; }
+  /* Text colors here are deliberately darker than the matching --orange-deep/--revisi/--teal
+     tokens used elsewhere -- at this badge's actual size (10px/600), the tokens measure
+     3.3:1 and 4.2:1 against their tint backgrounds, under the 4.5:1 WCAG AA text minimum.
+     Scoped to just these badge classes rather than changing the shared tokens, which are
+     used all over the app in contexts (buttons, large icons) where they're already fine. */
   .status-todo-sel{ background:#F1EFE8; color:var(--stone); }
-  .status-progress-sel{ background:var(--orange-tint); color:var(--orange-deep); }
+  .status-progress-sel{ background:var(--orange-tint); color:#925D18; }
   .status-review-sel{ background:var(--teal-tint); color:var(--teal-deep); }
-  .status-revisi-sel{ background:var(--revisi-tint); color:var(--revisi); }
-  .status-done-sel{ background:var(--teal); color:#fff; }
+  .status-revisi-sel{ background:var(--revisi-tint); color:#A9351A; }
+  .status-done-sel{ background:var(--teal-deep); color:#fff; }
   .task-mini-avatar{ width:19px; height:19px; font-size:8.5px; flex-shrink:0; border:none; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease; }
   .task-mini-avatar:hover{ box-shadow:0 0 0 3px var(--teal-tint); }
   .task-mini-avatar:active{ transform:scale(0.85); }
@@ -1119,7 +1129,7 @@
 
   /* ========================= DESKTOP ========================= */
   @media (min-width:860px){
-    .sidebar{ display:flex; box-shadow:2px 0 18px rgba(38,48,43,0.05); }
+    .sidebar{ display:flex; box-shadow:2px 0 18px rgba(38,48,43,0.05); position:sticky; top:0; height:100vh; overflow-y:auto; }
     .bottom-nav{ display:none; }
     .fab-btn{ right:40px; bottom:40px; }
     .topbar .brand{ display:none; }
@@ -1344,6 +1354,10 @@
   .today-ritual-title{ font-size:13.5px; color:var(--ink); }
   .today-ritual-tags{ display:flex; gap:5px; margin-top:3px; flex-wrap:wrap; align-items:center; }
   .today-ritual-section-title{ font-family:var(--font-display); font-weight:700; font-size:12px; color:var(--stone); letter-spacing:0.04em; margin:14px 0 4px; }
+  /* Tap target for the collapsible "N selesai" section headers (Focus Zone, My Tasks, Task
+     Umum) -- the plain label above is only ~19px tall on its own, well under the 44px
+     minimum tap-target size, since it was never meant to be clickable. */
+  .done-section-toggle{ min-height:44px; display:flex; align-items:center; padding:11px 2px; }
   .today-ritual-section-title:first-child{ margin-top:0; }
   .today-ritual-check{ width:20px; height:20px; border-radius:6px; border:1.5px solid var(--glass-border); flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; }
   .today-ritual-check.done{ background:var(--teal-deep); border-color:var(--teal-deep); }
@@ -1711,6 +1725,7 @@
             <div class="section-head-inline">
               <button class="btn-new-project" onclick="openNewEventModal()"><i class="ti ti-plus"></i><span data-i18n="event.new">Event baru</span></button>
             </div>
+            <input class="form-input" id="eventSearchInput" style="margin-bottom:14px;" placeholder="Cari event…" oninput="renderEventsScreen()">
             <div class="section-head"><div class="section-title" data-i18n="event.categoryTitle">Kategori</div></div>
             <div class="evcat-grid">
               <div class="evcat-card training" onclick="openEventCategory('training')">
@@ -1735,7 +1750,7 @@
               </div>
             </div>
 
-            <div class="section-head"><div class="section-title" data-i18n="event.upcomingTitle">Akan datang</div></div>
+            <div class="section-head"><div class="section-title" id="eventUpcomingTitle" data-i18n="event.upcomingTitle">Akan datang</div></div>
             <div id="eventUpcomingContainer"></div>
           </div>
         </div>
@@ -1748,6 +1763,7 @@
               <div class="grow"><div class="ttl" id="evcatTitle">Kategori</div><div class="sub" id="evcatSub">0 event</div></div>
               <button class="btn-new-project" onclick="openNewEventModal(currentEventCategory)"><i class="ti ti-plus"></i><span data-i18n="event.new">Event baru</span></button>
             </div>
+            <input class="form-input" id="evcatSearchInput" style="margin-bottom:10px;" placeholder="Cari event…" oninput="renderEventCategoryList()">
             <div class="evcat-filter-toggle" onclick="toggleEvcatFilters()">
               <i class="ti ti-filter"></i><span data-i18n="event.filterToggle">Filter</span>
               <span class="evcat-filter-badge" id="evcatFilterBadge" style="display:none;">1</span>
@@ -1794,6 +1810,7 @@
               <div id="calMonthLabel">—</div>
               <div class="cal-nav-btn" onclick="calNavNext()"><i class="ti ti-chevron-right"></i></div>
             </div>
+            <input class="form-input" id="calSearchInput" style="margin-bottom:10px;" placeholder="Cari project, task, ritual, event…" oninput="onCalSearchInput()">
             <div class="evcat-filter-toggle" onclick="toggleCalFilters()">
               <i class="ti ti-filter"></i><span data-i18n="event.filterToggle">Filter</span>
               <span class="evcat-filter-badge" id="calFilterBadge" style="display:none;">1</span>
@@ -2472,6 +2489,11 @@
                 <button class="btn-new-project" onclick="openNewGeneralTaskModal()"><i class="ti ti-plus"></i><span data-i18n="general.new">Task cepat</span></button>
               </div>
               <div class="general-hint" data-i18n="general.hint">Untuk tugas operasional lintas tim atau titipan cepat — tanpa perlu bikin project baru.</div>
+              <div class="filter-pills" id="generalTaskSortPills">
+                <div class="filter-pill active" data-sort="default" data-i18n="sort.default">Default</div>
+                <div class="filter-pill" data-sort="priority" data-i18n="sort.priority">Prioritas</div>
+                <div class="filter-pill" data-sort="deadline" data-i18n="sort.deadline">Deadline</div>
+              </div>
               <div id="generalTaskListContainer"></div>
             </div>
 
@@ -2708,6 +2730,7 @@
       <div class="form-row"><label class="form-label" data-i18n="form.endTimeOpt">Jam Berakhir (opsional)</label><input class="form-input" type="time" id="atEndTime"></div>
     </div>
     <div class="form-error" id="atDateError" data-i18n="form.dateError">Deadline tidak boleh sebelum tanggal mulai.</div>
+    <div class="form-row"><label class="form-label" data-i18n="form.duration">Estimasi Durasi (jam, opsional)</label><input class="form-input" type="number" min="0" step="0.5" id="atDuration" placeholder="cth. 4"></div>
     <div class="form-row"><label class="form-label" data-i18n="form.status">Status</label>
       <select class="form-select" id="atStatus">
         <option value="todo" data-i18n="status.todo">Belum Dikerjakan</option>
@@ -2747,6 +2770,7 @@
       <div class="form-row"><label class="form-label" data-i18n="form.endTimeOpt">Jam Berakhir (opsional)</label><input class="form-input" type="time" id="etDeadlineTime"></div>
     </div>
     <div class="form-error" id="etDateError" data-i18n="form.dateError">Deadline tidak boleh sebelum tanggal mulai.</div>
+    <div class="form-row"><label class="form-label" data-i18n="form.duration">Estimasi Durasi (jam, opsional)</label><input class="form-input" type="number" min="0" step="0.5" id="etDuration" placeholder="cth. 4"></div>
     <div class="form-row"><label class="form-label" data-i18n="form.status">Status</label>
       <select class="form-select" id="etStatus">
         <option value="todo" data-i18n="status.todo">Belum Dikerjakan</option>
@@ -2992,6 +3016,7 @@
       <div class="form-row"><label class="form-label" data-i18n="form.endTimeOpt">Jam Berakhir (opsional)</label><input class="form-input" type="time" id="gtEndTime"></div>
     </div>
     <div class="form-error" id="gtDateError" data-i18n="form.dateError">Deadline tidak boleh sebelum tanggal mulai.</div>
+    <div class="form-row"><label class="form-label" data-i18n="form.duration">Estimasi Durasi (jam, opsional)</label><input class="form-input" type="number" min="0" step="0.5" id="gtDuration" placeholder="cth. 4"></div>
     <div class="form-row" id="gtStatusRow" style="display:none;"><label class="form-label" data-i18n="form.status">Status</label>
       <select class="form-select" id="gtStatus">
         <option value="todo" data-i18n="status.todo">Belum Dikerjakan</option>
@@ -3412,14 +3437,18 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       p.phases.forEach(function(ph){
         ph.tasks.forEach(function(tk){
           if(tk.status==='done') return;
-          if(tk.pic===name) hours += EFFORT_HOURS[p.effort] || EFFORT_HOURS.medium;
-          else if(tk.secondaryPic && tk.secondaryPic.indexOf(name)>-1) hours += (EFFORT_HOURS[p.effort] || EFFORT_HOURS.medium)/2;
+          // Prefer the task's own estimated duration when the assigner set one -- it's a
+          // far more accurate per-task figure than applying the whole project's effort
+          // bucket uniformly to every task in it.
+          var taskHours = tk.duration!=null ? tk.duration : (EFFORT_HOURS[p.effort] || EFFORT_HOURS.medium);
+          if(tk.pic===name) hours += taskHours;
+          else if(tk.secondaryPic && tk.secondaryPic.indexOf(name)>-1) hours += taskHours/2;
         });
       });
     });
     generalTasks.forEach(function(g){
       if(g.division==='personal' || g.status==='done' || g.pic!==name) return;
-      hours += GENERAL_TASK_PRIORITY_HOURS[g.priority] || GENERAL_TASK_PRIORITY_HOURS.sedang;
+      hours += g.duration!=null ? g.duration : (GENERAL_TASK_PRIORITY_HOURS[g.priority] || GENERAL_TASK_PRIORITY_HOURS.sedang);
     });
     return Math.round(hours);
   }
@@ -3578,6 +3607,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var quizReturnScreen = 'account';
   var STATUS_LABEL = {todo:'Belum Dikerjakan', progress:'Sedang Dikerjakan', review:'Review', revisi:'Revisi', done:'Selesai'};
   var STATUS_COLOR = {todo:'#8A9490', progress:'#F7A433', review:'#009F8D', revisi:'#C43D1E', done:'#00695C'};
+  var STATUS_ICON = {todo:'ti-clock', progress:'ti-trending-up', review:'ti-search', revisi:'ti-refresh', done:'ti-check'};
+  // STATUS_COLOR's own hues (esp. progress #F7A433, review/done #009F8D/#00695C) are picked
+  // for icon/chart use, where WCAG only asks for 3:1 -- as actual small text (status labels,
+  // badges) against a light tint they measure well under the 4.5:1 text minimum (as low as
+  // 1.86:1 for progress). This darker set is for anywhere STATUS_COLOR[status] is used to
+  // color readable text, not an icon glyph or chart segment.
+  var STATUS_TEXT_COLOR = {todo:'#646D69', progress:'#925D18', review:'#00695C', revisi:'#A9351A', done:'#00695C'};
   var STATUS_WEIGHT = {todo:0, progress:0.5, review:0.8, revisi:0.6, done:1};
   var STATUS_ORDER = ['todo','progress','review','revisi','done'];
   var EFFORT_LABEL = {low:'Ringan', medium:'Sedang', high:'Berat', extreme:'Sangat Berat'};
@@ -4134,6 +4170,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     return rituals.filter(function(r){
       if(r.days.indexOf(tk)===-1) return false;
       if(r.divisions.indexOf('personal')>-1) return true;
+      // A ritual assigned to your actual division, or to you directly as PIC/secondary PIC,
+      // always shows — this used to depend entirely on a separate "ritualDivision" watch
+      // setting in Account, which real (non-demo) accounts often never set, silently hiding
+      // rituals that were correctly assigned to the user's own team.
+      if(userProfile.division && r.divisions.indexOf(userProfile.division)>-1) return true;
+      if(r.pic===CURRENT_USER_NAME || (r.secondaryPic||[]).indexOf(CURRENT_USER_NAME)>-1) return true;
       return !!userProfile.ritualDivision && r.divisions.indexOf(userProfile.ritualDivision)>-1;
     }).sort(function(a,b){ return a.startTime.localeCompare(b.startTime); });
   }
@@ -4147,6 +4189,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function getRitualMembers(r){
     var seen = {}; var list = [];
+    if(r.pic && !seen[r.pic]){ seen[r.pic]=true; list.push(r.pic); }
+    (r.secondaryPic||[]).forEach(function(u){ if(!seen[u]){ seen[u]=true; list.push(u); } });
     r.divisions.forEach(function(d){
       if(d==='personal') return;
       getDivisionMembers(d).forEach(function(u){ if(!seen[u]){ seen[u]=true; list.push(u); } });
@@ -4401,45 +4445,93 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(el) el.textContent = n ? '· '+n : '';
   }
   var generalTaskSortable = null;
+  var generalTaskSortMode = 'default';
+  var generalTaskDoneOpen = false;
+  function sortGeneralTaskList(list, mode){
+    var sorted = list.slice();
+    if(mode==='priority') sorted.sort(function(a,b){ return (PRIORITY_WEIGHT[a.priority]==null?1:PRIORITY_WEIGHT[a.priority]) - (PRIORITY_WEIGHT[b.priority]==null?1:PRIORITY_WEIGHT[b.priority]); });
+    else if(mode==='deadline') sorted.sort(function(a,b){ return (a.deadline||'9999-99-99').localeCompare(b.deadline||'9999-99-99'); });
+    else sorted.sort(function(a,b){ return (a.order||0)-(b.order||0); });
+    return sorted;
+  }
+  function toggleGeneralTaskDoneSection(){
+    generalTaskDoneOpen = !generalTaskDoneOpen;
+    var list = document.getElementById('generalTaskDoneList');
+    var chevron = document.getElementById('generalTaskDoneChevron');
+    if(list) list.style.display = generalTaskDoneOpen ? 'block' : 'none';
+    if(chevron) chevron.style.transform = generalTaskDoneOpen ? 'rotate(180deg)' : '';
+  }
+  function generalTaskRowHtml(g, isPersonal, draggable){
+    var statusOpts = STATUS_ORDER.map(function(s){ return '<option value="'+s+'"'+(g.status===s?' selected':'')+'>'+statusLabel(s)+'</option>'; }).join('');
+    var timeStr = (g.start?fmtDate(g.start)+(g.startTime?' '+g.startTime:''):'') + (g.deadline ? (g.start?' → ':t('general.dueLabel')+' ') + fmtDate(g.deadline)+(g.endTime?' '+g.endTime:'') : '');
+    var meta = timeStr || t('general.noDeadline');
+    var notesIcon = g.notes ? ' <i class="ti ti-file-text" style="font-size:11px;color:var(--teal-deep);vertical-align:middle;" title="'+t('taskdetail.hasRincian')+'"></i>' : '';
+    var prioBadge = g.priority ? '<span class="general-priority-badge priority-'+g.priority+'">'+t('priority.'+g.priority)+'</span>' : '';
+    var picBlock = isPersonal ? '' : '<div class="mini-avatar task-mini-avatar" title="PIC — klik untuk ganti" onclick="event.stopPropagation(); openAssigneePopover(event,\'generalTaskInline\',{taskId:\''+g.id+'\'})">'+(g.pic?initials(g.pic):'?')+'</div>';
+    // The grip handle only appears when the list is actually drag-reorderable (default sort,
+    // active section) -- showing it while sorted by priority/deadline, or in the done
+    // section, implied you could drag when the reorder logic wasn't even attached there.
+    var gripHtml = draggable ? '<i class="ti ti-grip-vertical task-drag-handle" onclick="event.stopPropagation();"></i>' : '';
+    return '<div class="general-task-row" onclick="openTaskDetailGeneral(\''+g.division+'\',\''+g.id+'\')">' +
+      '<div class="task-row-top">' +
+        gripHtml +
+        '<div class="general-task-body"><div class="general-task-name">'+prioBadge+escapeHtml(g.name)+notesIcon+'</div><div class="general-task-meta">'+escapeHtml(meta)+'</div></div>' +
+      '</div>' +
+      '<div class="task-row-bottom">' +
+        picBlock +
+        '<select class="task-status-select status-'+g.status+'-sel" onclick="event.stopPropagation();" onchange="changeGeneralTaskStatus(\''+g.id+'\',this.value)">'+statusOpts+'</select>' +
+        '<div class="task-row-spacer"></div>' +
+        '<i class="ti ti-edit task-edit-btn" title="'+t('general.editTitle')+'" onclick="event.stopPropagation(); openEditGeneralTaskModal(\''+g.id+'\')"></i>' +
+        '<i class="ti ti-target task-focus-btn'+(g.zone==='focus'?' active':'')+'" title="'+t('zone.focusShortcut')+'" onclick="event.stopPropagation(); toggleGeneralTaskFocus(\''+g.id+'\')"></i>' +
+        '<i class="ti ti-alert-triangle task-blocker-btn" title="'+t('blocker.report')+'" onclick="event.stopPropagation(); quickReportBlockerForGeneralTask(\''+g.id+'\')"></i>' +
+        '<i class="ti ti-trash task-del-btn" onclick="event.stopPropagation(); deleteGeneralTask(\''+g.id+'\')"></i>' +
+      '</div>' +
+    '</div>';
+  }
+  document.getElementById('generalTaskSortPills').addEventListener('click', function(e){
+    var pill = e.target.closest('.filter-pill');
+    if(!pill) return;
+    generalTaskSortMode = pill.dataset.sort;
+    document.querySelectorAll('#generalTaskSortPills .filter-pill').forEach(function(p){ p.classList.toggle('active', p===pill); });
+    renderGeneralTaskList();
+  });
   function renderGeneralTaskList(){
     refreshGeneralTabCount();
     var isPersonal = currentDivision==='personal';
-    var list = generalTasks.filter(function(g){ return g.division===currentDivision; }).slice().sort(function(a,b){ return (a.order||0)-(b.order||0); });
-    var html = list.map(function(g){
-      var statusOpts = STATUS_ORDER.map(function(s){ return '<option value="'+s+'"'+(g.status===s?' selected':'')+'>'+statusLabel(s)+'</option>'; }).join('');
-      var timeStr = (g.start?fmtDate(g.start)+(g.startTime?' '+g.startTime:''):'') + (g.deadline ? (g.start?' → ':t('general.dueLabel')+' ') + fmtDate(g.deadline)+(g.endTime?' '+g.endTime:'') : '');
-      var meta = timeStr || t('general.noDeadline');
-      var notesIcon = g.notes ? ' <i class="ti ti-file-text" style="font-size:11px;color:var(--teal-deep);vertical-align:middle;" title="'+t('taskdetail.hasRincian')+'"></i>' : '';
-      var prioBadge = g.priority ? '<span class="general-priority-badge priority-'+g.priority+'">'+t('priority.'+g.priority)+'</span>' : '';
-      var picBlock = isPersonal ? '' : '<div class="mini-avatar task-mini-avatar" title="PIC — klik untuk ganti" onclick="event.stopPropagation(); openAssigneePopover(event,\'generalTaskInline\',{taskId:\''+g.id+'\'})">'+(g.pic?initials(g.pic):'?')+'</div>';
-      return '<div class="general-task-row" onclick="openTaskDetailGeneral(\''+g.division+'\',\''+g.id+'\')">' +
-        '<div class="task-row-top">' +
-          '<i class="ti ti-grip-vertical task-drag-handle" onclick="event.stopPropagation();"></i>' +
-          '<div class="general-task-body"><div class="general-task-name">'+prioBadge+escapeHtml(g.name)+notesIcon+'</div><div class="general-task-meta">'+escapeHtml(meta)+'</div></div>' +
-        '</div>' +
-        '<div class="task-row-bottom">' +
-          picBlock +
-          '<select class="task-status-select status-'+g.status+'-sel" onclick="event.stopPropagation();" onchange="changeGeneralTaskStatus(\''+g.id+'\',this.value)">'+statusOpts+'</select>' +
-          '<div class="task-row-spacer"></div>' +
-          '<i class="ti ti-edit task-edit-btn" title="'+t('general.editTitle')+'" onclick="event.stopPropagation(); openEditGeneralTaskModal(\''+g.id+'\')"></i>' +
-          '<i class="ti ti-target task-focus-btn'+(g.zone==='focus'?' active':'')+'" title="'+t('zone.focusShortcut')+'" onclick="event.stopPropagation(); toggleGeneralTaskFocus(\''+g.id+'\')"></i>' +
-          '<i class="ti ti-alert-triangle task-blocker-btn" title="'+t('blocker.report')+'" onclick="event.stopPropagation(); quickReportBlockerForGeneralTask(\''+g.id+'\')"></i>' +
-          '<i class="ti ti-trash task-del-btn" onclick="event.stopPropagation(); deleteGeneralTask(\''+g.id+'\')"></i>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-    document.getElementById('generalTaskListContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('general.empty')+'</span></div>';
+    var allList = generalTasks.filter(function(g){ return g.division===currentDivision; });
+    // Completed tasks used to sit interleaved with active ones by drag order forever, with
+    // no way to sort or hide them -- they now collapse into their own section, and active
+    // tasks can be sorted by priority/deadline instead of only manual drag order.
+    var list = sortGeneralTaskList(allList.filter(function(g){ return g.status!=='done'; }), generalTaskSortMode);
+    var doneList = allList.filter(function(g){ return g.status==='done'; }).sort(function(a,b){ return (b.completedAt||'').localeCompare(a.completedAt||''); });
+    var reorderable = generalTaskSortMode==='default';
+    var activeRowsHtml = list.map(function(g){ return generalTaskRowHtml(g, isPersonal, reorderable); }).join('');
+    // Wrapped in its own container so Sortable (attached below) only ever sees the active
+    // rows -- appending the done section as further siblings of the same drag container
+    // would let it drag done rows in and corrupt the order math.
+    var html = '<div id="generalTaskActiveList">' + activeRowsHtml + '</div>';
+    var doneHtml = doneList.length ? (
+      '<div class="today-ritual-section-title done-section-toggle" style="cursor:pointer;justify-content:space-between;" onclick="toggleGeneralTaskDoneSection()">' +
+        '<span>'+t('focuszone.doneSection').replace('{n}', doneList.length)+'</span>' +
+        '<i class="ti ti-chevron-down" id="generalTaskDoneChevron" style="transition:transform .15s ease;'+(generalTaskDoneOpen?'transform:rotate(180deg);':'')+'"></i>' +
+      '</div>' +
+      '<div id="generalTaskDoneList" style="display:'+(generalTaskDoneOpen?'block':'none')+';">' +
+        doneList.map(function(g){ return generalTaskRowHtml(g, isPersonal); }).join('') +
+      '</div>'
+    ) : '';
+    document.getElementById('generalTaskListContainer').innerHTML = (activeRowsHtml ? html : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('general.empty')+'</span></div>') + doneHtml;
     hydrateIcons(document.getElementById('generalTaskListContainer'));
-    setupGeneralTaskDragDrop();
+    if(reorderable) setupGeneralTaskDragDrop(list);
+    else if(generalTaskSortable){ generalTaskSortable.destroy(); generalTaskSortable = null; }
   }
-  function setupGeneralTaskDragDrop(){
+  function setupGeneralTaskDragDrop(activeList){
     if(generalTaskSortable) generalTaskSortable.destroy();
-    var container = document.getElementById('generalTaskListContainer');
+    var container = document.getElementById('generalTaskActiveList');
     if(!container) return;
     generalTaskSortable = new Sortable(container, {
       handle:'.task-drag-handle', animation:150, ghostClass:'sortable-ghost', dragClass:'sortable-drag',
       onEnd: function(evt){
-        var list = generalTasks.filter(function(g){ return g.division===currentDivision; }).slice().sort(function(a,b){ return (a.order||0)-(b.order||0); });
+        var list = activeList.slice();
         var moved = list.splice(evt.oldIndex,1)[0];
         list.splice(evt.newIndex,0,moved);
         list.forEach(function(g,idx){ g.order = idx; });
@@ -4523,6 +4615,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtDeadline').value='';
     document.getElementById('gtEndTime').value='';
     document.getElementById('gtPriority').value='sedang';
+    document.getElementById('gtDuration').value='';
     document.getElementById('gtNotes').value='';
     document.getElementById('gtClient').value='';
     gtSelectedZone = 'later';
@@ -4553,6 +4646,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtDeadline').value = g.deadline || '';
     document.getElementById('gtEndTime').value = g.endTime || '';
     document.getElementById('gtPriority').value = g.priority || 'sedang';
+    document.getElementById('gtDuration').value = g.duration != null ? g.duration : '';
     document.getElementById('gtNotes').value = g.notes || '';
     document.getElementById('gtClient').value = g.client || '';
     gtSelectedZone = g.zone || 'later';
@@ -4591,6 +4685,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var startTime = document.getElementById('gtStartTime').value;
     var endTime = document.getElementById('gtEndTime').value;
     var notes = document.getElementById('gtNotes').value.trim();
+    var durationVal = document.getElementById('gtDuration').value;
+    var durationFinal = durationVal ? parseFloat(durationVal) : null;
     if(editingGeneralTaskId){
       var g = generalTasks.find(function(x){ return x.id===editingGeneralTaskId; });
       var newStatus = document.getElementById('gtStatus').value;
@@ -4598,7 +4694,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       else if(newStatus!=='done'){ g.completedAt = null; }
       var oldNotes = g.notes; var oldPic = g.pic;
       var oldSecondary = (g.secondaryPic||[]).slice();
-      g.division = divFinal; g.name = name; g.pic = picFinal; g.secondaryPic = secondaryFinal; g.projectId = projectIdFinal; g.client = clientFinal; g.priority = priority; g.status = newStatus; g.start = startDate; g.startTime = startTime; g.deadline = deadlineDate; g.endTime = endTime; g.notes = notes; g.zone = gtSelectedZone;
+      g.division = divFinal; g.name = name; g.pic = picFinal; g.secondaryPic = secondaryFinal; g.projectId = projectIdFinal; g.client = clientFinal; g.priority = priority; g.status = newStatus; g.start = startDate; g.startTime = startTime; g.deadline = deadlineDate; g.endTime = endTime; g.notes = notes; g.duration = durationFinal; g.zone = gtSelectedZone;
       if(oldPic!==picFinal) g.assignedAt = todayISO();
       notifyNewMentions(oldNotes, notes, name, "openTaskDetailGeneral('"+divFinal+"','"+g.id+"')");
       if(window.LovaDB) LovaDB.updateGeneralTask(g);
@@ -4609,7 +4705,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       renderGeneralTaskList();
       showToast(t('account.saved'));
     } else {
-      var newTask = { id:(window.LovaDB?LovaDB.newId():uid('g')), division:divFinal, name:name, pic:picFinal, secondaryPic:secondaryFinal, projectId:projectIdFinal, client:clientFinal, status:'todo', priority:priority, start:startDate, startTime:startTime, deadline:deadlineDate, endTime:endTime, notes:notes, zone:gtSelectedZone, order:generalTasks.filter(function(x){return x.division===divFinal;}).length, assignedAt:todayISO() };
+      var newTask = { id:(window.LovaDB?LovaDB.newId():uid('g')), division:divFinal, name:name, pic:picFinal, secondaryPic:secondaryFinal, projectId:projectIdFinal, client:clientFinal, status:'todo', priority:priority, start:startDate, startTime:startTime, deadline:deadlineDate, endTime:endTime, notes:notes, duration:durationFinal, zone:gtSelectedZone, order:generalTasks.filter(function(x){return x.division===divFinal;}).length, assignedAt:todayISO() };
       generalTasks.push(newTask);
       if(window.LovaDB) LovaDB.createGeneralTask(newTask);
       notifyNewMentions('', notes, name, "openTaskDetailGeneral('"+divFinal+"','"+newTask.id+"')");
@@ -4882,10 +4978,21 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function renderEventsScreen(){
     refreshEventCategoryBadges();
-    var upcoming = events.filter(function(m){ return m.date>=todayISO(); }).slice().sort(function(a,b){ return (a.date+a.startTime).localeCompare(b.date+b.startTime); }).slice(0,4);
-    var html = groupEventsByDate(upcoming);
-    document.getElementById('eventUpcomingContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('event.empty')+'</span></div>';
+    var searchEl = document.getElementById('eventSearchInput');
+    var q = searchEl ? searchEl.value.trim().toLowerCase() : '';
+    var shown;
+    if(q){
+      // Searching looks across every event (not just the next 4 upcoming) so it actually
+      // finds past/older events by name too, not just what's already on screen.
+      shown = events.filter(function(m){ return m.title.toLowerCase().indexOf(q)>-1; }).slice().sort(function(a,b){ return (b.date+b.startTime).localeCompare(a.date+a.startTime); });
+    } else {
+      shown = events.filter(function(m){ return m.date>=todayISO(); }).slice().sort(function(a,b){ return (a.date+a.startTime).localeCompare(b.date+b.startTime); }).slice(0,4);
+    }
+    var html = groupEventsByDate(shown);
+    document.getElementById('eventUpcomingContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+(q?t('event.searchEmpty'):t('event.empty'))+'</span></div>';
     hydrateIcons(document.getElementById('eventUpcomingContainer'));
+    var titleEl = document.getElementById('eventUpcomingTitle');
+    if(titleEl) titleEl.textContent = q ? t('event.searchResultsTitle') : t('event.upcomingTitle');
   }
 
   var currentEventCategory = 'training';
@@ -4894,6 +5001,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('evcatTitle').textContent = EVENT_TYPE_LABEL[key];
     document.querySelectorAll('#evcatScopeFilterPills .filter-pill').forEach(function(p,i){ p.classList.toggle('active', i===0); });
     document.querySelectorAll('#evcatDivFilterPills .filter-pill').forEach(function(p,i){ p.classList.toggle('active', i===0); });
+    document.querySelectorAll('#evcatDateFilterPills .filter-pill').forEach(function(p,i){ p.classList.toggle('active', i===0); });
+    document.getElementById('evcatSearchInput').value = '';
     document.getElementById('evcatFiltersPanel').style.display = 'none';
     document.getElementById('evcatFilterChevron').classList.remove('ti-chevron-up'); document.getElementById('evcatFilterChevron').classList.add('ti-chevron-down');
     renderEventCategoryList();
@@ -4922,17 +5031,31 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var scopeKey = scopeFilter ? scopeFilter.dataset.scopefilter : 'all';
     var divFilter = document.querySelector('#evcatDivFilterPills .filter-pill.active');
     var divKey = divFilter ? divFilter.dataset.efilter : 'all';
+    var dateFilter = document.querySelector('#evcatDateFilterPills .filter-pill.active');
+    var dateKey = dateFilter ? dateFilter.dataset.datefilter : 'all';
+    var searchEl = document.getElementById('evcatSearchInput');
+    var q = searchEl ? searchEl.value.trim().toLowerCase() : '';
     updateEvcatFilterBadge();
+    var today = todayISO();
+    var monthPrefix = today.slice(0,7);
     var list = events.filter(function(m){
       return m.eventType===currentEventCategory &&
         (scopeKey==='all' || m.cakupan===scopeKey) &&
-        (divKey==='all' || m.division===divKey);
+        (divKey==='all' || m.division===divKey) &&
+        (dateKey==='all' || (dateKey==='upcoming' && m.date>=today) || (dateKey==='thismonth' && m.date.slice(0,7)===monthPrefix) || (dateKey==='past' && m.date<today)) &&
+        (!q || m.title.toLowerCase().indexOf(q)>-1);
     }).slice().sort(function(a,b){ return (a.date+a.startTime).localeCompare(b.date+b.startTime); });
     document.getElementById('evcatSub').textContent = list.length+' event';
     var html = groupEventsByDate(list);
     document.getElementById('eventsContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('event.empty')+'</span></div>';
     hydrateIcons(document.getElementById('eventsContainer'));
   }
+  document.getElementById('evcatDateFilterPills').addEventListener('click', function(e){
+    var pill = e.target.closest('.filter-pill'); if(!pill) return;
+    document.querySelectorAll('#evcatDateFilterPills .filter-pill').forEach(function(p){ p.classList.remove('active'); });
+    pill.classList.add('active');
+    renderEventCategoryList();
+  });
   document.getElementById('evcatScopeFilterPills').addEventListener('click', function(e){
     var pill = e.target.closest('.filter-pill'); if(!pill) return;
     document.querySelectorAll('#evcatScopeFilterPills .filter-pill').forEach(function(p){ p.classList.remove('active'); });
@@ -5188,6 +5311,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   var calSelectedDateStr = todayISO();
   var calViewMode = 'month';
   var calCurrentWeekDates = null;
+  var calSearchQuery = '';
 
   function dateToISO(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
   function timeToY(timeStr){
@@ -5247,8 +5371,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(r.days.indexOf(dayKey)>-1){ items.push({type:'ritual', title:r.title, divisions:r.divisions, color:CAL_TYPE_COLOR.ritual, time:r.startTime, endTime:r.endTime, source:'ritual', ritualId:r.id}); }
     });
     events.forEach(function(ev){
-      if(ev.date===dateStr){ items.push({type:'event', title:ev.title, division:ev.division, color:CAL_TYPE_COLOR.event, time:ev.startTime, endTime:ev.endTime, source:'event', eventId:ev.id}); }
+      // Training/sertifikasi events carry a dateMulai/dateSelesai range (set in the New Event
+      // modal) separate from the single `date` field -- the calendar used to only ever place
+      // the event on `date`, so a 3-day training only showed on its last day. It now shows on
+      // every day within the range when one is set.
+      var matches = (ev.dateMulai && ev.dateSelesai) ? (dateStr>=ev.dateMulai && dateStr<=ev.dateSelesai) : ev.date===dateStr;
+      if(matches){ items.push({type:'event', title:ev.title, division:ev.division, color:CAL_TYPE_COLOR.event, time:ev.startTime, endTime:ev.endTime, source:'event', eventId:ev.id}); }
     });
+    if(calSearchQuery){
+      var q = calSearchQuery.toLowerCase();
+      items = items.filter(function(it){ return it.title.toLowerCase().indexOf(q)>-1; });
+    }
     return items;
   }
   function calActiveFilters(){
@@ -5314,6 +5447,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.querySelectorAll('#screen-calendar .tab-row .tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.calview===mode); });
     document.querySelectorAll('#screen-calendar .cal-view-panel').forEach(function(p){ p.classList.remove('active'); });
     document.getElementById('calview-'+mode).classList.add('active');
+    calRerenderCurrentView();
+  }
+  function onCalSearchInput(){
+    calSearchQuery = document.getElementById('calSearchInput').value.trim();
     calRerenderCurrentView();
   }
   function calRerenderCurrentView(){
@@ -5741,7 +5878,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var rows = USERS.map(function(u){
       var checked = popoverSelection.indexOf(u)>-1;
       var pct = capacityPct(u);
-      return '<div class="popover-item'+(checked?' checked':'')+'" onclick="togglePopoverUser(\''+u.replace(/'/g,"\\'")+'\')"><div class="popover-check">'+(checked?'✓':'')+'</div><span style="flex:1;">'+u+'</span><span class="cap-dot" style="background:'+capacityColor(pct)+';" title="'+pct+'% kapasitas"></span></div>';
+      var full = pct>=100;
+      // Full-capacity people are visibly flagged *before* the user clicks them (not just
+      // after, via an interrupt modal) -- clicking one as PIC utama still opens the capacity
+      // modal, but this row label makes it clear upfront why, instead of feeling like the
+      // click "did nothing".
+      var fullTag = full ? ' <span style="color:var(--revisi);font-weight:600;font-size:10.5px;">('+t('capacity.fullTag')+')</span>' : '';
+      return '<div class="popover-item'+(checked?' checked':'')+'" onclick="togglePopoverUser(\''+u.replace(/'/g,"\\'")+'\')"><div class="popover-check">'+(checked?'✓':'')+'</div><span style="flex:1;'+(full?'color:var(--stone);':'')+'">'+u+fullTag+'</span><span class="cap-dot" style="background:'+capacityColor(pct)+';" title="'+pct+'% kapasitas"></span></div>';
     }).join('');
     var legend = '<div class="cap-legend"><span><span class="cap-dot" style="background:var(--teal);"></span>Sehat</span><span><span class="cap-dot" style="background:var(--orange);"></span>Sibuk</span><span><span class="cap-dot" style="background:var(--revisi);"></span>Penuh</span></div>';
     var html = legend + rows + (isSingleMode() ? '' : '<div class="popover-done-btn" onclick="closePopover()">Selesai</div>');
@@ -7195,6 +7338,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('atStart').value=''; document.getElementById('atDeadline').value='';
     document.getElementById('atStartTime').value=''; document.getElementById('atEndTime').value='';
     document.getElementById('atStatus').value='todo';
+    document.getElementById('atDuration').value='';
     atSelectedZone = 'later';
     renderTaskZoneButtons('atZoneRow', atSelectedZone, 'selectAtZone');
     formPicUtama=''; formPicSekunder=[];
@@ -7222,7 +7366,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!deadline || (start && deadline < start)){ document.getElementById('atDateError').classList.add('active'); return; }
     var ph = p.phases.find(function(x){ return x.id===addTaskCtx.phaseId; });
     var atNotesVal = document.getElementById('atNotes').value.trim();
-    var newTask = { id:(window.LovaDB?LovaDB.newId():uid('t')), name:name, status:document.getElementById('atStatus').value, pic: isPersonal ? CURRENT_USER_NAME : formPicUtama, secondaryPic: isPersonal ? [] : formPicSekunder.slice(), start:start, startTime:document.getElementById('atStartTime').value, deadline:deadline, endTime:document.getElementById('atEndTime').value, zone:atSelectedZone, notes:atNotesVal, assignedAt:todayISO() };
+    var atDurationVal = document.getElementById('atDuration').value;
+    var newTask = { id:(window.LovaDB?LovaDB.newId():uid('t')), name:name, status:document.getElementById('atStatus').value, pic: isPersonal ? CURRENT_USER_NAME : formPicUtama, secondaryPic: isPersonal ? [] : formPicSekunder.slice(), start:start, startTime:document.getElementById('atStartTime').value, deadline:deadline, endTime:document.getElementById('atEndTime').value, zone:atSelectedZone, notes:atNotesVal, duration: atDurationVal ? parseFloat(atDurationVal) : null, assignedAt:todayISO() };
     ph.tasks.push(newTask);
     if(window.LovaDB) LovaDB.createProjectTask(ph.id, newTask);
     notifyNewMentions('', atNotesVal, name, "openTaskDetailProject('"+p.id+"','"+ph.id+"','"+newTask.id+"')");
@@ -7258,6 +7403,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('etDeadlineDate').value = tk.deadline || '';
     document.getElementById('etDeadlineTime').value = tk.endTime || '';
     document.getElementById('etStatus').value = tk.status;
+    document.getElementById('etDuration').value = tk.duration != null ? tk.duration : '';
     document.getElementById('etNotes').value = tk.notes || '';
     etSelectedZone = tk.zone || 'later';
     renderTaskZoneButtons('etZoneRow', etSelectedZone, 'selectEtZone');
@@ -7284,6 +7430,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     tk2.endTime = document.getElementById('etDeadlineTime').value;
     tk2.status = document.getElementById('etStatus').value;
     tk2.completedAt = tk2.status==='done' ? (tk2.completedAt || todayISO()) : null;
+    var etDurationVal = document.getElementById('etDuration').value;
+    tk2.duration = etDurationVal ? parseFloat(etDurationVal) : null;
     tk2.zone = etSelectedZone;
     tk2.notes = document.getElementById('etNotes').value.trim();
     notifyNewMentions(oldEtNotes, tk2.notes, name, "openTaskDetailProject('"+p2.id+"','"+ph2.id+"','"+tk2.id+"')");
@@ -8717,7 +8865,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var quickToggleAction = "event.stopPropagation(); quickToggleTaskDone("+(m.isGeneral?'true':'false')+",'"+(m.projectId||'')+"','"+(m.phaseId||'')+"','"+tk.id+"', event)";
     return '<div class="list-row" data-task-id="'+tk.id+'" onclick="'+clickAction+'">' +
       reorderHtml +
-      '<div class="list-icon" style="cursor:pointer;'+(isDone?'background:var(--teal-tint); color:var(--teal-deep);':'')+'" onclick="'+quickToggleAction+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+(isDone?'ti-check':'ti-clock')+'"></i></div>' +
+      '<div class="list-icon" style="cursor:pointer;background:'+(STATUS_COLOR[tk.status]||STATUS_COLOR.todo)+'22;color:'+(STATUS_COLOR[tk.status]||STATUS_COLOR.todo)+';" onclick="'+quickToggleAction+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+(STATUS_ICON[tk.status]||'ti-clock')+'"></i></div>' +
       '<div class="list-body"><div class="list-title'+(isDone?' done':'')+'">'+escapeHtml(tk.name)+'</div><div class="list-sub">'+priorityBadgeHtml(prio)+' via '+escapeHtml(m.groupTitle)+(deadlineStr?' · '+deadlineStr:'')+assignedByTag+pendingBadge+'</div></div>' +
       (opts.editable ? '<i class="ti ti-edit" style="color:var(--stone);font-size:15px;padding:6px;" onclick="'+editAction+'"></i>' : '<div class="list-time">'+statusLabel(tk.status)+'</div>') +
     '</div>';
@@ -8869,12 +9017,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       '<div class="td-info-grid">' +
         '<div class="td-info-cell"><div class="td-info-label">'+t('taskdetail.start')+'</div><div class="td-info-value">'+startStr+'</div></div>' +
         '<div class="td-info-cell"><div class="td-info-label">'+t('taskdetail.deadline')+'</div><div class="td-info-value">'+deadlineStr+'</div></div>' +
+        (tk.duration!=null ? '<div class="td-info-cell"><div class="td-info-label">'+t('taskdetail.duration')+'</div><div class="td-info-value">'+tk.duration+' '+t('taskdetail.hours')+'</div></div>' : '') +
         (tk.assignedAt ? '<div class="td-info-cell"><div class="td-info-label">'+t('taskdetail.assignedAt')+'</div><div class="td-info-value">'+fmtDate(tk.assignedAt)+'</div></div>' : '') +
       '</div>' +
       '<div class="td-status-label">'+t('taskdetail.statusLabel')+'</div>' +
       '<div class="td-status-row">' + STATUS_ORDER.map(function(s){
         var active = tk.status===s;
-        return '<button class="td-status-btn'+(active?' active':'')+'" style="'+(active?('background:'+STATUS_COLOR[s]+';border-color:'+STATUS_COLOR[s]+';color:#fff;'):('color:'+STATUS_COLOR[s]+';border-color:'+STATUS_COLOR[s]+';'))+'" onclick="setTaskDetailStatus(\''+s+'\', event)">'+statusLabel(s)+'</button>';
+        return '<button class="td-status-btn'+(active?' active':'')+'" style="'+(active?('background:'+STATUS_TEXT_COLOR[s]+';border-color:'+STATUS_TEXT_COLOR[s]+';color:#fff;'):('color:'+STATUS_TEXT_COLOR[s]+';border-color:'+STATUS_COLOR[s]+';'))+'" onclick="setTaskDetailStatus(\''+s+'\', event)">'+statusLabel(s)+'</button>';
       }).join('') + '</div>' +
       (tk.notes ? '<div class="td-status-label" style="margin-top:18px;">'+t('taskdetail.rincianTitle')+'</div><div class="rincian-box">'+renderMentions(tk.notes)+'</div>' : '');
     hydrateIcons(body);
@@ -8936,7 +9085,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         return '<div class="task-row-v2" style="cursor:pointer;" onclick="'+clickAction+'">' +
           '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionP+'" title="'+t('taskrow.quickToggle')+'">'+(tk.status==='done'?'✓':'')+'</div>' +
           '<div class="task-name-input" style="pointer-events:none;">'+escapeHtml(tk.name)+'</div>' +
-          '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
+          '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_TEXT_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
         '</div>';
       }).join('');
       return '<div class="mytasks-group-title">'+escapeHtml(group[0].groupTitle)+'</div>' + rows;
@@ -8992,17 +9141,43 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     showScreen('focus-zone');
   }
   var focusZoneSortable = null;
+  var focusZoneDoneOpen = false;
+  function toggleFocusZoneDoneSection(){
+    focusZoneDoneOpen = !focusZoneDoneOpen;
+    var list = document.getElementById('focusZoneDoneList');
+    var chevron = document.getElementById('focusZoneDoneChevron');
+    if(list) list.style.display = focusZoneDoneOpen ? 'block' : 'none';
+    if(chevron) chevron.style.transform = focusZoneDoneOpen ? 'rotate(180deg)' : '';
+  }
   function renderFocusZoneScreen(){
-    var mine = getMyTasks(true).filter(function(m){ return m.task.zone==='focus'; });
-    mine = sortTaskList(mine, focusZoneSortMode);
+    var allMine = getMyTasks(true).filter(function(m){ return m.task.zone==='focus'; });
+    // Completed tasks used to stay mixed into the active list forever (had to be manually
+    // moved out of the zone) -- they now drop into a separate collapsed "Selesai" section
+    // below, same idea as My Tasks, so the active count/list only shows what's left to do.
+    var mine = sortTaskList(allMine.filter(function(m){ return m.task.status!=='done'; }), focusZoneSortMode);
+    var doneMine = allMine.filter(function(m){ return m.task.status==='done'; });
     var reorderable = focusZoneSortMode==='default';
     document.getElementById('focusZoneSub').textContent = t('focuszone.subCount').replace('{n}', mine.length);
-    document.getElementById('focusZoneContainer').innerHTML = mine.map(function(m,i){ return taskRowHtml(m,{editable:true, returnScreen:'focus-zone', reorderable:reorderable, isFirst:i===0, isLast:i===mine.length-1}); }).join('') ||
+    var activeRowsHtml = mine.map(function(m,i){ return taskRowHtml(m,{editable:true, returnScreen:'focus-zone', reorderable:reorderable, isFirst:i===0, isLast:i===mine.length-1}); }).join('') ||
       '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noFocusToday')+'</span></div>';
+    // The active list is wrapped in its own container so Sortable only ever sees/reorders
+    // *those* rows -- appending the done section as further siblings of the same element
+    // Sortable is attached to would let it drag done rows in and corrupt the order math.
+    var activeHtml = '<div id="focusZoneActiveList">' + activeRowsHtml + '</div>';
+    var doneHtml = doneMine.length ? (
+      '<div class="today-ritual-section-title done-section-toggle" style="cursor:pointer;justify-content:space-between;" onclick="toggleFocusZoneDoneSection()">' +
+        '<span>'+t('focuszone.doneSection').replace('{n}', doneMine.length)+'</span>' +
+        '<i class="ti ti-chevron-down" id="focusZoneDoneChevron" style="transition:transform .15s ease;'+(focusZoneDoneOpen?'transform:rotate(180deg);':'')+'"></i>' +
+      '</div>' +
+      '<div id="focusZoneDoneList" style="display:'+(focusZoneDoneOpen?'block':'none')+';">' +
+        doneMine.map(function(m){ return taskRowHtml(m,{editable:true, returnScreen:'focus-zone'}); }).join('') +
+      '</div>'
+    ) : '';
+    document.getElementById('focusZoneContainer').innerHTML = activeHtml + doneHtml;
     hydrateIcons(document.getElementById('focusZoneContainer'));
     if(focusZoneSortable){ focusZoneSortable.destroy(); focusZoneSortable = null; }
     if(reorderable && mine.length>1){
-      focusZoneSortable = new Sortable(document.getElementById('focusZoneContainer'), {
+      focusZoneSortable = new Sortable(document.getElementById('focusZoneActiveList'), {
         handle:'.row-drag-handle', animation:150, ghostClass:'sortable-ghost', dragClass:'sortable-drag',
         onEnd: function(evt){
           var moved = mine.splice(evt.oldIndex,1)[0];
@@ -9057,10 +9232,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!m) return;
     if(m.isGeneral){
       var g = generalTasks.find(function(x){ return x.id===m.task.id; });
-      if(g) g.zone='focus';
+      if(g){ g.zone='focus'; if(window.LovaDB) LovaDB.updateGeneralTask(g); }
     } else {
       var p = projects.find(function(x){ return x.id===m.projectId; });
-      if(p) p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){ if(tk.id===m.task.id) tk.zone='focus'; }); });
+      if(p) p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){ if(tk.id===m.task.id){ tk.zone='focus'; if(window.LovaDB) LovaDB.updateProjectTask(tk); } }); });
     }
     closeModal('addFocusModal');
     afterFocusZoneChange();
@@ -9071,7 +9246,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!name){ showToast(t('focus.needName')); return; }
     var division = document.getElementById('addFocusNewDivision').value;
     var deadline = document.getElementById('addFocusNewDeadline').value;
-    generalTasks.push({ id:uid('g'), division:division, name:name, pic:CURRENT_USER_NAME, status:'todo', priority:'sedang', start:todayISO(), deadline: deadline||'', zone:'focus', notes:'' });
+    var newTask = { id:uid('g'), division:division, name:name, pic:CURRENT_USER_NAME, status:'todo', priority:'sedang', start:todayISO(), deadline: deadline||'', zone:'focus', notes:'' };
+    generalTasks.push(newTask);
+    if(window.LovaDB) LovaDB.createGeneralTask(newTask);
     document.getElementById('addFocusNewName').value='';
     document.getElementById('addFocusNewDeadline').value='';
     closeModal('addFocusModal');
@@ -9837,7 +10014,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(focusBarFill) focusBarFill.style.width = (focusAll.length ? Math.round(focusDone/focusAll.length*100) : 0)+'%';
     var upnextBarFill = document.getElementById('todayUpnextBarFill');
     if(upnextBarFill) upnextBarFill.style.width = (upnextAll.length ? Math.round(upnextDone/upnextAll.length*100) : 0)+'%';
-    document.getElementById('myTasksCount').textContent = getMyTasks().length;
+    document.getElementById('myTasksCount').textContent = getMyTasks().filter(function(m){ return m.task.status!=='done'; }).length;
     var personalProjN = projects.filter(function(p){ return p.division==='personal'; }).length;
     document.getElementById('personalProjCount').textContent = personalProjN;
 
@@ -9847,7 +10024,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var html = todayOnly.map(function(m){
       var tk = m.task;
       var isDone = tk.status==='done';
-      var iconCls = isDone ? 'ti-check' : (tk.zone==='focus'?'ti-target': tk.zone==='upnext'?'ti-clipboard-list':'ti-clock');
+      var iconCls = STATUS_ICON[tk.status] || 'ti-clock';
       var clickAction = m.isGeneral ? ("openTaskDetailGeneral('"+m.divisionKey+"','"+tk.id+"')") : ("openTaskDetailProject('"+m.projectId+"','"+m.phaseId+"','"+tk.id+"')");
       var assignedByTag = tk.assignedBy ? ' · '+t('taskdetail.assignedByShort').replace('{name}', escapeHtml(tk.assignedBy)) : '';
       var pendingBadge = (tk.assignmentStatus==='pending' && tk.assignedBy && tk.assignedBy!==CURRENT_USER_NAME) ? '<span class="pending-assign-badge">'+t('taskdetail.pendingBadge')+'</span>' : '';
@@ -9861,7 +10038,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var quickToggleActionT = "event.stopPropagation(); quickToggleTaskDone("+(m.isGeneral?'true':'false')+",'"+(m.projectId||'')+"','"+(m.phaseId||'')+"','"+tk.id+"', event)";
       return '<div class="list-row" data-task-id="'+tk.id+'" data-zone="'+tk.zone+'" onclick="'+clickAction+'">' +
         reorderHtml +
-        '<div class="list-icon" style="cursor:pointer;'+(isDone?'background:var(--teal-tint); color:var(--teal-deep);':'')+'" onclick="'+quickToggleActionT+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+(isDone?'ti-check':iconCls)+'"></i></div>' +
+        '<div class="list-icon" style="cursor:pointer;background:'+(STATUS_COLOR[tk.status]||STATUS_COLOR.todo)+'22;color:'+(STATUS_COLOR[tk.status]||STATUS_COLOR.todo)+';" onclick="'+quickToggleActionT+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+iconCls+'"></i></div>' +
         '<div class="list-body"><div class="list-title'+(isDone?' done':'')+'">'+escapeHtml(tk.name)+'</div><div class="list-sub">via '+escapeHtml(m.groupTitle)+' · '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+pendingBadge+'</div></div>' +
         '<div class="list-time">'+statusLabel(tk.status)+'</div>' +
       '</div>';
@@ -9992,9 +10169,22 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('myTasksContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyProjects')+'</span></div>';
     hydrateIcons(document.getElementById('myTasksContainer'));
   }
+  var myTasksDoneOpen = false;
+  function toggleMyTasksDoneSection(){
+    myTasksDoneOpen = !myTasksDoneOpen;
+    var list = document.getElementById('myTasksDoneList');
+    var chevron = document.getElementById('myTasksDoneChevron');
+    if(list) list.style.display = myTasksDoneOpen ? 'block' : 'none';
+    if(chevron) chevron.style.transform = myTasksDoneOpen ? 'rotate(180deg)' : '';
+  }
   function renderMyTasksTaskView(){
-    var mine = getMyTasks(true);
-    if(myTasksDivFilter!=='all') mine = mine.filter(function(m){ return m.divisionKey===myTasksDivFilter; });
+    var allMine = getMyTasks(true);
+    if(myTasksDivFilter!=='all') allMine = allMine.filter(function(m){ return m.divisionKey===myTasksDivFilter; });
+    // Same idea as Focus Zone: completed tasks used to stay mixed in with everything still
+    // to do, making the count/list look far busier than reality. They now collapse into
+    // their own section below instead of disappearing outright.
+    var mine = allMine.filter(function(m){ return m.task.status!=='done'; });
+    var doneMine = allMine.filter(function(m){ return m.task.status==='done'; });
     var groupCount = Object.keys(mine.reduce(function(a,m){ a[m.groupKey]=1; return a; },{})).length;
     document.getElementById('myTasksSub').textContent = t('mytasks.subCount').replace('{n}', mine.length).replace('{g}', groupCount);
     var byGroup = {};
@@ -10021,14 +10211,23 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '<div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="'+clickAction+'">' +
             '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionM+'" title="'+t('taskrow.quickToggle')+'">'+(tk.status==='done'?'✓':'')+'</div>' +
             '<div class="task-name-input" style="pointer-events:none;">'+escapeHtml(tk.name)+' <span style="color:var(--stone);font-size:10.5px;">· '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+'</span>'+pendingBadge+'</div>' +
-            '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
+            '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_TEXT_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
           '</div>' +
           reorderControls +
         '</div>';
       }).join('');
       return '<div class="mytasks-group-title"'+titleAction+'>'+escapeHtml(group[0].groupTitle)+(isProjectGroup?' <i class="ti ti-chevron-right" style="font-size:12px;"></i>':'')+'</div><div class="mytasks-group-sortable" data-group-key="'+key+'">' + rows + '</div>';
     }).join('');
-    document.getElementById('myTasksContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyTasks')+'</span></div>';
+    var doneHtml = doneMine.length ? (
+      '<div class="today-ritual-section-title done-section-toggle" style="cursor:pointer;justify-content:space-between;" onclick="toggleMyTasksDoneSection()">' +
+        '<span>'+t('focuszone.doneSection').replace('{n}', doneMine.length)+'</span>' +
+        '<i class="ti ti-chevron-down" id="myTasksDoneChevron" style="transition:transform .15s ease;'+(myTasksDoneOpen?'transform:rotate(180deg);':'')+'"></i>' +
+      '</div>' +
+      '<div id="myTasksDoneList" style="display:'+(myTasksDoneOpen?'block':'none')+';">' +
+        doneMine.map(function(m){ return taskRowHtml(m,{editable:true, returnScreen:'mytasks'}); }).join('') +
+      '</div>'
+    ) : '';
+    document.getElementById('myTasksContainer').innerHTML = (html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyTasks')+'</span></div>') + doneHtml;
     hydrateIcons(document.getElementById('myTasksContainer'));
     myTasksSortables.forEach(function(s){ s.destroy(); });
     myTasksSortables = [];
@@ -10279,6 +10478,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "block.focus.title": {id:"Focus zone", en:"Focus zone"}, "block.focus.sub": {id:"{n} tugas · hari ini", en:"{n} tasks · today"},
     "block.next.title": {id:"Up next", en:"Up next"}, "block.next.sub": {id:"{n} tugas · menyusul", en:"{n} tasks · coming up"},
     "upnext.subCount": {id:"{n} tugas", en:"{n} tasks"}, "focuszone.subCount": {id:"{n} tugas", en:"{n} tasks"},
+    "focuszone.doneSection": {id:"{n} tugas selesai", en:"{n} completed"},
     "mytasks.subCount": {id:"{n} tugas · {g} grup", en:"{n} tasks · {g} groups"},
     "mytasks.subCountProjects": {id:"{n} project", en:"{n} projects"},
     "mytasks.viewTasks": {id:"Tugas", en:"Tasks"}, "mytasks.viewProjects": {id:"Project", en:"Projects"},
@@ -10310,6 +10510,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "quickadd.project": {id:"Project Baru", en:"New Project"},
     "quickadd.task": {id:"Task Umum Baru", en:"New General Task"},
     "taskdetail.start": {id:"Mulai", en:"Start"}, "taskdetail.deadline": {id:"Deadline", en:"Deadline"},
+    "taskdetail.duration": {id:"Estimasi Durasi", en:"Est. duration"}, "taskdetail.hours": {id:"jam", en:"hrs"},
     "taskdetail.statusLabel": {id:"Status", en:"Status"},
     "eventdetail.title": {id:"Detail Event", en:"Event Detail"},
     "event.dateLabel": {id:"Tanggal", en:"Date"}, "event.timeLabel": {id:"Waktu", en:"Time"},
@@ -10346,6 +10547,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "modal.newProject": {id:"Project baru", en:"New project"},
     "form.client": {id:"Nama Client", en:"Client name"}, "form.title": {id:"Judul Project", en:"Project title"},
     "form.priority": {id:"Prioritas", en:"Priority"}, "form.effort": {id:"Effort", en:"Effort"}, "form.value": {id:"Nominal Project (juta Rp)", en:"Project value (million Rp)"},
+    "form.duration": {id:"Estimasi Durasi (jam, opsional)", en:"Estimated duration (hours, optional)"},
     "info.startDate": {id:"Tanggal Mulai", en:"Start date"}, "info.deadline": {id:"Deadline", en:"Deadline"}, "info.desc": {id:"Deskripsi", en:"Description"},
     "info.noneYet": {id:"Belum ada", en:"None yet"}, "info.noNotes": {id:"Tidak ada catatan", en:"No notes"},
     "info.linkedEvents": {id:"Event Terkait", en:"Linked Events"}, "info.noEvents": {id:"Belum ada event terkait", en:"No linked events yet"},
@@ -10567,6 +10769,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "capacity.modalMsg2": {id:"Ini bisa menambah beban lebih dari kapasitasnya sekitar {h} jam.", en:"This could push them roughly {h} hours past their capacity."},
     "capacity.pickOther": {id:"Pilih orang lain", en:"Choose someone else"},
     "capacity.addAnyway": {id:"Tetap assign ke orang ini", en:"Assign anyway"},
+    "capacity.fullTag": {id:"Penuh", en:"Full"},
 
     "focus.startCta": {id:"Mulai Fokus", en:"Start Focus"},
     "focus.pickDuration": {id:"Berapa lama mau fokus?", en:"How long do you want to focus?"},
@@ -10741,6 +10944,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "event.sub": {id:"Semua jadwal meeting, training, dan sertifikasi Lenusa", en:"All Lenusa meetings, training, and certification schedules"},
     "event.sectionTitle": {id:"Event", en:"Events"},
     "event.empty": {id:"Belum ada event terjadwal", en:"No events scheduled yet"},
+    "event.searchEmpty": {id:"Tidak ada event yang cocok", en:"No matching events"},
+    "event.searchResultsTitle": {id:"Hasil pencarian", en:"Search results"},
     "event.confirmDelete": {id:"Hapus event ini?", en:"Delete this event?"},
     "event.modalTitle": {id:"Event baru", en:"New event"},
     "event.name": {id:"Judul Event", en:"Event title"}, "event.nameError": {id:"Judul event wajib diisi.", en:"Event title is required."},
@@ -10875,7 +11080,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     return {
       id: t.id, name: t.name, status: t.status, pic: nameOf(t.pic_id),
       secondaryPic: (t.secondary_pic || []).map(nameOf).filter(Boolean),
-      priority: t.priority, effort: t.effort,
+      priority: t.priority, effort: t.effort, duration: t.duration_hours,
       start: t.start_date, startTime: hhmm(t.start_time), deadline: t.deadline, endTime: hhmm(t.end_time),
       zone: t.zone, notes: t.notes || '',
       assignedBy: nameOf(t.assigned_by), originalAssignedBy: nameOf(t.original_assigned_by),
@@ -10892,7 +11097,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     return {
       name: tk.name, status: tk.status, pic_id: idOf(tk.pic),
       secondary_pic: (tk.secondaryPic || []).map(idOf).filter(Boolean),
-      priority: tk.priority || null, effort: tk.effort || null,
+      priority: tk.priority || null, effort: tk.effort || null, duration_hours: tk.duration != null ? tk.duration : null,
       start_date: tk.start || null, start_time: tk.startTime || null,
       deadline: tk.deadline || null, end_time: tk.endTime || null,
       zone: tk.zone || 'later', notes: tk.notes || null,
@@ -10942,7 +11147,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         id: g.id, division: divIdToKey[g.division_id], name: g.name, status: g.status, pic: nameOf(g.pic_id),
         secondaryPic: (g.secondary_pic || []).map(nameOf).filter(Boolean),
         projectId: g.project_id || null, client: g.client || '',
-        priority: g.priority, start: g.start_date, startTime: hhmm(g.start_time), deadline: g.deadline, endTime: hhmm(g.end_time),
+        priority: g.priority, duration: g.duration_hours, start: g.start_date, startTime: hhmm(g.start_time), deadline: g.deadline, endTime: hhmm(g.end_time),
         notes: g.notes || '', zone: g.zone, assignedBy: nameOf(g.assigned_by), originalAssignedBy: nameOf(g.original_assigned_by),
         assignmentStatus: g.assignment_status, assignedAt: g.assigned_at, preToggleStatus: g.pre_toggle_status,
         completedAt: g.completed_at, focusOrder: g.focus_order, order: g.sort_order,
