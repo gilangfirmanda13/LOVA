@@ -10,8 +10,8 @@
 ## Tasks
 - [[Approval strategi]]
 - [[Cold Email (75 perusahaan)]]
-- [[FU Cold Account (PIC)]]
 - [[Koneksi PIC by Linked]]
+- [[FU Cold Account PIC for 35 Companies]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

@@ -15,6 +15,8 @@
 - [[Final QaQc]]
 - [[Kirim proposal ke Yola]]
 - [[Kirim proposal ke klien]]
+- [[FU Cold Account PIC for 35 Companies]]
 - [[CRM PBD]]
 - [[Summarize untuk jawaban dari kuisioner GDMS]]
 - [[Discount Req VMF J Resource]]
+- [[Clarify Lisensi VMF PT Arutmin]]

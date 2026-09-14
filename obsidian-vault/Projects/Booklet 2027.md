@@ -12,6 +12,7 @@
 - [[desain]]
 - [[Online Training]]
 - [[Public Training]]
+- [[Infografis diklat sertifikasi 2026]]
 
 ## Deskripsi
 booklet 2027

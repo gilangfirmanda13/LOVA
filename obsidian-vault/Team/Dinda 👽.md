@@ -22,6 +22,7 @@
 - [[Undangan untuk demo klien]]
 - [[Timeline demo mdp]]
 - [[Sheduling Demo MDP]]
+- [[Infografis diklat sertifikasi 2026]]
 - [[Riset Skema Sertifikasi Baru]]
 - [[Review Portofolio Peserta Sertifikasi Geoteknik]]
 - [[Assist Sertifikasi 18-19 Sept]]

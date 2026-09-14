@@ -47,6 +47,7 @@
 - [[Training QAQC]]
 - [[Identifikasi Training Gap]]
 - [[Database Training]]
+- [[Infografis diklat sertifikasi 2026]]
 - [[Proposal Skema Reklamasi]]
 - [[manajemen all docs tim dalam drive]]
 - [[Workshop 2027]]
