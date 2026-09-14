@@ -24,3 +24,4 @@
 - [[Sheduling Demo MDP]]
 - [[Riset Skema Sertifikasi Baru]]
 - [[Review Portofolio Peserta Sertifikasi Geoteknik]]
+- [[Assist Sertifikasi 18-19 Sept]]

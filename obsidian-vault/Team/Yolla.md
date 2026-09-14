@@ -17,3 +17,4 @@
 - [[Kirim proposal ke klien]]
 - [[CRM PBD]]
 - [[Summarize untuk jawaban dari kuisioner GDMS]]
+- [[Discount Req VMF J Resource]]

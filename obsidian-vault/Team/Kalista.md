@@ -19,3 +19,5 @@
 - [[Buat Quotation Diskon 3%]]
 - [[Daftar Ulang Tender]]
 - [[Infokan mengenai Bupot ke Grup Admin]]
+- [[Pembayaran BIB]]
+- [[Pembayar Dinas PU ke Seequent]]
