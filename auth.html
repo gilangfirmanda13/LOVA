@@ -6,7 +6,7 @@
 <title>LOVA — Masuk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 <style>
   :root{
     --teal:#009F8D; --teal-deep:#00695C; --teal-tint:#E7F5F3;
@@ -156,8 +156,23 @@
   const HOBBY_OPTIONS = ['Membaca','Fotografi','Mendaki','Kuliner','Musik','Olahraga','Traveling','Gaming','Menonton Film','Memasak','Menulis','Berkebun','Menggambar','Desain Grafis','Coding','Yoga','Meditasi','Bersepeda','Renang','Hiking','Camping','Memancing','Karaoke','Podcasting','Vlogging','Koleksi Barang','Melukis','Crafting','Badminton','Futsal','Basket'];
   var selectedHobbies = [];
 
+  // SECURITY: org names and Postgres/Supabase error messages both end up here
+  // (an org's name is user-chosen at signup with no character restriction,
+  // and error.message can echo back caller-supplied values for some
+  // Postgres error classes) -- building the box via textContent instead of
+  // innerHTML means neither can inject markup/script, no matter what they
+  // contain.
+  function escapeHtml(str){
+    if(str===null || str===undefined) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
   function showMsg(text, kind){
-    document.getElementById('msgBox').innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
+    var box = document.getElementById('msgBox');
+    box.innerHTML = '';
+    var div = document.createElement('div');
+    div.className = 'msg ' + kind;
+    div.textContent = text;
+    box.appendChild(div);
   }
   function clearMsg(){ document.getElementById('msgBox').innerHTML = ''; }
   function showView(id){
@@ -194,7 +209,7 @@
         document.getElementById('signupEmail').readOnly = true;
         var badge = document.getElementById('inviteBadge');
         badge.classList.remove('hidden');
-        badge.innerHTML = '<div class="invite-badge"><div class="ico">' + preview.org_name.charAt(0) + '</div><div><b>' + preview.org_name + '</b><span>Sebagai ' + (ROLE_LABEL[preview.role]||preview.role) + (preview.division_name ? ' · ' + preview.division_name : '') + '</span></div></div>';
+        badge.innerHTML = '<div class="invite-badge"><div class="ico">' + escapeHtml(preview.org_name.charAt(0)) + '</div><div><b>' + escapeHtml(preview.org_name) + '</b><span>Sebagai ' + escapeHtml(ROLE_LABEL[preview.role]||preview.role) + (preview.division_name ? ' · ' + escapeHtml(preview.division_name) : '') + '</span></div></div>';
         switchTab('signup');
       }
     }
@@ -223,7 +238,7 @@
     if(pendingInviteToken){
       var preview = await loadInvitePreview(pendingInviteToken);
       if(preview){
-        document.getElementById('acceptInviteBadge').innerHTML = '<div class="invite-badge"><div class="ico">' + preview.org_name.charAt(0) + '</div><div><b>' + preview.org_name + '</b><span>Sebagai ' + (ROLE_LABEL[preview.role]||preview.role) + (preview.division_name ? ' · ' + preview.division_name : '') + '</span></div></div>';
+        document.getElementById('acceptInviteBadge').innerHTML = '<div class="invite-badge"><div class="ico">' + escapeHtml(preview.org_name.charAt(0)) + '</div><div><b>' + escapeHtml(preview.org_name) + '</b><span>Sebagai ' + escapeHtml(ROLE_LABEL[preview.role]||preview.role) + (preview.division_name ? ' · ' + escapeHtml(preview.division_name) : '') + '</span></div></div>';
         showView('viewAcceptInvite');
         return;
       }

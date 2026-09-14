@@ -7,7 +7,7 @@
 // only an org owner can INSERT into `invites` in the first place (see
 // the identity_and_org migration's RLS policy), reaching this point at
 // all already proves the caller legitimately created that invite.
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { createClient } from 'jsr:@supabase/supabase-js@2.116.0'
 
 const FROM_ADDRESS = 'LOVA <onboarding@resend.dev>'
 // Same sandbox-domain caveat as send-notification-email: only delivers
@@ -50,6 +50,22 @@ Deno.serve(async (req) => {
       return json({ error: 'this invite does not belong to your organization' }, 403)
     }
 
+    // RATE LIMIT: this function previously had no throttle at all -- an org
+    // owner could loop invite-creation to spam arbitrary addresses with no
+    // limit. Cap at 15 invite emails/hour per caller.
+    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    const { count: recentCount } = await admin
+      .from('email_rate_limit')
+      .select('id', { count: 'exact', head: true })
+      .eq('caller_id', caller.id)
+      .eq('fn', 'send-invite-email')
+      .gte('created_at', oneHourAgo)
+    if ((recentCount || 0) >= 15) {
+      return json({ error: 'too many invite emails sent recently, please wait a bit' }, 429)
+    }
+    await admin.from('email_rate_limit').insert({ caller_id: caller.id, fn: 'send-invite-email' })
+
     const orgName = (invite as any).organizations?.name || 'LOVA'
     const roleLabel: Record<string, string> = { owner: 'Business Owner', manager: 'Manager', staff: 'Staff', finance_admin: 'Finance Admin' }
     const link = `${appUrl || 'https://lova-lenusa.netlify.app'}/auth.html?invite=${inviteToken}`
@@ -69,11 +85,15 @@ Deno.serve(async (req) => {
       body: JSON.stringify({ from: FROM_ADDRESS, to: invite.email, subject: `Undangan bergabung ke ${orgName} di LOVA`, html }),
     })
     const resendData = await resendResp.json()
-    if (!resendResp.ok) return json({ error: resendData }, resendResp.status)
+    if (!resendResp.ok) {
+      console.error('send-invite-email: Resend API error', resendResp.status, resendData)
+      return json({ error: 'failed to send the invite email, please try again' }, 502)
+    }
 
     return json({ ok: true, id: resendData.id })
   } catch (e) {
-    return json({ error: String(e) }, 500)
+    console.error('send-invite-email: unexpected error', e)
+    return json({ error: 'something went wrong, please try again' }, 500)
   }
 })
 

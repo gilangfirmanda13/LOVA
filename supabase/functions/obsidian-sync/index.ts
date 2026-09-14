@@ -11,7 +11,7 @@
 // is why the secret check matters: anyone holding it can read every
 // org's data, so it must never leave Supabase secrets + the GitHub
 // Actions secret it's mirrored into.
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { createClient } from 'jsr:@supabase/supabase-js@2.116.0'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -26,30 +26,72 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   const secret = req.headers.get('x-sync-secret')
-  if (!secret || secret !== Deno.env.get('OBSIDIAN_SYNC_SECRET')) {
+  const expected = Deno.env.get('OBSIDIAN_SYNC_SECRET') || ''
+  if (!secret || !(await timingSafeEqual(secret, expected))) {
     return json({ error: 'unauthorized' }, 401)
   }
 
   try {
     const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 
+    // SECURITY: this function uses the service-role key, which bypasses RLS
+    // entirely -- without an explicit org filter it would read and commit
+    // EVERY organization's data into this one vault the moment a second org
+    // signs up (the app supports self-serve org creation). Resolve exactly
+    // one org (see the obsidian_sync_org_scope migration) and scope every
+    // query to it.
+    const { data: syncOrg, error: orgErr } = await admin
+      .from('organizations')
+      .select('id')
+      .eq('obsidian_sync_enabled', true)
+      .maybeSingle()
+    if (orgErr || !syncOrg) {
+      console.error('obsidian-sync: could not resolve the sync-enabled organization', orgErr)
+      return json({ error: 'sync not configured' }, 500)
+    }
+    const orgId = syncOrg.id
+
+    // divisions/profiles/projects/general_tasks all carry org_id directly.
+    // phases and tasks don't (they only reference project_id/phase_id), so
+    // they're scoped by first resolving this org's project/phase ids, then
+    // filtering with plain .in() -- simpler and easier to verify correct
+    // than a multi-level PostgREST embedded-filter expression.
     const [
       { data: divisions, error: e1 },
       { data: profiles, error: e2 },
       { data: projects, error: e3 },
-      { data: phases, error: e4 },
-      { data: tasks, error: e5 },
       { data: generalTasks, error: e6 },
     ] = await Promise.all([
-      admin.from('divisions').select('*'),
-      admin.from('profiles').select('*'),
-      admin.from('projects').select('*'),
-      admin.from('phases').select('*'),
-      admin.from('tasks').select('*'),
-      admin.from('general_tasks').select('*'),
+      admin.from('divisions').select('*').eq('org_id', orgId),
+      admin.from('profiles').select('*').eq('org_id', orgId),
+      admin.from('projects').select('*').eq('org_id', orgId),
+      admin.from('general_tasks').select('*').eq('org_id', orgId),
     ])
-    const firstError = e1 || e2 || e3 || e4 || e5 || e6
-    if (firstError) return json({ error: String(firstError) }, 500)
+    let firstError = e1 || e2 || e3 || e6
+    if (firstError) {
+      console.error('obsidian-sync: failed to load data', firstError)
+      return json({ error: 'failed to load sync data' }, 500)
+    }
+
+    const projectIds = (projects || []).map((p: any) => p.id)
+    const { data: phases, error: e4 } = projectIds.length
+      ? await admin.from('phases').select('*').in('project_id', projectIds)
+      : { data: [], error: null }
+    firstError = e4
+    if (firstError) {
+      console.error('obsidian-sync: failed to load phases', firstError)
+      return json({ error: 'failed to load sync data' }, 500)
+    }
+
+    const phaseIds = (phases || []).map((ph: any) => ph.id)
+    const { data: tasks, error: e5 } = phaseIds.length
+      ? await admin.from('tasks').select('*').in('phase_id', phaseIds)
+      : { data: [], error: null }
+    firstError = e5
+    if (firstError) {
+      console.error('obsidian-sync: failed to load tasks', firstError)
+      return json({ error: 'failed to load sync data' }, 500)
+    }
 
     const divisionById = new Map((divisions || []).map((d: any) => [d.id, d]))
     const profileById = new Map((profiles || []).map((p: any) => [p.id, p]))
@@ -159,9 +201,28 @@ Deno.serve(async (req) => {
       counts: { team: (profiles || []).length, projects: (projects || []).length, tasks: (tasks || []).length + (generalTasks || []).length },
     })
   } catch (e) {
-    return json({ error: String(e) }, 500)
+    console.error('obsidian-sync: unexpected error', e)
+    return json({ error: 'sync failed' }, 500)
   }
 })
+
+// Plain !== short-circuits as soon as characters differ, which leaks how
+// many leading characters of a guessed secret were correct via response
+// timing. Compares every character regardless of an early mismatch, and
+// normalizes length first (via hashing) so unequal-length secrets don't
+// leak length either.
+async function timingSafeEqual(a: string, b: string): Promise<boolean> {
+  const enc = new TextEncoder()
+  const [ha, hb] = await Promise.all([
+    crypto.subtle.digest('SHA-256', enc.encode(a)),
+    crypto.subtle.digest('SHA-256', enc.encode(b)),
+  ])
+  const va = new Uint8Array(ha)
+  const vb = new Uint8Array(hb)
+  let diff = 0
+  for (let i = 0; i < va.length; i++) diff |= va[i] ^ vb[i]
+  return diff === 0
+}
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })

@@ -7736,9 +7736,17 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       }
     });
   }
+  var AVATAR_MAX_BYTES = 5*1024*1024; // 5MB, matches the avatars storage bucket's server-side limit
+  var AVATAR_ALLOWED_TYPES = ['image/png','image/jpeg','image/webp','image/gif'];
   async function onAvatarFileChange(e){
     var file = e.target.files[0];
     if(!file) return;
+    // The file picker's accept="image/*" is a UI hint only -- it doesn't stop drag-and-drop
+    // or a non-browser upload, so the real check has to happen here too (the storage bucket
+    // itself now also enforces this server-side, but failing fast with a clear message here
+    // is better UX than waiting on a round-trip to find out).
+    if(AVATAR_ALLOWED_TYPES.indexOf(file.type)===-1){ showToast(t('account.avatarTypeError')); e.target.value=''; return; }
+    if(file.size > AVATAR_MAX_BYTES){ showToast(t('account.avatarSizeError')); e.target.value=''; return; }
     var reader = new FileReader();
     reader.onload = function(ev){
       userProfile.avatarPhoto = ev.target.result; // instant local preview while the real upload runs
@@ -8143,13 +8151,23 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       return '<div class="tm-assign-row"><div class="tm-assign-dot" style="background:var(--revisi);"></div><div class="tm-assign-body"><div class="tm-assign-title">'+escapeHtml(o.context||t('team.overrideNoContext'))+'</div><div class="tm-assign-meta">'+fmtDate(o.date)+' · '+t('team.overrideBy')+' '+escapeHtml(o.assignedBy)+' · '+o.pct+'%</div></div></div>';
     }).join('') : '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('team.overrideNone')+'</span></div>';
 
+    // SECURITY: these all come straight from profiles columns with no DB
+    // character constraint. The UI only ever lets a user pick from fixed
+    // option lists, but writes go straight through sb.from('profiles')
+    // .update(...) from the browser, so anyone could set their own row to
+    // an HTML/script payload via a direct API call and have it execute in
+    // every teammate's browser when they open this profile. escapeHtml()
+    // everything; favColor additionally gets a strict hex-color check
+    // since it's interpolated into a style="background:...;" attribute,
+    // where quote-escaping alone wouldn't stop a CSS-value-level injection.
+    var safeFavColor = /^#[0-9a-fA-F]{3,8}$/.test(info.favColor||'') ? info.favColor : '#8A9490';
     var factsHtml = '';
-    if(info.hobbies && info.hobbies.length){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.hobbies')+'</span><span class="tm-fact-value">'+info.hobbies.join(', ')+'</span></div>'; }
+    if(info.hobbies && info.hobbies.length){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.hobbies')+'</span><span class="tm-fact-value">'+info.hobbies.map(escapeHtml).join(', ')+'</span></div>'; }
     if(info.birthDate){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.birthDate')+'</span><span class="tm-fact-value">'+fmtDate(info.birthDate)+'</span></div>'; }
-    if(info.favColor){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.favColor')+'</span><span class="tm-fact-value"><span class="tm-color-dot" style="background:'+info.favColor+';"></span></span></div>'; }
-    if(info.loveLangReceiving){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('quiz.receivingLabel')+'</span><span class="tm-fact-value">'+info.loveLangReceiving+'</span></div>'; }
-    if(info.loveLangGiving){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('quiz.givingLabel')+'</span><span class="tm-fact-value">'+info.loveLangGiving+'</span></div>'; }
-    if(info.attachStyle){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.attachStyle')+'</span><span class="tm-fact-value">'+info.attachStyle+'</span></div>'; }
+    if(info.favColor){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.favColor')+'</span><span class="tm-fact-value"><span class="tm-color-dot" style="background:'+safeFavColor+';"></span></span></div>'; }
+    if(info.loveLangReceiving){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('quiz.receivingLabel')+'</span><span class="tm-fact-value">'+escapeHtml(info.loveLangReceiving)+'</span></div>'; }
+    if(info.loveLangGiving){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('quiz.givingLabel')+'</span><span class="tm-fact-value">'+escapeHtml(info.loveLangGiving)+'</span></div>'; }
+    if(info.attachStyle){ factsHtml += '<div class="tm-fact-row"><span class="tm-fact-label">'+t('account.attachStyle')+'</span><span class="tm-fact-value">'+escapeHtml(info.attachStyle)+'</span></div>'; }
     document.getElementById('tmFunFacts').innerHTML = factsHtml || '<div style="text-align:center;color:var(--stone);font-size:12.5px;padding:10px 0;">—</div>';
 
     currentTeamMemberName = name;
@@ -10436,6 +10454,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "account.avatarUploaded": {id:"Foto profil diperbarui", en:"Profile photo updated"},
     "account.nameUnsafeChars": {id:"Nama tidak boleh mengandung karakter < > \" ' \\ atau `", en:"Name can't contain the characters < > \" ' \\ or `"},
     "account.avatarUploadFailed": {id:"Gagal mengunggah foto, coba lagi", en:"Failed to upload photo, try again"},
+    "account.avatarTypeError": {id:"File harus berupa gambar (PNG, JPG, WEBP, atau GIF)", en:"File must be an image (PNG, JPG, WEBP, or GIF)"},
+    "account.avatarSizeError": {id:"Ukuran foto maksimal 5MB", en:"Photo must be under 5MB"},
     "account.loveLangReceiving": {id:"Love Language — Menerima", en:"Love language — receiving"},
     "account.loveLangGiving": {id:"Love Language — Memberi", en:"Love language — giving"},
     "account.testLoveLang": {id:"Tes Love Language (12 pertanyaan)", en:"Take love language test (12 questions)"},
@@ -11061,7 +11081,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
      the offline demo (local-only, resets on reload). That is
      tracked as the next follow-up pass, not an oversight.
 ============================================================ -->
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 <script>
 (function(){
   var SUPABASE_URL = 'https://nysgvqcnwgcaimnghcau.supabase.co';

@@ -9,7 +9,7 @@
 // Authorization is enforced here in code (not RLS, since auth.users
 // deletion bypasses RLS entirely): the caller must be an 'owner' in
 // the SAME org as the target, and can't remove themselves.
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { createClient } from 'jsr:@supabase/supabase-js@2.116.0'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -48,11 +48,18 @@ Deno.serve(async (req) => {
 
     const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
     const { error: deleteError } = await admin.auth.admin.deleteUser(targetProfileId)
-    if (deleteError) return json({ error: deleteError.message }, 500)
+    if (deleteError) {
+      console.error('remove-team-member: deleteUser failed', deleteError)
+      return json({ error: 'failed to remove this member, please try again' }, 500)
+    }
 
     return json({ ok: true })
   } catch (e) {
-    return json({ error: String(e) }, 500)
+    // Full error stays in the function's own server-side log (Supabase
+    // dashboard -> Edge Functions -> Logs) -- callers only ever see a
+    // generic message, never raw internal/DB error text.
+    console.error('remove-team-member: unexpected error', e)
+    return json({ error: 'something went wrong, please try again' }, 500)
   }
 })
 

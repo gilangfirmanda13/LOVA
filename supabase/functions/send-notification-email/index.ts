@@ -12,7 +12,7 @@
 // checks the recipient is in the same organization as the caller before
 // sending anything, so a compromised or buggy client can't be used to
 // spam arbitrary email addresses.
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { createClient } from 'jsr:@supabase/supabase-js@2.116.0'
 
 const FROM_ADDRESS = 'LOVA <onboarding@resend.dev>'
 // ^ Resend's shared testing domain. Works with zero setup, but only
@@ -53,6 +53,25 @@ Deno.serve(async (req) => {
     }
 
     const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+
+    // RATE LIMIT: this function previously had no throttle at all -- any org
+    // member could loop task reassignment/@mentions to trigger unlimited
+    // Resend calls. Cap at 30 sends/hour per caller (generous for a genuinely
+    // busy day of real notifications, tight enough to make a spam loop
+    // pointless). The row is written after this check regardless of what
+    // happens next, so a failed/retried send still counts.
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    const { count: recentCount } = await admin
+      .from('email_rate_limit')
+      .select('id', { count: 'exact', head: true })
+      .eq('caller_id', caller.id)
+      .eq('fn', 'send-notification-email')
+      .gte('created_at', oneHourAgo)
+    if ((recentCount || 0) >= 30) {
+      return json({ error: 'too many notification emails sent recently, please wait a bit' }, 429)
+    }
+    await admin.from('email_rate_limit').insert({ caller_id: caller.id, fn: 'send-notification-email' })
+
     const { data: authUserData, error: userErr } = await admin.auth.admin.getUserById(recipientProfileId)
     const recipientEmail = authUserData?.user?.email
     if (userErr || !recipientEmail) return json({ error: 'recipient has no known email' }, 404)
@@ -66,11 +85,15 @@ Deno.serve(async (req) => {
       body: JSON.stringify({ from: FROM_ADDRESS, to: recipientEmail, subject, html: bodyHtml }),
     })
     const resendData = await resendResp.json()
-    if (!resendResp.ok) return json({ error: resendData }, resendResp.status)
+    if (!resendResp.ok) {
+      console.error('send-notification-email: Resend API error', resendResp.status, resendData)
+      return json({ error: 'failed to send the notification email' }, 502)
+    }
 
     return json({ ok: true, id: resendData.id })
   } catch (e) {
-    return json({ error: String(e) }, 500)
+    console.error('send-notification-email: unexpected error', e)
+    return json({ error: 'something went wrong, please try again' }, 500)
   }
 })
 
