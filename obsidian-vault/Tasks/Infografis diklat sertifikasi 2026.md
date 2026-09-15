@@ -32,3 +32,5 @@ TOTAL
 - Reklamasi (4)
 - eksplorasi 5
 - pts 3, ptl 1
+
+@Dinda 👽

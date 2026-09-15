@@ -3,6 +3,6 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Campaign - Year-End In-House Training Promotion 2027]]
 **Phase:** KV Campaign
-**Status:** Belum Dikerjakan
+**Status:** Review
 **Deadline:** 2026-09-16
 

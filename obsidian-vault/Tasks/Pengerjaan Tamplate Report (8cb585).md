@@ -1,8 +1,8 @@
 # Pengerjaan Tamplate Report
 
 **Assigned to:** [[Arya]]
-**Project:** [[Report - Expolosion Program - Manjemen Perawatan]]
+**Project:** [[Report - Expolosion Program - Mekanikal Permesinan]]
 **Phase:** Pengerjaan Tamplate Report
 **Status:** Revisi
-**Deadline:** 2026-09-15
+**Deadline:** 2026-09-14
 

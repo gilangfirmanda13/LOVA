@@ -26,3 +26,4 @@
 - [[Riset Skema Sertifikasi Baru]]
 - [[Review Portofolio Peserta Sertifikasi Geoteknik]]
 - [[Assist Sertifikasi 18-19 Sept]]
+- [[Final review booklet 2027]]
