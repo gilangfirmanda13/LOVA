@@ -8,7 +8,7 @@
 **Mulai:** - · **Deadline:** -
 
 ## Tasks
-- [[Background Zoom (872b7f)]]
+- [[Background Zoom]]
 - [[Background Pre Test & Post Test (c9b697)]]
 - [[Banner (7290bc)]]
 - [[Flyer Onboarding (a2ec3b)]]

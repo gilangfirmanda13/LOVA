@@ -61,4 +61,7 @@
 - [[review flyer (ada 2 training online) yang akan diserahkan ke masing2 trainer]]
 - [[promotion to groups whatsaap training online bulan september]]
 - [[diskusi bersama tim training untuk request-nya perihal booklet 2027 dan promotion inhouse training]]
+- [[uploading infografis (4 infografis).]]
+- [[penjadwalan kirim.email, untuk 4 training september (hard selling)]]
+- [[diskusi perihal MC-ing diklat sertifikasi di jam 0230pm]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]

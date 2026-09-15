@@ -8,10 +8,10 @@
 **Mulai:** - · **Deadline:** -
 
 ## Tasks
-- [[Background Zoom]]
 - [[Background Pre Test & Post Test]]
 - [[Banner]]
 - [[Flyer Onboarding]]
+- [[Background Zoom (f0d286)]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
