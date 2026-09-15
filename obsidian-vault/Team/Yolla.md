@@ -19,4 +19,5 @@
 - [[CRM PBD]]
 - [[Summarize untuk jawaban dari kuisioner GDMS]]
 - [[Discount Req VMF J Resource]]
+- [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 - [[Clarify Lisensi VMF PT Arutmin]]
