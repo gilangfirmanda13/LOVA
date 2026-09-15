@@ -18,6 +18,7 @@
 - [[Booklet - Diklat & Sertifikasi 2027]]
 - [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 - [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
+- [[Job Family - Mining and Coal Handling Batch 5]]
 
 ## Tasks
 - [[LAPORAN - MECHANICAL MAINTENANCE]]
@@ -53,6 +54,10 @@
 - [[Background Pre Test & Post Test]]
 - [[Banner]]
 - [[Flyer Onboarding]]
+- [[Background Zoom (872b7f)]]
+- [[Background Pre Test & Post Test (c9b697)]]
+- [[Banner (7290bc)]]
+- [[Flyer Onboarding (a2ec3b)]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]

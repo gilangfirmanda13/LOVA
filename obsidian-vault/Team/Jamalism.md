@@ -11,6 +11,7 @@
 - [[2027 LENUSA PUBLIC TRAINING]]
 - [[Brand & Digital Strategist]]
 - [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
+- [[Job Family - Mining and Coal Handling Batch 5]]
 
 ## Tasks
 - [[Online Training]]
@@ -28,6 +29,10 @@
 - [[Background Pre Test & Post Test]]
 - [[Banner]]
 - [[Flyer Onboarding]]
+- [[Background Zoom (872b7f)]]
+- [[Background Pre Test & Post Test (c9b697)]]
+- [[Banner (7290bc)]]
+- [[Flyer Onboarding (a2ec3b)]]
 - [[Poster - Booklet Online Training]]
 - [[Event Calender - LND]]
 - [[Booklet Public Training - LND]]

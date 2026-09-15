@@ -8,7 +8,10 @@
 **Mulai:** - · **Deadline:** -
 
 ## Tasks
-_Belum ada task_
+- [[Background Zoom (872b7f)]]
+- [[Background Pre Test & Post Test (c9b697)]]
+- [[Banner (7290bc)]]
+- [[Flyer Onboarding (a2ec3b)]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
