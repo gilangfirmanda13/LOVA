@@ -1,6 +1,6 @@
 # Proposal - Explosion Program - Mining and Coal Handling Batch 4
 
-**Klien:** Creative Team
+**Klien:** Learning & Development Division
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** medium
@@ -8,7 +8,9 @@
 **Mulai:** 2026-09-14 · **Deadline:** 2026-09-17
 
 ## Tasks
-_Belum ada task_
+- [[Pengumpulan Data & Draft Proposal]]
+- [[Review & Revisi Proposal]]
+- [[Finalisasi Proposal]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

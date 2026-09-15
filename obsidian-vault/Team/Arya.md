@@ -14,6 +14,8 @@
 - [[Report - Expolosion Program - Manjemen Perawatan]]
 - [[Report - Expolosion Program - Mekanikal Permesinan]]
 - [[Event Calender - Training]]
+- [[Proposal - Explosion Program - Mining and Coal Handling Batch 4]]
+- [[Booklet - Diklat & Sertifikasi 2027]]
 
 ## Tasks
 - [[LAPORAN - MECHANICAL MAINTENANCE]]
@@ -38,6 +40,12 @@
 - [[Pembuatan Layout]]
 - [[Revisi Layout]]
 - [[Finalisasi Layout]]
+- [[Finalisasi Proposal]]
+- [[Pengumpulan Data & Draft Proposal]]
+- [[Review & Revisi Proposal]]
+- [[Riset Konten & Outline Booklet]]
+- [[Desain & Layout Booklet]]
+- [[Finalisasi & Cetak Booklet]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]
