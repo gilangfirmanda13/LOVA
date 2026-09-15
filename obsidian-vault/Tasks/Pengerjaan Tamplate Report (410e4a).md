@@ -1,8 +1,8 @@
 # Pengerjaan Tamplate Report
 
 **Assigned to:** [[Arya]]
-**Project:** [[Report - Expolosion Program - Mekanikal Permesinan]]
+**Project:** [[Report - Expolosion Program - Listrik dan Elektronika]]
 **Phase:** Pengerjaan Tamplate Report
 **Status:** Belum Dikerjakan
-**Deadline:** 2026-09-14
+**Deadline:** 2026-10-09
 

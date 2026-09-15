@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-10 · **Deadline:** 2026-09-14
 
 ## Tasks
-_Belum ada task_
+- [[Pengerjaan Tamplate Report]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

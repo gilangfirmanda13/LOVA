@@ -10,6 +10,9 @@
 - [[Mining Development Program]]
 - [[Campaign - Year-End In-House Training Promotion 2027]]
 - [[Brand & Digital Strategist]]
+- [[Report - Expolosion Program - Mekanikal Permesinan]]
+- [[Report - Expolosion Program - Manjemen Perawatan]]
+- [[Report - Expolosion Program - Listrik dan Elektronika]]
 
 ## Tasks
 - [[LAPORAN - MECHANICAL MAINTENANCE]]
@@ -25,6 +28,9 @@
 - [[updating tim desain hal prmotion akhir tahun in-house trianing]]
 - [[content plan Infografis → Training Lukman dan Indra Bagus]]
 - [[2 training online → Lukman dan Indra Bagus, pembuatan flyer]]
+- [[Pengerjaan Tamplate Report]]
+- [[Pengerjaan Tamplate Report (b45553)]]
+- [[Pengerjaan Tamplate Report (410e4a)]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]
