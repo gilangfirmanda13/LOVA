@@ -21,4 +21,4 @@
 - [[Infokan mengenai Bupot ke Grup Admin]]
 - [[Daftar Ulang Tender]]
 - [[Pembayaran BIB]]
-- [[Perhitungan dan QTN PT Endaprosindo]]
+- [[Perhitungan dan QTN PT Endaprosindo & Mitrasoft]]

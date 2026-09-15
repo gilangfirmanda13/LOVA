@@ -1,4 +1,4 @@
-# Perhitungan dan QTN PT Endaprosindo
+# Perhitungan dan QTN PT Endaprosindo & Mitrasoft
 
 **Assigned to:** [[Kalista]]
 **Divisi:** [[Project & Business Development]]
