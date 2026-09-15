@@ -7,6 +7,7 @@
 ## Projects
 - [[Mining Development Program]]
 - [[Booklet 2027]]
+- [[Brand & Digital Strategist]]
 
 ## Tasks
 - [[1. Pengembangan Rumpun]]
@@ -23,5 +24,6 @@
 - [[Demo MDP - PT Cipta Kridatama]]
 - [[Demo MDP - PT BIB x Learning]]
 - [[Demo MDP - PT Riung Mitra Lestari]]
+- [[diskusi bersama tim training untuk request-nya perihal booklet 2027 dan promotion inhouse training]]
 - [[FU bu alice - bu aini - bu helda PTBA]]
 - [[sop alur training development]]

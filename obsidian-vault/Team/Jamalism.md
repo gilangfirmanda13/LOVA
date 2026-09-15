@@ -33,6 +33,7 @@
 - [[Background Pre Test & Post Test (c9b697)]]
 - [[Banner (7290bc)]]
 - [[Flyer Onboarding (a2ec3b)]]
+- [[review flyer (ada 2 training online) yang akan diserahkan ke masing2 trainer]]
 - [[Poster - Booklet Online Training]]
 - [[Event Calender - LND]]
 - [[Booklet Public Training - LND]]
