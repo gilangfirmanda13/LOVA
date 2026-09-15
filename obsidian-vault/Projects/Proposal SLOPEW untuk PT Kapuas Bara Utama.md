@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-15 · **Deadline:** 2026-09-16
 
 ## Tasks
-_Belum ada task_
+- [[Review & Finalisasi Proposal]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
