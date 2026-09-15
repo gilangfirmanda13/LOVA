@@ -3,6 +3,6 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Campaign - Year-End In-House Training Promotion 2027]]
 **Phase:** KV Campaign
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-16
 
