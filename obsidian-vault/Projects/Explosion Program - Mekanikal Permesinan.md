@@ -1,6 +1,6 @@
-# Report - Expolosion Program - Mekanikal Permesinan
+# Explosion Program - Mekanikal Permesinan
 
-**Klien:** Learning  & Development Division
+**Klien:** PDP
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** medium
@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-10 · **Deadline:** 2026-09-14
 
 ## Tasks
-- [[Pengerjaan Tamplate Report (8cb585)]]
+- [[Pengerjaan Tamplate Report]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

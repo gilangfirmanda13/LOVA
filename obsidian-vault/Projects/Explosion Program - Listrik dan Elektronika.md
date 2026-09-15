@@ -1,6 +1,6 @@
-# Report - Expolosion Program - Listrik dan Elektronika
+# Explosion Program - Listrik dan Elektronika
 
-**Klien:** Learning  & Development Division
+**Klien:** PDP
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** tinggi · **Effort:** high
