@@ -8,7 +8,9 @@
 **Mulai:** 2026-09-09 · **Deadline:** 2026-09-14
 
 ## Tasks
-_Belum ada task_
+- [[Pembuatan Layout]]
+- [[Revisi Layout]]
+- [[Finalisasi Layout]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

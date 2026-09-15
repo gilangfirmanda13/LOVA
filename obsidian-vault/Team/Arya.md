@@ -13,6 +13,7 @@
 - [[Report - Expolosion Program - Listrik dan Elektronika]]
 - [[Report - Expolosion Program - Manjemen Perawatan]]
 - [[Report - Expolosion Program - Mekanikal Permesinan]]
+- [[Event Calender - Training]]
 
 ## Tasks
 - [[LAPORAN - MECHANICAL MAINTENANCE]]
@@ -34,6 +35,9 @@
 - [[Pengerjaan Tamplate Report (410e4a)]]
 - [[Pengerjaan Tamplate Report (8cb585)]]
 - [[Mechanical Fabrication Material]]
+- [[Pembuatan Layout]]
+- [[Revisi Layout]]
+- [[Finalisasi Layout]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]

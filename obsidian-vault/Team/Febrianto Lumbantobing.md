@@ -9,14 +9,14 @@
 
 ## Tasks
 - [[canva bbar]]
-- [[canva probabilitas dan mekanisme kelongsoran]]
 - [[draft final laporan BIB]]
+- [[canva probabilitas dan mekanisme kelongsoran]]
 - [[canva steady state & SSR]]
 - [[canva material settlement]]
 - [[FEM Settlement]]
 - [[FEM SSR]]
 - [[Region Cross Section DXF to gsz]]
-- [[FEM Rainfall]]
 - [[LEM FK B Bar]]
+- [[FEM Rainfall]]
 - [[LEM FK Steady State Drainase]]
 - [[Isi form survey Yola]]
