@@ -23,6 +23,7 @@
 - [[- updating katalog whatsapp Slope Stability Monitoring for Safe and Sustainable Mining Operations dan Introduction to Groundwater Modeling for Open Pit Mining]]
 - [[membantu dinda untuk katalog whatsapp]]
 - [[promotion 15% off inhouse training (feed instagram dan stories)]]
+- [[broadcasting 15% off inhouse trianing]]
 - [[upload stories]]
 - [[Infografis dari training online Strategic Hydrology, Hydrogeology dan Geotech Planning in Laterite Nickel Mine]]
 - [[Infografis dari training Judul Pemantauan Kinerja Lereng Untuk Operasional Pertambangan yang Aman Dan Berkelanjutan]]

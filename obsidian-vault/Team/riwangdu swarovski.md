@@ -67,4 +67,5 @@
 - [[promotion 15% off inhouse training]]
 - [[promotion 15% off inhouse training (feed instagram dan stories)]]
 - [[follow up dan update leads (goal 2 calon peserta - invoice)]]
+- [[broadcasting 15% off inhouse trianing]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]
