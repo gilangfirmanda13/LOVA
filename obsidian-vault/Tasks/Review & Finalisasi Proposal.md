@@ -3,6 +3,6 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 **Phase:** Review & Finalisasi Proposal
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-16
 

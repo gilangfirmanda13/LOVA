@@ -16,9 +16,9 @@
 - [[Event Calender - Training]]
 - [[Proposal - Explosion Program - Mining and Coal Handling Batch 4]]
 - [[Booklet - Diklat & Sertifikasi 2027]]
-- [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 - [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
 - [[Job Family - Mining and Coal Handling Batch 5]]
+- [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 
 ## Tasks
 - [[LAPORAN - MECHANICAL MAINTENANCE]]
@@ -46,7 +46,6 @@
 - [[Review & Revisi Proposal]]
 - [[Riset Konten & Outline Booklet]]
 - [[Finalisasi & Cetak Booklet]]
-- [[Review & Finalisasi Proposal]]
 - [[Background Pre Test & Post Test]]
 - [[Banner]]
 - [[Flyer Onboarding]]
@@ -58,6 +57,7 @@
 - [[Pengerjaan Tamplate Report (410e4a)]]
 - [[Pengerjaan Tamplate Report (b45553)]]
 - [[Desain & Layout Booklet]]
+- [[Review & Finalisasi Proposal]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]
