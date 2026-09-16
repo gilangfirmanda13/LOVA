@@ -64,4 +64,7 @@
 - [[uploading infografis (4 infografis).]]
 - [[penjadwalan kirim.email, untuk 4 training september (hard selling)]]
 - [[diskusi perihal MC-ing diklat sertifikasi di jam 0230pm]]
+- [[promotion 15% off inhouse training]]
+- [[promotion 15% off inhouse training (feed instagram dan stories)]]
+- [[follow up dan update leads (goal 2 calon peserta - invoice)]]
 - [[uploading stories (whatsapp, instagram, reupload linkedIn)]]
