@@ -6,6 +6,7 @@
 
 ## Projects
 - [[PT. BIB - In-pit Dump Geotechnical Analysis]]
+- [[Training Development]]
 
 ## Tasks
 - [[canva bbar]]
@@ -19,4 +20,5 @@
 - [[LEM FK B Bar]]
 - [[FEM Rainfall]]
 - [[LEM FK Steady State Drainase]]
+- [[Modflow training]]
 - [[Isi form survey Yola]]
