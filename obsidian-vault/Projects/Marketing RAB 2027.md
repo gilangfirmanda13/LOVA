@@ -12,6 +12,7 @@
 - [[Cold Email (75 perusahaan)]]
 - [[Koneksi PIC by Linked]]
 - [[FU Cold Account PIC for 35 Companies]]
+- [[Target 15 PIC]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
