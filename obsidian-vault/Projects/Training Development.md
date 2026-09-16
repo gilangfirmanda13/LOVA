@@ -9,12 +9,12 @@
 
 ## Tasks
 - [[Competitor Benchmark]]
-- [[Training QAQC]]
 - [[Identifikasi Training Gap]]
 - [[Industry Trend]]
 - [[Market Research]]
-- [[Database Training]]
+- [[Training QAQC]]
 - [[Database Trainer]]
+- [[Database Training]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
