@@ -9,6 +9,8 @@
 - [[Booklet 2027]]
 - [[Geotechnical Review]]
 - [[Proposal Pembentukan MHTI (Masyarakat Hidrogeologi Tambang Indonesia)]]
+- [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
+- [[Job Family - Mining and Coal Handling Batch 5]]
 
 ## Tasks
 - [[Buat metode penelitian terbaik di proposal]]
@@ -34,4 +36,6 @@
 - [[Pembuatan Latar Belakang Masalah]]
 - [[Metodologi Penelitian]]
 - [[Cek notulensi terkait scope of work]]
+- [[Pembuatan Foto Profile]]
+- [[Pembuatan Foto Profile (3d5bb2)]]
 - [[Bayar tagihan]]
