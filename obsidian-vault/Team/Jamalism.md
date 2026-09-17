@@ -35,6 +35,8 @@
 - [[Flyer Onboarding (55fbc2)]]
 - [[review flyer (ada 2 training online) yang akan diserahkan ke masing2 trainer]]
 - [[uploading infografis (4 infografis).]]
+- [[Pembuatan Foto Profile]]
+- [[Pembuatan Foto Profile (d25c80)]]
 - [[Poster - Booklet Online Training]]
 - [[Event Calender - LND]]
 - [[Booklet Public Training - LND]]

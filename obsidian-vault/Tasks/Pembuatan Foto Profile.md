@@ -1,7 +1,7 @@
 # Pembuatan Foto Profile
 
-**Assigned to:** [[Gilang Firmanda]]
-**Project:** [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
+**Assigned to:** [[Jamalism]]
+**Project:** [[Job Family - Mining and Coal Handling Batch 5]]
 **Phase:** Persiapan Training
 **Status:** Selesai
 **Deadline:** 2026-09-17

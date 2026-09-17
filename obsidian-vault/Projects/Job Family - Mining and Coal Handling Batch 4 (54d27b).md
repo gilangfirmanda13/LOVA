@@ -12,7 +12,7 @@
 - [[Background Zoom (f0d286)]]
 - [[Banner (1a7d02)]]
 - [[Flyer Onboarding (55fbc2)]]
-- [[Pembuatan Foto Profile]]
+- [[Pembuatan Foto Profile (d25c80)]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

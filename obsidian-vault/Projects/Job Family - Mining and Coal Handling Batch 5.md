@@ -12,7 +12,7 @@
 - [[Flyer Onboarding]]
 - [[Background Zoom]]
 - [[Background Pre Test & Post Test (c9b697)]]
-- [[Pembuatan Foto Profile (3d5bb2)]]
+- [[Pembuatan Foto Profile]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
