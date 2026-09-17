@@ -3,6 +3,6 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Explosion Program - Manjemen Perawatan]]
 **Phase:** Pengerjaan Laporan
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-10-15
 

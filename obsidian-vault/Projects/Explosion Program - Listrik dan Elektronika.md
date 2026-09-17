@@ -10,7 +10,7 @@
 ## Tasks
 - [[Mekanikal Mentenance]]
 - [[Occupational Safety Management]]
-- [[Pengerjaan Tamplate Report (410e4a)]]
+- [[Pengerjaan Tamplate Report]]
 
 ## Deskripsi
 Link Deskripsi: 
