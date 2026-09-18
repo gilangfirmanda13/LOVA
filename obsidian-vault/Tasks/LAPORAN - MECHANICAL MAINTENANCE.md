@@ -3,7 +3,7 @@
 **Assigned to:** [[Regina]]
 **Project:** [[PDP - LISTRIK & ELEKTRONIKA BATCH 1]]
 **Phase:** DESIGN
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-14
 
 ## Catatan

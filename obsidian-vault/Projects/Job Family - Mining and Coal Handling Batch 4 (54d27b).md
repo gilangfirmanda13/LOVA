@@ -9,7 +9,7 @@
 
 ## Tasks
 - [[Background Pre Test & Post Test]]
-- [[Background Zoom (f0d286)]]
+- [[Background Zoom]]
 - [[Banner (1a7d02)]]
 - [[Flyer Onboarding (55fbc2)]]
 - [[Pembuatan Foto Profile (d25c80)]]

@@ -3,6 +3,6 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Proposal - Explosion Program - Mining and Coal Handling Batch 4]]
 **Phase:** Review & Revisi Proposal
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-17
 
