@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Dinda 👽]]
 **Divisi:** [[Learning & Development]]
-**Status:** Belum Dikerjakan
+**Status:** Sedang Dikerjakan
 **Deadline:** 2026-09-11
 
 ## Catatan
