@@ -4,7 +4,7 @@
 **Project:** [[Training Development]]
 **Phase:** Training Need Analysis
 **Status:** Belum Dikerjakan
-**Deadline:** 2026-09-18
+**Deadline:** 2026-09-30
 
 ## Catatan
 Sumber riset:

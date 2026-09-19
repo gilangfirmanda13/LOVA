@@ -3,6 +3,6 @@
 **Assigned to:** [[riwangdu swarovski]]
 **Project:** [[Brand & Digital Strategist]]
 **Phase:** Online Training
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-14
 

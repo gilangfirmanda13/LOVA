@@ -9,7 +9,6 @@
 - [[Booklet 2027]]
 - [[Geotechnical Review]]
 - [[Proposal Pembentukan MHTI (Masyarakat Hidrogeologi Tambang Indonesia)]]
-- [[Report - Expolosion Program - Listrik dan Elektronika]]
 
 ## Tasks
 - [[Buat metode penelitian terbaik di proposal]]
@@ -28,12 +27,11 @@
 - [[Input semua copywriting ke template design]]
 - [[Layouting]]
 - [[Kirim proposal ke Yola]]
-- [[Brainstorm apa yang dibutuhkan untuk membangun MHTI]]
 - [[Buat In-scope & Out-scope]]
+- [[Brainstorm apa yang dibutuhkan untuk membangun MHTI]]
 - [[Deliverable]]
 - [[Pembuatan RAB]]
 - [[Pembuatan Latar Belakang Masalah]]
 - [[Metodologi Penelitian]]
 - [[Cek notulensi terkait scope of work]]
-- [[Pengerjaan Tamplate Report]]
 - [[Bayar tagihan]]

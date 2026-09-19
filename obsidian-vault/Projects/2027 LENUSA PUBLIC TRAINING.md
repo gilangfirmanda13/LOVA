@@ -1,6 +1,6 @@
 # 2027 LENUSA PUBLIC TRAINING
 
-**Klien:** Learning & Development Program
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Jamalism]]
 **Prioritas:** sedang · **Effort:** medium

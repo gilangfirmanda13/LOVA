@@ -1,8 +1,8 @@
 # Pengerjaan Tamplate Report
 
-**Assigned to:** [[Gilang Firmanda]]
-**Project:** [[Report - Expolosion Program - Listrik dan Elektronika]]
+**Assigned to:** [[Arya]]
+**Project:** [[Explosion Program - Listrik dan Elektronika]]
 **Phase:** Pengerjaan Tamplate Report
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-10-09
 

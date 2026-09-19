@@ -20,3 +20,4 @@
 - [[Summarize untuk jawaban dari kuisioner GDMS]]
 - [[Discount Req VMF J Resource]]
 - [[Clarify Lisensi VMF PT Arutmin]]
+- [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]

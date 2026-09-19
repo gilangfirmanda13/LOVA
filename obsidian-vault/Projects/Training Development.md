@@ -10,11 +10,13 @@
 ## Tasks
 - [[Industry Trend]]
 - [[Competitor Benchmark]]
-- [[Training QAQC]]
 - [[Identifikasi Training Gap]]
 - [[Market Research]]
-- [[Database Training]]
+- [[Training QAQC]]
 - [[Database Trainer]]
+- [[Database Training]]
+- [[Modflow training]]
+- [[Database Lead]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

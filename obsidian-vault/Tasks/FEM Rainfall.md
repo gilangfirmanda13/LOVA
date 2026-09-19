@@ -4,5 +4,5 @@
 **Project:** [[PT. BIB - In-pit Dump Geotechnical Analysis]]
 **Phase:** analisa by software
 **Status:** Belum Dikerjakan
-**Deadline:** 2026-09-11
+**Deadline:** 2026-09-30
 

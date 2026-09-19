@@ -1,6 +1,6 @@
 # Booklet - Diklat & Sertifikasi 2027
 
-**Klien:** Learning  & Development Division
+**Klien:** Learning & Development Division
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** high
@@ -8,7 +8,9 @@
 **Mulai:** 2026-10-09 · **Deadline:** 2026-12-09
 
 ## Tasks
-_Belum ada task_
+- [[Riset Konten & Outline Booklet]]
+- [[Desain & Layout Booklet]]
+- [[Finalisasi & Cetak Booklet]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

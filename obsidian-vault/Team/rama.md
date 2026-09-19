@@ -6,7 +6,9 @@
 
 ## Projects
 - [[Proposal Project OPD & IPD Geotechnical Review]]
+- [[Training Development]]
 
 ## Tasks
 - [[Final QaQc]]
+- [[Modflow training]]
 - [[canva BIB]]

@@ -8,6 +8,7 @@
 - [[Booklet 2027]]
 - [[Mining Development Program]]
 - [[Brand & Digital Strategist]]
+- [[Training Development]]
 
 ## Tasks
 - [[Brajnstorm]]
@@ -23,6 +24,11 @@
 - [[Timeline demo mdp]]
 - [[Sheduling Demo MDP]]
 - [[Infografis diklat sertifikasi 2026]]
-- [[Riset Skema Sertifikasi Baru]]
+- [[diskusi perihal MC-ing diklat sertifikasi di jam 0230pm]]
+- [[Database Lead]]
 - [[Review Portofolio Peserta Sertifikasi Geoteknik]]
+- [[Riset Skema Sertifikasi Baru]]
 - [[Assist Sertifikasi 18-19 Sept]]
+- [[Plan q4]]
+- [[Report event q3]]
+- [[Final review booklet 2027]]

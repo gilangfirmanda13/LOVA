@@ -1,8 +1,8 @@
-# Perhitungan dan QTN PT Endaprosindo
+# Perhitungan dan QTN PT Endaprosindo & Mitrasoft
 
 **Assigned to:** [[Kalista]]
 **Divisi:** [[Project & Business Development]]
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-18
 
 ## Catatan

@@ -1,6 +1,6 @@
-# Report - Expolosion Program - Manjemen Perawatan
+# Explosion Program - Manjemen Perawatan
 
-**Klien:** Learning  & Development Division
+**Klien:** PDP
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** medium
@@ -8,7 +8,8 @@
 **Mulai:** 2026-09-10 · **Deadline:** 2026-09-15
 
 ## Tasks
-_Belum ada task_
+- [[Pengerjaan Tamplate Report (b45553)]]
+- [[Mechanical Fabrication Material]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
