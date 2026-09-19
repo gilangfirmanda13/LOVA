@@ -1844,7 +1844,7 @@
                 <div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div><div>Min</div>
               </div>
               <div class="cal-grid" id="calGrid"></div>
-              <div class="section-head"><div class="section-title" id="calDayDetailTitle">—</div></div>
+              <div class="section-head"><div class="section-title" id="calDayDetailTitle">—</div><i class="ti ti-plus" style="cursor:pointer;color:var(--teal-deep);font-size:18px;padding:4px;" title="Tambah event di tanggal ini" onclick="openNewEventModal(null, calSelectedDateStr)"></i></div>
               <div id="calDayDetailContainer"></div>
             </div>
 
@@ -2804,8 +2804,7 @@
     <div class="modal-head"><div class="modal-title" data-i18n="capacity.modalTitle">Cek Kapasitas</div><div class="modal-close" aria-label="Tutup" onclick="closeModal('capacityModal')"><i class="ti ti-x"></i></div></div>
     <div class="confirm-msg" id="capacityModalMsg"></div>
     <div class="capacity-modal-actions">
-      <div class="btn-sm" onclick="capacityModalPickOther()" data-i18n="capacity.pickOther">Pilih orang lain</div>
-      <div class="btn-sm btn-danger" onclick="capacityModalAssignAnyway()" data-i18n="capacity.addAnyway">Tetap assign ke orang ini</div>
+      <div class="btn-sm primary" onclick="capacityModalPickOther()" data-i18n="capacity.pickOther">Pilih orang lain</div>
     </div>
   </div>
 </div>
@@ -3207,12 +3206,12 @@
     <div class="form-row" style="margin-top:12px;"><label class="form-label" data-i18n="event.eventType">Jenis Event</label>
       <div class="loc-type-row" id="evTypeRow"></div>
     </div>
+    <div class="form-grid-2">
+      <div class="form-row"><label class="form-label" data-i18n="event.dateMulai">Tanggal Mulai (opsional, utk event berhari-hari)</label><input class="form-input" type="date" id="evDateMulai"></div>
+      <div class="form-row"><label class="form-label" data-i18n="event.dateSelesai">Tanggal Selesai (opsional)</label><input class="form-input" type="date" id="evDateSelesai"></div>
+    </div>
+    <div class="form-error" id="evDateRangeError" data-i18n="event.dateRangeError">Tanggal selesai tidak boleh sebelum tanggal mulai.</div>
     <div id="evTrainingFieldsWrap" style="display:none;">
-      <div class="form-grid-2">
-        <div class="form-row"><label class="form-label" data-i18n="event.dateMulai">Tanggal Mulai</label><input class="form-input" type="date" id="evDateMulai"></div>
-        <div class="form-row"><label class="form-label" data-i18n="event.dateSelesai">Tanggal Selesai</label><input class="form-input" type="date" id="evDateSelesai"></div>
-      </div>
-      <div class="form-error" id="evDateRangeError" data-i18n="event.dateRangeError">Tanggal selesai tidak boleh sebelum tanggal mulai.</div>
       <div class="form-row"><label class="form-label" data-i18n="event.pembicara">Pembicara/Fasilitator</label><input class="form-input" id="evPembicara" placeholder="cth. Ir. Budi Santoso, M.T."></div>
       <div class="form-grid-2">
         <div class="form-row"><label class="form-label" data-i18n="event.harga">Harga per Peserta (Rp)</label><input class="form-input" id="evHarga" placeholder="cth. 1.500.000" oninput="onEvHargaInput()"></div>
@@ -5163,13 +5162,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     sel.innerHTML = '<option value="">—</option>' + relevant.map(function(p){ return '<option value="'+p.id+'">'+escapeHtml(p.title)+'</option>'; }).join('');
     if(relevant.some(function(p){ return p.id===currentVal; })) sel.value = currentVal;
   }
-  function openNewEventModal(prefillCategory){
+  function openNewEventModal(prefillCategory, prefillDate){
     editingEventId = null;
     document.getElementById('newEventModalTitle').textContent = t('event.modalTitle');
     document.getElementById('newEventSubmitBtn').textContent = t('event.submit');
     document.getElementById('evTitle').value='';
     document.getElementById('evDesc').value='';
-    document.getElementById('evDate').value='';
+    document.getElementById('evDate').value = prefillDate || '';
     document.getElementById('evStart').value='';
     document.getElementById('evEnd').value='';
     document.getElementById('evDuration').value='';
@@ -5253,8 +5252,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!start){ document.getElementById('evTimeError').classList.add('active'); return; }
     var end = document.getElementById('evEnd').value || start;
     var hasRangeFields = (evSelectedType==='training' || evSelectedType==='sertifikasi');
-    var dateMulaiVal = hasRangeFields ? document.getElementById('evDateMulai').value : '';
-    var dateSelesaiVal = hasRangeFields ? document.getElementById('evDateSelesai').value : '';
+    var dateMulaiVal = document.getElementById('evDateMulai').value;
+    var dateSelesaiVal = document.getElementById('evDateSelesai').value;
     if(dateMulaiVal && dateSelesaiVal && dateSelesaiVal<dateMulaiVal){ document.getElementById('evDateRangeError').classList.add('active'); return; }
     var hargaVal = parseInt(document.getElementById('evHarga').dataset.raw || document.getElementById('evHarga').value.replace(/[^0-9]/g,'') || '0', 10);
     var jumlahVal = parseInt(document.getElementById('evJumlahPeserta').value || '0', 10);
@@ -5266,8 +5265,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       pembicara: hasRangeFields ? document.getElementById('evPembicara').value.trim() : '',
       harga: hasRangeFields ? hargaVal : 0,
       jumlahPeserta: hasRangeFields ? jumlahVal : 0,
-      dateMulai: hasRangeFields ? (dateMulaiVal || null) : null,
-      dateSelesai: hasRangeFields ? (dateSelesaiVal || null) : null };
+      dateMulai: dateMulaiVal || null,
+      dateSelesai: dateSelesaiVal || null };
     var wasAttendeeBefore = false;
     if(editingEventId){
       var evOld = events.find(function(x){ return x.id===editingEventId; });
@@ -5924,13 +5923,6 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function capacityModalPickOther(){
     closeModal('capacityModal');
-  }
-  function capacityModalAssignAnyway(){
-    var u = capacityModalUser;
-    closeModal('capacityModal');
-    if(!u) return;
-    logCapacityOverride(u, capacityPct(u));
-    commitSingleAssignee(u);
   }
   /* ================= KPI ROLLUP ================= */
   var kpiPeriod = 'week';
@@ -6868,25 +6860,6 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(el) el.textContent = count>0 ? count+' '+t('decision.waitingBadge') : t('decision.noneWaiting');
   }
 
-  function logCapacityOverride(assignedTo, pct){
-    var context = '';
-    if(popoverTarget==='taskInline' && popoverCtx){
-      var p = projects.find(function(x){ return x.id===popoverCtx.pid; });
-      var ph = p && p.phases.find(function(x){ return x.id===popoverCtx.phId; });
-      var tk = ph && ph.tasks.find(function(x){ return x.id===popoverCtx.tId; });
-      context = tk ? tk.name+' ('+p.title+')' : '';
-    } else if(popoverTarget==='generalTaskInline' && popoverCtx){
-      var gt = generalTasks.find(function(x){ return x.id===popoverCtx.taskId; });
-      context = gt ? gt.name : '';
-    } else if(popoverTarget==='taskPic'){
-      var atNameEl = document.getElementById('atName');
-      context = atNameEl ? atNameEl.value.trim() : '';
-    } else if(popoverTarget==='generalPic'){
-      var gtNameEl = document.getElementById('gtName');
-      context = gtNameEl ? gtNameEl.value.trim() : '';
-    }
-    capacityOverrideLog.unshift({ id:uid('co'), date:todayISO(), assignedBy:(userProfile.name||CURRENT_USER_NAME), assignedTo:assignedTo, pct:pct, context:context });
-  }
   function commitSingleAssignee(u){
     closePopoverOnly();
     if(popoverTarget==='taskInline' && popoverCtx){
@@ -9101,7 +9074,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         var clickAction = m.isGeneral ? ("openTaskDetailGeneral('personal','"+tk.id+"')") : ("openTaskDetailProject('"+m.projectId+"','"+m.phaseId+"','"+tk.id+"')");
         var quickToggleActionP = "quickToggleTaskDone("+(m.isGeneral?'true':'false')+",'"+(m.projectId||'')+"','"+(m.phaseId||'')+"','"+tk.id+"', event)";
         return '<div class="task-row-v2" style="cursor:pointer;" onclick="'+clickAction+'">' +
-          '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionP+'" title="'+t('taskrow.quickToggle')+'">'+(tk.status==='done'?'✓':'')+'</div>' +
+          '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionP+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+(STATUS_ICON[tk.status]||'ti-clock')+'" style="font-size:12px;color:#fff;"></i></div>' +
           '<div class="task-name-input" style="pointer-events:none;">'+escapeHtml(tk.name)+'</div>' +
           '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_TEXT_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
         '</div>';
@@ -10227,7 +10200,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '</div>' : '';
         return '<div class="task-row-v2" data-task-id="'+tk.id+'">' +
           '<div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="'+clickAction+'">' +
-            '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionM+'" title="'+t('taskrow.quickToggle')+'">'+(tk.status==='done'?'✓':'')+'</div>' +
+            '<div class="mini-avatar task-mini-avatar" style="background:'+STATUS_COLOR[tk.status]+';cursor:pointer;" onclick="'+quickToggleActionM+'" title="'+t('taskrow.quickToggle')+'"><i class="ti '+(STATUS_ICON[tk.status]||'ti-clock')+'" style="font-size:12px;color:#fff;"></i></div>' +
             '<div class="task-name-input" style="pointer-events:none;">'+escapeHtml(tk.name)+' <span style="color:var(--stone);font-size:10.5px;">· '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+'</span>'+pendingBadge+'</div>' +
             '<span style="font-size:10px;font-weight:600;padding:5px 9px;border-radius:99px;background:'+STATUS_COLOR[tk.status]+'22;color:'+STATUS_TEXT_COLOR[tk.status]+';flex-shrink:0;">'+statusLabel(tk.status)+'</span>' +
           '</div>' +
@@ -10784,11 +10757,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "dash.heroDoneTitle": {id:"Selesai untuk hari ini 👋", en:"You're done for today 👋"},
     "dash.heroDoneSub": {id:"Sampai ketemu besok. Nikmati sisa harimu.", en:"See you tomorrow. Enjoy the rest of your day."},
 
-    "capacity.modalTitle": {id:"Cek Kapasitas", en:"Capacity check"},
-    "capacity.modalMsg1": {id:"{name} sudah di {pct}% kapasitas minggu ini.", en:"{name} is already at {pct}% capacity this week."},
-    "capacity.modalMsg2": {id:"Ini bisa menambah beban lebih dari kapasitasnya sekitar {h} jam.", en:"This could push them roughly {h} hours past their capacity."},
+    "capacity.modalTitle": {id:"Kapasitas Penuh", en:"At full capacity"},
+    "capacity.modalMsg1": {id:"{name} sudah di {pct}% kapasitas minggu ini, jadi tidak bisa dijadikan PIC utama dulu untuk sekarang.", en:"{name} is already at {pct}% capacity this week, so they can't be set as the main PIC right now."},
+    "capacity.modalMsg2": {id:"Menambah task ini akan membuatnya sekitar {h} jam melebihi kapasitas.", en:"Adding this task would put them roughly {h} hours over capacity."},
     "capacity.pickOther": {id:"Pilih orang lain", en:"Choose someone else"},
-    "capacity.addAnyway": {id:"Tetap assign ke orang ini", en:"Assign anyway"},
     "capacity.fullTag": {id:"Penuh", en:"Full"},
 
     "focus.startCta": {id:"Mulai Fokus", en:"Start Focus"},
