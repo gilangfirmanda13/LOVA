@@ -18,7 +18,7 @@ hasil:
 Analisis tren — dari data primer ini
 Tren 1: Dua wajah kompresi anggaran
 
-PTBA dan BSSR sama-sama mengompres biaya pelatihan secara signifikan (PTBA −26%, BSSR −41%). Tapi di BSSR, jam pelatihan per karyawan justru naik (17,33 → 20,00). Ini bukan kontradiksi — ini sinyal pergeseran ke pelatihan lebih murah per jam: in-house, e-learning, atau instruktur internal menggantikan external provider. FACT → INFERENCE: perusahaan sedang mencari ROI yang lebih terukur per jam training, bukan memotong training. Implikasi untuk Litologi: proposal ke PTBA (dan klien sejenis) harus memperlihatkan value per rupiah yang konkret — template, checklist, studi kasus yang dibawa pulang — bukan jam ceramah generik.
+PTBA dan BSSR (PT Baramulti Suksessarana) sama-sama mengompres biaya pelatihan secara signifikan (PTBA −26%, BSSR −41%). Tapi di BSSR, jam pelatihan per karyawan justru naik (17,33 → 20,00). Ini bukan kontradiksi — ini sinyal pergeseran ke pelatihan lebih murah per jam: in-house, e-learning, atau instruktur internal menggantikan external provider. FACT → INFERENCE: perusahaan sedang mencari ROI yang lebih terukur per jam training, bukan memotong training. Implikasi untuk Litologi: proposal ke PTBA (dan klien sejenis) harus memperlihatkan value per rupiah yang konkret — template, checklist, studi kasus yang dibawa pulang — bukan jam ceramah generik.
 
 Tren 2: Reversal Vale adalah sinyal positif untuk hilirisasi kompetensi
 

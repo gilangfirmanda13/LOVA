@@ -10,8 +10,8 @@
 ## Tasks
 - [[Banner]]
 - [[Flyer Onboarding]]
-- [[Background Zoom (872b7f)]]
-- [[Background Pre Test & Post Test (c9b697)]]
+- [[Background Zoom]]
+- [[Background Pre Test & Post Test]]
 - [[Pembuatan Foto Profile]]
 
 ## Deskripsi
