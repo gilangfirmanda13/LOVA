@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Kalista]]
 **Divisi:** [[Project & Business Development]]
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-20
 
 ## Catatan

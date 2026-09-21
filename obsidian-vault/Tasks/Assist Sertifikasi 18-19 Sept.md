@@ -2,6 +2,6 @@
 
 **Assigned to:** [[Dinda 👽]]
 **Divisi:** [[Project & Business Development]]
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-19
 
