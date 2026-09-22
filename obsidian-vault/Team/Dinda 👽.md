@@ -9,6 +9,7 @@
 - [[Persiapan Inhouse Diklat Sertifikasi Reklamasi - PTBA Tanjung Enim]]
 - [[Mining Development Program]]
 - [[Brand & Digital Strategist]]
+- [[Diklat Sertifikasi PTS PTL]]
 - [[Training Development]]
 
 ## Tasks
@@ -26,6 +27,7 @@
 - [[Undangan untuk demo klien]]
 - [[Timeline demo mdp]]
 - [[Sheduling Demo MDP]]
+- [[Banner (7d2725)]]
 - [[Infografis diklat sertifikasi 2026]]
 - [[diskusi perihal MC-ing diklat sertifikasi di jam 0230pm]]
 - [[Database Lead]]

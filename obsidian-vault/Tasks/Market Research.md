@@ -3,7 +3,7 @@
 **Assigned to:** [[Hilda]]
 **Project:** [[Training Development]]
 **Phase:** Training Need Analysis
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-18
 
 ## Catatan

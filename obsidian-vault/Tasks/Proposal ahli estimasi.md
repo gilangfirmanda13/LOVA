@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Hilda]]
 **Divisi:** [[Ruang Personal]]
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-08
 
 ## Catatan

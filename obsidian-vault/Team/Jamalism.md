@@ -12,6 +12,7 @@
 - [[Brand & Digital Strategist]]
 - [[Job Family - Mining and Coal Handling Batch 5]]
 - [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
+- [[Diklat Sertifikasi PTS PTL]]
 - [[Persiapan Inhouse Diklat Sertifikasi PTS PTL - PT BIB Site Angsana]]
 
 ## Tasks
@@ -29,6 +30,7 @@
 - [[Flyer Onboarding]]
 - [[Flyer Onboarding (a2ec3b)]]
 - [[2 training online → Lukman dan Indra Bagus, pembuatan flyer]]
+- [[Banner (7d2725)]]
 - [[Banner (1a7d02)]]
 - [[Background Zoom]]
 - [[Background Pre Test & Post Test]]

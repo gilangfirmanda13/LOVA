@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Hilda]]
 **Divisi:** [[Learning & Development]]
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-17
 
 ## Catatan

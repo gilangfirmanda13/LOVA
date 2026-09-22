@@ -3,7 +3,7 @@
 **Assigned to:** [[Hilda]]
 **Project:** [[Mining Development Program]]
 **Phase:** Design - Program
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-18
 
 ## Catatan
