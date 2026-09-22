@@ -1,6 +1,6 @@
 # Proposal - Explosion Program - Mining and Coal Handling Batch 4
 
-**Klien:** Learning & Development Division
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** medium

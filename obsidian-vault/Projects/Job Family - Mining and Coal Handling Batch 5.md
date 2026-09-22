@@ -9,7 +9,7 @@
 
 ## Tasks
 - [[Banner]]
-- [[Flyer Onboarding]]
+- [[Flyer Onboarding (a2ec3b)]]
 - [[Background Zoom]]
 - [[Background Pre Test & Post Test]]
 - [[Pembuatan Foto Profile]]

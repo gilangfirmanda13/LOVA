@@ -11,6 +11,7 @@
 - [[Brand & Digital Strategist]]
 - [[Campaign - Year-End In-House Training Promotion 2027]]
 - [[Job Family - Mining and Coal Handling Batch 5]]
+- [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
 - [[Proposal - Explosion Program - Mining and Coal Handling Batch 4]]
 - [[Event Calender - Training]]
 - [[Booklet - Diklat & Sertifikasi 2027]]
@@ -18,7 +19,6 @@
 - [[Explosion Program - Manjemen Perawatan]]
 - [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 - [[Explosion Program - Mekanikal Permesinan]]
-- [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
 
 ## Tasks
 - [[desain]]
@@ -35,6 +35,7 @@
 - [[Banner]]
 - [[content plan Infografis → Training Lukman dan Indra Bagus]]
 - [[Flyer Onboarding]]
+- [[Flyer Onboarding (a2ec3b)]]
 - [[Finalisasi Proposal]]
 - [[2 training online → Lukman dan Indra Bagus, pembuatan flyer]]
 - [[Review & Revisi Proposal]]
@@ -53,7 +54,6 @@
 - [[Occupational Safety Management]]
 - [[Finalisasi & Cetak Booklet]]
 - [[Banner (1a7d02)]]
-- [[Flyer Onboarding (55fbc2)]]
 - [[Background Zoom]]
 - [[Background Pre Test & Post Test]]
 - [[Background Pre Test & Post Test (1444cc)]]
