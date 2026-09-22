@@ -24,5 +24,4 @@
 - [[Pembayaran BIB]]
 - [[Perhitungan dan QTN PT Endaprosindo & Mitrasoft]]
 - [[Infokan mengenai Bupot ke Grup Admin]]
-- [[Daftar tender PT Berau Coal Energy]]
 - [[Hydrogeological Interpretation, Monitoring & Step Drawdown]]
