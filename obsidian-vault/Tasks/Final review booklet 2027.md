@@ -2,7 +2,7 @@
 
 **Assigned to:** [[Dinda 👽]]
 **Divisi:** [[Learning & Development]]
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-15
 
 ## Catatan

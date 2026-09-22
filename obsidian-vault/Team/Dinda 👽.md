@@ -35,5 +35,5 @@
 - [[Riset Skema Sertifikasi Baru]]
 - [[Plan q4]]
 - [[Assist Sertifikasi 18-19 Sept]]
-- [[Report event q3]]
 - [[Final review booklet 2027]]
+- [[Report event q3]]

@@ -3,6 +3,6 @@
 **Assigned to:** [[Ratu Bilqis]]
 **Project:** [[Marketing RAB 2027]]
 **Phase:** Contact PIC By WA (Based Litologi Training Onsite)
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-22
 
