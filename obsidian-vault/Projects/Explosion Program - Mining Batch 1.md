@@ -1,6 +1,6 @@
 # Explosion Program - Mining Batch 1
 
-**Klien:** PDP
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** medium
@@ -8,7 +8,8 @@
 **Mulai:** - · **Deadline:** -
 
 ## Tasks
-_Belum ada task_
+- [[Desain Sertifikat]]
+- [[Review & Finalisasi Sertifikat]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

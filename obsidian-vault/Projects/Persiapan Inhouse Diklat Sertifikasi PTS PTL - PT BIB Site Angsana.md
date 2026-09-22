@@ -1,6 +1,6 @@
 # Persiapan Inhouse Diklat Sertifikasi PTS PTL - PT BIB Site Angsana
 
-**Klien:** PT BIB
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** medium
@@ -8,7 +8,8 @@
 **Mulai:** - · **Deadline:** 2026-10-14
 
 ## Tasks
-_Belum ada task_
+- [[Banner Pegang]]
+- [[Banner Tempel]]
 
 ## Deskripsi
 Kantor PT. BIB Site Angsana | 11-14 Oktober 2026. Skema: PTL (Perencanaan Operasional Tambang Terbuka Jangka Panjang) & PTS (Perencanaan Operasional Tambang Terbuka Jangka Pendek). Banner lama page 10: https://canva.link/pnj42xqaftrsi4a

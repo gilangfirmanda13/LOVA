@@ -12,6 +12,7 @@
 - [[Brand & Digital Strategist]]
 - [[Job Family - Mining and Coal Handling Batch 5]]
 - [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
+- [[Persiapan Inhouse Diklat Sertifikasi PTS PTL - PT BIB Site Angsana]]
 
 ## Tasks
 - [[Tahapan penyusunan training]]
@@ -37,6 +38,7 @@
 - [[uploading infografis (4 infografis).]]
 - [[Pembuatan Foto Profile]]
 - [[Pembuatan Foto Profile (d25c80)]]
+- [[Banner Pegang]]
 - [[Poster - Booklet Online Training]]
 - [[Event Calender - LND]]
 - [[Booklet Public Training - LND]]

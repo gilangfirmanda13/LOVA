@@ -1,6 +1,6 @@
 # Event Calender - Training
 
-**Klien:** Learning & Development Division
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** tinggi · **Effort:** high

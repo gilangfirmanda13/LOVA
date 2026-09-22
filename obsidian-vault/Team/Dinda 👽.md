@@ -6,14 +6,17 @@
 
 ## Projects
 - [[Booklet 2027]]
+- [[Persiapan Inhouse Diklat Sertifikasi Reklamasi - PTBA Tanjung Enim]]
 - [[Mining Development Program]]
 - [[Brand & Digital Strategist]]
 - [[Training Development]]
 
 ## Tasks
 - [[Brajnstorm]]
+- [[Persiapan Materi Sertifikasi Batch 1]]
 - [[Demo MDP - ITM Group]]
 - [[kirim.email (Introduction to Groundwater Modeling for Open Pit Mining)]]
+- [[Persiapan Materi & Banner Diklat Batch 2]]
 - [[Demo MDP - PT GAM]]
 - [[Demo MDP - PT Kutai Energi]]
 - [[Demo MDP - PT.BIB]]

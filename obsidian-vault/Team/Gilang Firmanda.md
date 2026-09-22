@@ -8,7 +8,9 @@
 - [[Proposal Project OPD & IPD Geotechnical Review]]
 - [[Booklet 2027]]
 - [[Geotechnical Review]]
+- [[Persiapan Inhouse Diklat Sertifikasi PTS PTL - PTBA Tanjung Enim]]
 - [[Proposal Pembentukan MHTI (Masyarakat Hidrogeologi Tambang Indonesia)]]
+- [[Persiapan Inhouse Diklat Sertifikasi Reklamasi - PTBA Tanjung Enim]]
 
 ## Tasks
 - [[Buat metode penelitian terbaik di proposal]]
@@ -27,6 +29,7 @@
 - [[Input semua copywriting ke template design]]
 - [[Layouting]]
 - [[Kirim proposal ke Yola]]
+- [[Sertifikat Batch 1]]
 - [[Buat In-scope & Out-scope]]
 - [[Brainstorm apa yang dibutuhkan untuk membangun MHTI]]
 - [[Deliverable]]
@@ -34,4 +37,6 @@
 - [[Pembuatan Latar Belakang Masalah]]
 - [[Metodologi Penelitian]]
 - [[Cek notulensi terkait scope of work]]
+- [[Sertifikat Batch 2]]
+- [[Sertifikat Batch 1 (6b072c)]]
 - [[Bayar tagihan]]

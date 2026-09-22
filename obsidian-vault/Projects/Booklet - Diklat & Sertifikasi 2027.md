@@ -1,6 +1,6 @@
 # Booklet - Diklat & Sertifikasi 2027
 
-**Klien:** Learning & Development Division
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** high

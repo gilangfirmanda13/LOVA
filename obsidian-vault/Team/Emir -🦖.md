@@ -7,6 +7,8 @@
 ## Projects
 - [[Mining Development Program]]
 - [[Booklet 2027]]
+- [[Persiapan Inhouse Diklat Sertifikasi PTS PTL - PTBA Tanjung Enim]]
+- [[Persiapan Inhouse Diklat Sertifikasi Reklamasi - PTBA Tanjung Enim]]
 - [[Brand & Digital Strategist]]
 
 ## Tasks
@@ -24,6 +26,10 @@
 - [[Demo MDP - PT Cipta Kridatama]]
 - [[Demo MDP - PT BIB x Learning]]
 - [[Demo MDP - PT Riung Mitra Lestari]]
+- [[Persiapan Materi Sertifikasi Batch 2]]
+- [[Persiapan Materi & Banner Diklat Batch 1]]
 - [[diskusi bersama tim training untuk request-nya perihal booklet 2027 dan promotion inhouse training]]
+- [[Persiapan Materi & Banner Diklat Batch 2 (5fd8c2)]]
+- [[Persiapan Materi Sertifikasi Batch 1 (25c11a)]]
 - [[FU bu alice - bu aini - bu helda PTBA]]
 - [[sop alur training development]]
