@@ -10,6 +10,7 @@
 ## Tasks
 - [[Tahapan penyusunan training]]
 - [[Logo]]
+- [[Tanggal Merah 2027]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

@@ -9,6 +9,7 @@
 - [[PDP - LISTRIK & ELEKTRONIKA BATCH 1]]
 - [[PDP - MINING AND COAL HANDLING BATCH 2]]
 - [[PDP - MEKANIKAL PERMESINAN BATCH 1]]
+- [[Event Calender 2027]]
 
 ## Tasks
 - [[Reminder online training - CQA lvl 1]]
@@ -24,3 +25,4 @@
 - [[SPPD Peserta]]
 - [[Rekap absensi OSM - lvl 2]]
 - [[Rekap absensi dan pre-test lvl 1]]
+- [[Tanggal Merah 2027]]
