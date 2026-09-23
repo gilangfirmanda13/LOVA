@@ -24,6 +24,6 @@
 - [[Kirim proposal ke klien]]
 - [[Koneksi PIC by Linked]]
 - [[FU Cold Account PIC for 35 Companies]]
-- [[Target 15 PIC]]
-- [[Target 15 PIC (5456a3)]]
+- [[Target 1 (15 PIC)]]
+- [[Target 2 (15 PIC)]]
 - [[Kirim Proposal PTBA]]
