@@ -5,7 +5,7 @@
 **Owner:** [[Yolla]]
 **Prioritas:** tinggi · **Effort:** medium
 **Status:** Aktif
-**Mulai:** 2026-09-02 · **Deadline:** 2026-09-21
+**Mulai:** 2026-09-02 · **Deadline:** 2026-09-30
 
 ## Tasks
 - [[PT Amman Mineral Nusa Tenggara (Aquachem)]]

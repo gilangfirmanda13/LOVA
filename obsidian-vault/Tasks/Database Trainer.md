@@ -3,7 +3,7 @@
 **Assigned to:** [[Hilda]]
 **Project:** [[Training Development]]
 **Phase:** Desain Training
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-30
 
 ## Catatan
