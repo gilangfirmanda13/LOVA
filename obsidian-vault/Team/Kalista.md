@@ -21,7 +21,7 @@
 - [[Buat Quotation Diskon 3%]]
 - [[Pembayar Dinas PU ke Seequent]]
 - [[Daftar Ulang Tender]]
-- [[Pembayaran BIB]]
 - [[Perhitungan dan QTN PT Endaprosindo & Mitrasoft]]
 - [[Infokan mengenai Bupot ke Grup Admin]]
+- [[Pembayaran BIB]]
 - [[Hydrogeological Interpretation, Monitoring & Step Drawdown]]
