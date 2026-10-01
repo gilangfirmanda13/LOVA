@@ -2,6 +2,6 @@
 
 **Assigned to:** [[Jamalism]]
 **Divisi:** [[Creative Team]]
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-12-14
 

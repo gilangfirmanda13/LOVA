@@ -20,6 +20,7 @@
 - [[Explosion Program - Manjemen Perawatan]]
 - [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 - [[Explosion Program - Mekanikal Permesinan]]
+- [[Infografis - Rencana Konten Media Sosial]]
 
 ## Tasks
 - [[desain]]
@@ -60,6 +61,7 @@
 - [[Background Zoom (f0d286)]]
 - [[Finalisasi Layout]]
 - [[Flyer Onboarding (a2ec3b)]]
+- [[Konten 1. Musim hujan datang terlambat]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]

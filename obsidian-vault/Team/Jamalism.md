@@ -14,6 +14,7 @@
 - [[Job Family - Mining and Coal Handling Batch 4 (54d27b)]]
 - [[Diklat Sertifikasi PTS PTL]]
 - [[Persiapan Inhouse Diklat Sertifikasi PTS PTL - PT BIB Site Angsana]]
+- [[Infografis - Rencana Konten Media Sosial]]
 
 ## Tasks
 - [[Tahapan penyusunan training]]
@@ -41,8 +42,11 @@
 - [[Pembuatan Foto Profile]]
 - [[Pembuatan Foto Profile (d25c80)]]
 - [[Banner Pegang]]
+- [[Konten 1. Musim hujan datang terlambat]]
+- [[Konten 2. Masuk zona rawan gerakan tanah, apa artinya]]
+- [[Konten 3. Memperkenalkan Geotechnical Monitoring & Interpretation]]
 - [[Poster - Booklet Online Training]]
-- [[Event Calender - LND]]
 - [[Booklet Public Training - LND]]
+- [[Event Calender - LND]]
 - [[Template Word - Proposal]]
 - [[Poster Online Training - Practical Long-Term & Short-Term Mine Planning for Mining Operations]]
