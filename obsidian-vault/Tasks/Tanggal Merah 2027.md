@@ -3,7 +3,7 @@
 **Assigned to:** [[Ayu ✨]]
 **Project:** [[Event Calender 2027]]
 **Phase:** Tanggal Merah 2027
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2027-12-31
 
 ## Catatan
