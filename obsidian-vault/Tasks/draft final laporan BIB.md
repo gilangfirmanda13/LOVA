@@ -4,7 +4,7 @@
 **Project:** [[PT. BIB - In-pit Dump Geotechnical Analysis]]
 **Phase:** pembuatan laporan
 **Status:** Revisi
-**Deadline:** 2026-09-20
+**Deadline:** 2026-10-31
 
 ## Catatan
 yg perlu direview ulang:
