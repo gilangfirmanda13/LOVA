@@ -3,6 +3,6 @@
 **Assigned to:** [[Sindy]]
 **Project:** [[Mining Development Program]]
 **Phase:** Scheduling and Administration
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-12-31
 

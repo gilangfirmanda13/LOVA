@@ -11,7 +11,7 @@
 
 ## Tasks
 - [[reimburse & fee sunardi]]
-- [[Undangan untuk demo klien]]
 - [[Timeline demo mdp]]
 - [[Sheduling Demo MDP]]
+- [[Undangan untuk demo klien]]
 - [[Banner (7d2725)]]

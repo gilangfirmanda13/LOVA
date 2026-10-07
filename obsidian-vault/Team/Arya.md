@@ -15,11 +15,11 @@
 - [[Booklet - Diklat & Sertifikasi 2027]]
 - [[Proposal - Explosion Program - Mining and Coal Handling Batch 4]]
 - [[Event Calender - Training]]
-- [[Diklat Sertifikasi PTS PTL]]
 - [[Explosion Program - Listrik dan Elektronika]]
 - [[Explosion Program - Manjemen Perawatan]]
 - [[Proposal SLOPEW untuk PT Kapuas Bara Utama]]
 - [[Explosion Program - Mekanikal Permesinan]]
+- [[Diklat Sertifikasi PTS PTL]]
 - [[Infografis - Rencana Konten Media Sosial]]
 
 ## Tasks
@@ -45,7 +45,6 @@
 - [[Revisi Layout]]
 - [[Desain & Layout Booklet]]
 - [[Pengumpulan Data & Draft Proposal]]
-- [[Banner (7d2725)]]
 - [[Pengerjaan Tamplate Report]]
 - [[Pengerjaan Tamplate Report (b45553)]]
 - [[Review & Finalisasi Proposal]]
@@ -54,6 +53,7 @@
 - [[Pengerjaan Tamplate Report (8cb585)]]
 - [[Occupational Safety Management]]
 - [[Banner (1a7d02)]]
+- [[Banner (7d2725)]]
 - [[Background Zoom]]
 - [[Background Pre Test & Post Test]]
 - [[Background Pre Test & Post Test (1444cc)]]
