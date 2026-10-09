@@ -1399,7 +1399,7 @@
     .filter-pill, .tab-btn, .btn-sm, .btn-new-project, .test-btn, .evcat-filter-toggle, .blocker-history-toggle, .more-list-row, .timeline-toggle button{ min-height:44px; }
     .section-link{ display:inline-flex; align-items:center; min-height:44px; }
     .action-needed-title{ min-height:44px; }
-    .dash-event-chip, .checkin-widget-row, .mytasks-group-title{ min-height:44px; }
+    .dash-event-chip, .checkin-widget-row, .mytasks-group-title, .hobby-chip{ min-height:44px; }
     .account-avatar-edit::after{ content:''; position:absolute; inset:-8px; }
   }
 </style>
@@ -3906,6 +3906,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
      browser wherever that value gets rendered. Use for every plain-text
      field (names, titles, meta strings); rich-text fields already go through
      renderMentions(), which does its own equivalent escaping first. */
+  /* A11y: mood/level colors are tuned for icons and bars (3:1). When the same color is used
+     as TEXT it needs 4.5:1, so darken it toward black while keeping its hue. */
+  function readableInk(c){ return 'color-mix(in srgb, '+c+' 55%, #000)'; }
   function escapeHtml(str){
     if(str===null || str===undefined) return '';
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
@@ -8385,7 +8388,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var el = document.getElementById('burnoutLastResult');
     if(userProfile.burnoutPct==null){ el.innerHTML = t('journal.burnoutNone'); return; }
     var lvl = burnoutLevelInfo(userProfile.burnoutPct);
-    el.innerHTML = '<span class="big" style="color:'+lvl.color+';">'+userProfile.burnoutPct+'%</span><br>'+fmtDate(userProfile.burnoutDate);
+    el.innerHTML = '<span class="big" style="color:'+readableInk(lvl.color)+';">'+userProfile.burnoutPct+'%</span><br>'+fmtDate(userProfile.burnoutDate);
   }
   function burnoutLevelInfo(pct){
     if(pct>=67) return { color:'var(--revisi)', label:t('journal.burnoutHigh'), desc:t('journal.burnoutHighDesc'), tips:[t('journal.burnoutTipHigh1'),t('journal.burnoutTipHigh2'),t('journal.burnoutTipHigh3')] };
@@ -8443,7 +8446,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('quizResultPanel').innerHTML =
       '<div class="quiz-result-card">' +
         '<div class="quiz-result-label">'+t('journal.burnoutResultLabel')+'</div>' +
-        '<div class="quiz-result-title" style="color:'+lvl.color+';">'+pct+'% · '+lvl.label+'</div>' +
+        '<div class="quiz-result-title" style="color:'+readableInk(lvl.color)+';">'+pct+'% · '+lvl.label+'</div>' +
         '<div class="quiz-result-desc">'+lvl.desc+'</div>' +
         tipsHtml +
       '</div>' +
@@ -8534,11 +8537,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var top = '<div class="journal-entry-top"><span class="journal-entry-date">'+fmtDate(e.date)+'</span><span class="journal-entry-type">'+t('journal.type.'+e.type)+'</span></div>';
       if(e.type==='mood'){
         var m = MOOD_META[e.summaryKey];
-        return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-mood" style="color:'+m.color+';">'+m.label+' · '+e.moodValues[e.summaryKey]+'%</div></div>';
+        return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-mood" style="color:'+readableInk(m.color)+';">'+m.label+' · '+e.moodValues[e.summaryKey]+'%</div></div>';
       }
       if(e.type==='burnout'){
         var lvl = burnoutLevelInfo(e.pct);
-        return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-mood" style="color:'+lvl.color+';">'+e.pct+'% · '+lvl.label+'</div></div>';
+        return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-mood" style="color:'+readableInk(lvl.color)+';">'+e.pct+'% · '+lvl.label+'</div></div>';
       }
       if(e.type==='emotion'){
         return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-note">'+escapeHtml(e.question)+(e.answer?' — '+escapeHtml(e.answer):'')+'</div>'+(e.note?'<div class="journal-entry-note">'+escapeHtml(e.note)+'</div>':'')+'</div>';
