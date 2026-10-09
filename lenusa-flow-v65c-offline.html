@@ -1419,7 +1419,7 @@
   .biz-health-item.aman .biz-health-item-status::before{ content:'\2713  '; }
   .biz-health-item.cek .biz-health-item-status::before{ content:'!  '; }
   .biz-health-item.waspada .biz-health-item-status::before{ content:'\25B2  '; }
-  .biz-health-item-count{ font-size:11px; color:var(--stone); margin-top:2px; }
+  .biz-health-item-count{ font-size:11px; color:var(--ink); margin-top:2px; }
   .team-cap-dot{ width:12px; height:12px; }
   .team-cap-dot.cap-busy, .cap-dot.cap-busy{ border-radius:2px; transform:rotate(45deg); }
   .team-cap-dot.cap-overloaded, .cap-dot.cap-overloaded{ border-radius:0; clip-path:polygon(50% 0, 100% 100%, 0 100%); }
@@ -4998,7 +4998,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function eventRowHtml(m, showCategoryBadge){
     var divTag = m.division!=='umum' ? '<span class="event-div-tag">'+(m.division==='personal'?'Personal':(DIVISION_SHORT[m.division]||m.division))+'</span>' : '';
     var attendeeAvatars = (m.attendees||[]).map(function(a){ return '<div class="mini-avatar" onclick="event.stopPropagation(); openTeamMember(\''+a+'\')">'+initials(a)+'</div>'; }).join('');
-    var typeBadge = showCategoryBadge ? '<span class="event-loc-badge" style="background:'+(EVENT_TYPE_COLOR[m.eventType]||'#8A9490')+'22;color:'+(EVENT_TYPE_COLOR[m.eventType]||'#8A9490')+';">'+(EVENT_TYPE_LABEL[m.eventType]||m.eventType)+'</span>' : '';
+    var typeBadge = showCategoryBadge ? '<span class="event-loc-badge" style="background:'+(EVENT_TYPE_COLOR[m.eventType]||'#8A9490')+'22;color:'+readableInk(EVENT_TYPE_COLOR[m.eventType]||'#8A9490')+';">'+(EVENT_TYPE_LABEL[m.eventType]||m.eventType)+'</span>' : '';
     var scopeBadge = '<span class="event-loc-badge" style="background:var(--teal-tint);color:var(--teal-ink);">'+CAKUPAN_LABEL[m.cakupan||'internal']+(m.cakupan==='klien'&&m.clientName?' · '+escapeHtml(m.clientName):'')+'</span>';
     var linkedProj = m.linkedProjectId ? projects.find(function(p){ return p.id===m.linkedProjectId; }) : null;
     var linkedTag = linkedProj ? '<span class="event-loc-badge" style="background:var(--purple-tint);color:var(--purple-ink);"><i class="ti ti-folder"></i>'+escapeHtml(linkedProj.title)+'</span>' : '';
@@ -8972,7 +8972,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var dateStr = d.getDate()+' '+monthNamesShort[d.getMonth()]+' '+d.getFullYear();
     if(ev.dateMulai && ev.dateSelesai && ev.dateMulai!==ev.dateSelesai){ dateStr = fmtDate(ev.dateMulai)+' – '+fmtDate(ev.dateSelesai); }
     else if(ev.dateMulai){ dateStr = fmtDate(ev.dateMulai); }
-    var typeBadge = '<span class="event-loc-badge" style="background:'+(EVENT_TYPE_COLOR[ev.eventType]||'#8A9490')+'22;color:'+(EVENT_TYPE_COLOR[ev.eventType]||'#8A9490')+';">'+(EVENT_TYPE_LABEL[ev.eventType]||ev.eventType)+'</span>';
+    var typeBadge = '<span class="event-loc-badge" style="background:'+(EVENT_TYPE_COLOR[ev.eventType]||'#8A9490')+'22;color:'+readableInk(EVENT_TYPE_COLOR[ev.eventType]||'#8A9490')+';">'+(EVENT_TYPE_LABEL[ev.eventType]||ev.eventType)+'</span>';
     var scopeBadge = '<span class="event-loc-badge" style="background:var(--teal-tint);color:var(--teal-ink);">'+CAKUPAN_LABEL[ev.cakupan||'internal']+(ev.cakupan==='klien'&&ev.clientName?' · '+escapeHtml(ev.clientName):'')+'</span>';
     var linkedProj = ev.linkedProjectId ? projects.find(function(p){ return p.id===ev.linkedProjectId; }) : null;
     var linkedTag = linkedProj ? '<span class="event-loc-badge" style="background:var(--purple-tint);color:var(--purple-ink);" onclick="openProject(\''+linkedProj.id+'\')"><i class="ti ti-folder"></i>'+escapeHtml(linkedProj.title)+'</span>' : '';
