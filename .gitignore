@@ -7,3 +7,6 @@
 # Deploy staging copy — generated from auth.html + lenusa-flow-v65c-offline.html,
 # not a source file. Regenerate with: cp auth.html lenusa-flow-v65c-offline.html public/
 public/
+
+# Contains live invite tokens - never commit or deploy
+invite-links.html
