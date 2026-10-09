@@ -1412,6 +1412,9 @@
   /* ---- skip link, reduced motion, status shapes, duplicate-nav cleanup, dark-mode fixes ---- */
   .skip-link{ position:absolute; left:-9999px; top:8px; z-index:99999; background:var(--teal-strong); color:#fff; padding:10px 16px; border-radius:12px; font-weight:600; font-size:14px; text-decoration:none; }
   .skip-link:focus{ left:12px; }
+  /* Indonesian labels are longer than the English ones ("Hari Ini"): keep them on one line */
+  .bn-item{ padding:8px 10px; }
+  .bn-item span{ white-space:nowrap; }
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
   }
