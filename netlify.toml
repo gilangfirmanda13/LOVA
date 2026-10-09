@@ -1,3 +1,16 @@
 [build]
   command = "mkdir -p public && cp auth.html public/auth.html && cp lenusa-flow-v65c-offline.html public/lenusa-flow-v65c-offline.html && printf '/  /auth.html  200\n' > public/_redirects"
   publish = "public"
+
+# Security headers (HSTS is already added by Netlify). CSP keeps inline
+# script/style because the app is a single HTML file with inline handlers;
+# it still blocks framing, plugins, <base> hijack and any network call to
+# hosts other than Supabase (+ the exchange-rate API the app uses).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://nysgvqcnwgcaimnghcau.supabase.co; connect-src 'self' https://nysgvqcnwgcaimnghcau.supabase.co wss://nysgvqcnwgcaimnghcau.supabase.co https://open.er-api.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
