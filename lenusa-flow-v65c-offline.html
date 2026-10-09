@@ -1586,6 +1586,7 @@
                 </div>
               </div>
               <div class="list-card glass" id="todayTaskList"></div>
+              <div id="todayTaskDone"></div>
 
               <div class="focus-cta-row" id="focusCtaRow" style="display:none;">
                 <div class="focus-cta-btn" onclick="openPomodoroModal(focusCandidateTask)"><i class="ti ti-target"></i> <span data-i18n="focus.startCta">Mulai Fokus</span></div>
@@ -1706,6 +1707,7 @@
               <div class="filter-pill" data-sort="deadline" data-i18n="sort.deadline">Deadline</div>
             </div>
             <div id="upnextContainer"></div>
+            <div id="upnextDone"></div>
           </div>
         </div>
 
@@ -4302,14 +4304,18 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
 
     var personalAgg = ritualAggRowHtml(personal.filter(function(r){ return ritualFrequency(r)==='daily'; }), 'ritual.dailyLabel') +
       ritualAggRowHtml(personal.filter(function(r){ return ritualFrequency(r)==='weekly'; }), 'ritual.weeklyLabel');
-    var personalRows = personal.map(function(r){
+    var buildPersonalRitualRow = function(r){
       var done = isRitualDoneBy(r.id, CURRENT_USER_NAME);
       return '<div class="today-ritual-row">' +
         '<div class="today-ritual-check'+(done?' done':'')+'" onclick="event.stopPropagation(); toggleMyRitualDone(\''+r.id+'\', event)">'+(done?'<i class="ti ti-check"></i>':'')+'</div>' +
         '<div class="today-ritual-time">'+r.startTime+'</div>' +
         '<div class="today-ritual-body" onclick="openEditRitualModal(\''+r.id+'\')"><div class="today-ritual-title'+(done?' done':'')+'">'+escapeHtml(r.title)+'</div></div>' +
       '</div>';
-    }).join('');
+    };
+    var personalOpen = personal.filter(function(r){ return !isRitualDoneBy(r.id, CURRENT_USER_NAME); });
+    var personalDoneList = personal.filter(function(r){ return isRitualDoneBy(r.id, CURRENT_USER_NAME); });
+    var personalRows = personalOpen.map(buildPersonalRitualRow).join('');
+    var personalDoneHtml = doneSectionHtml('ritual', personalDoneList.length, personalDoneList.map(buildPersonalRitualRow).join(''));
 
     var divisionRows = division.map(function(r){
       var stats = getRitualStats(r);
@@ -4326,7 +4332,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     }).join('');
 
     document.getElementById('todayRitualList').innerHTML =
-      (personal.length ? '<div class="today-ritual-section-title">'+t('ritual.personalTitle')+'</div>'+personalAgg+personalRows : '') +
+      (personal.length ? '<div class="today-ritual-section-title">'+t('ritual.personalTitle')+'</div>'+personalAgg+personalRows+personalDoneHtml : '') +
       (division.length ? '<div class="today-ritual-section-title">'+t('ritual.divisionTitle')+'</div>'+divisionRows : '');
     hydrateIcons(card);
   }
@@ -4609,7 +4615,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     g.status = val;
     g.completedAt = val==='done' ? todayISO() : null;
     if(window.LovaDB) LovaDB.updateGeneralTask(g);
-    renderGeneralTaskList();
+    refreshAllTaskViews();
   }
   function toggleGeneralTaskFocus(id){
     var g = generalTasks.find(function(x){ return x.id===id; });
@@ -5425,12 +5431,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(p.deadline===dateStr){ items.push({type:'project', title:p.title+' · deadline', division:p.division, color:CAL_TYPE_COLOR.project, source:'projectDeadline', projectId:p.id}); }
       p.phases.forEach(function(ph){
         ph.tasks.forEach(function(tk){
-          if(tk.deadline===dateStr){ items.push({type:'project', title:tk.name, division:p.division, color:CAL_TYPE_COLOR.project, source:'task', projectId:p.id, phaseId:ph.id, taskId:tk.id}); }
+          if(tk.deadline===dateStr && tk.status!=='done'){ items.push({type:'project', title:tk.name, division:p.division, color:CAL_TYPE_COLOR.project, source:'task', projectId:p.id, phaseId:ph.id, taskId:tk.id}); }
         });
       });
     });
     generalTasks.forEach(function(g){
-      if(g.deadline===dateStr){ items.push({type:'project', title:g.name, division:g.division, color:CAL_TYPE_COLOR.project, source:'generalTask', taskId:g.id}); }
+      if(g.deadline===dateStr && g.status!=='done'){ items.push({type:'project', title:g.name, division:g.division, color:CAL_TYPE_COLOR.project, source:'generalTask', taskId:g.id}); }
     });
     rituals.forEach(function(r){
       if(r.days.indexOf(dayKey)>-1){ items.push({type:'ritual', title:r.title, divisions:r.divisions, color:CAL_TYPE_COLOR.ritual, time:r.startTime, endTime:r.endTime, source:'ritual', ritualId:r.id}); }
@@ -5949,7 +5955,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       // modal, but this row label makes it clear upfront why, instead of feeling like the
       // click "did nothing".
       var fullTag = full ? ' <span style="color:var(--revisi);font-weight:600;font-size:10.5px;">('+t('capacity.fullTag')+')</span>' : '';
-      return '<div class="popover-item'+(checked?' checked':'')+'" onclick="togglePopoverUser(\''+u.replace(/'/g,"\\'")+'\')"><div class="popover-check">'+(checked?'✓':'')+'</div><span style="flex:1;'+(full?'color:var(--stone);':'')+'">'+u+fullTag+'</span><span class="cap-dot" style="background:'+capacityColor(pct)+';" title="'+pct+'% kapasitas"></span></div>';
+      return '<div class="popover-item'+(checked?' checked':'')+'" onclick="togglePopoverUser(\''+u.replace(/'/g,"\\'")+'\')"><div class="popover-check">'+(checked?'✓':'')+'</div><span style="flex:1;'+''+'">'+u+fullTag+'</span><span class="cap-dot" style="background:'+capacityColor(pct)+';" title="'+pct+'% kapasitas"></span></div>';
     }).join('');
     var legend = '<div class="cap-legend"><span><span class="cap-dot cap-healthy" style="background:var(--teal);"></span>Sehat</span><span><span class="cap-dot cap-busy" style="background:var(--orange);"></span>Sibuk</span><span><span class="cap-dot cap-overloaded" style="background:var(--revisi);"></span>Penuh</span></div>';
     var html = legend + rows + (isSingleMode() ? '' : '<div class="popover-done-btn" onclick="closePopover()">Selesai</div>');
@@ -5963,12 +5969,15 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function togglePopoverUser(u){
     if(isSingleMode()){
+      // Capacity is advisory: a person at/over capacity can still be assigned. Warn after the
+      // fact (toast) instead of blocking, so the assigner keeps the final say.
       var pct = capacityPct(u);
+      var capBefore = getUserCapacity(u);
+      commitSingleAssignee(u);
       if(pct>=100){
-        closePopoverOnly();
-        openCapacityModal(u, pct);
-      } else {
-        commitSingleAssignee(u);
+        var overH = capBefore ? Math.max(0, capBefore.planned - capBefore.available) : 0;
+        var overTxt = overH>0 ? t('capacity.overHours').replace('{h}', overH) : '';
+        showToast(t('capacity.warnAssigned').replace('{name}', u).replace('{pct}', pct).replace('{over}', overTxt), 6000);
       }
       return;
     }
@@ -7167,7 +7176,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var html = p.phases.map(function(phase, pIdx){
       var prog = phaseProgress(phase);
       var avatars = phase.assignees.map(function(a){ return '<div class="mini-avatar" style="width:18px;height:18px;font-size:8px;" onclick="event.stopPropagation(); openTeamMember(\''+a+'\')">'+initials(a)+'</div>'; }).join('');
-      var taskHtml = phase.tasks.map(function(task){
+      var buildTaskRow = function(task){
         var statusOpts = STATUS_ORDER.map(function(s){ return '<option value="'+s+'"'+(task.status===s?' selected':'')+'>'+statusLabel(s)+'</option>'; }).join('');
         var picBlock = isPersonalProject ? '' :
           '<div class="mini-avatar task-mini-avatar" title="PIC utama — klik untuk ganti" onclick="openAssigneePopover(event,\'taskInline\',{pid:\''+p.id+'\',phId:\''+phase.id+'\',tId:\''+task.id+'\'})">'+(task.pic?initials(task.pic):'?')+'</div>' +
@@ -7189,7 +7198,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
               '<i class="ti ti-trash task-del-btn" onclick="event.stopPropagation(); deleteTask(\''+p.id+'\',\''+phase.id+'\',\''+task.id+'\')"></i>' +
             '</div>' +
           '</div>';
-      }).join('');
+      };
+      var phaseOpenTasks = phase.tasks.filter(function(tk){ return tk.status!=='done'; });
+      var phaseDoneTasks = phase.tasks.filter(function(tk){ return tk.status==='done'; });
+      var taskHtml = phaseOpenTasks.map(buildTaskRow).join('');
+      var phaseDoneHtml = doneSectionHtml('ph-'+phase.id, phaseDoneTasks.length, phaseDoneTasks.map(buildTaskRow).join(''));
       return '' +
         '<div class="phase-card'+(collapsedPhases[phase.id]?' collapsed':'')+'" data-phase-id="'+phase.id+'">' +
           '<div class="phase-card-head">' +
@@ -7205,6 +7218,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '</div>' +
           '<div class="phase-body">' +
             '<div class="task-sortable" data-phase-id="'+phase.id+'">'+taskHtml+'</div>' +
+            phaseDoneHtml +
             '<button class="add-btn" onclick="openAddTaskModal(\''+p.id+'\',\''+phase.id+'\')"><i class="ti ti-plus"></i>Tambah task</button>' +
           '</div>' +
         '</div>';
@@ -7233,9 +7247,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var phase = p.phases.find(function(ph){ return ph.id===phaseId; });
       phaseSortables.push(new Sortable(container, {
         handle:'.task-drag-handle', animation:150, ghostClass:'sortable-ghost', dragClass:'sortable-drag',
-        onEnd: function(evt){
-          var moved = phase.tasks.splice(evt.oldIndex,1)[0];
-          phase.tasks.splice(evt.newIndex,0,moved);
+        onEnd: function(){
+          var ids = Array.prototype.map.call(container.querySelectorAll('[data-task-id]'), function(el){ return el.dataset.taskId; });
+          var ordered = ids.map(function(id){ return phase.tasks.find(function(tk){ return tk.id===id; }); }).filter(Boolean);
+          var rest = phase.tasks.filter(function(tk){ return ids.indexOf(tk.id)===-1; });
+          phase.tasks = ordered.concat(rest);
         }
       }));
     });
@@ -7248,7 +7264,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     t.status = val;
     t.completedAt = val==='done' ? todayISO() : null;
     if(window.LovaDB) LovaDB.updateProjectTask(t);
-    renderPhases();
+    refreshAllTaskViews();
   }
   function quickToggleTaskDone(isGeneral, pid, phId, taskId, evt){
     if(evt){ evt.stopPropagation(); evt.preventDefault(); }
@@ -7267,13 +7283,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     }
     if(window.LovaDB){ if(isGeneral) LovaDB.updateGeneralTask(tk); else LovaDB.updateProjectTask(tk); }
     if(!wasDone) celebrateBurst(evt ? evt.currentTarget : null);
-    renderPhases();
-    renderTodayFromProjects();
-    renderDashGlance();
-    renderFocusZoneScreen();
-    renderUpNextScreen();
-    renderMyTasksScreen();
-    renderPersonalTasksScreen();
+    refreshAllTaskViews();
   }
   function isMyTaskAssignment(tk){
     return tk.pic===CURRENT_USER_NAME || (tk.secondaryPic||[]).indexOf(CURRENT_USER_NAME)>-1;
@@ -8136,6 +8146,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(p.division==='personal') return;
       p.phases.forEach(function(ph){
         ph.tasks.forEach(function(tk){
+          if(tk.status==='done') return;
           if(tk.pic===name || (tk.secondaryPic && tk.secondaryPic.indexOf(name)>-1)){
             results.push({ title:tk.name, meta:p.title, status:tk.status, color:STATUS_COLOR[tk.status] });
           }
@@ -8143,7 +8154,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       });
     });
     generalTasks.forEach(function(g){
-      if(g.division==='personal') return;
+      if(g.division==='personal' || g.status==='done') return;
       if(g.pic===name){
         results.push({ title:g.name, meta:(divisions[g.division]?divisions[g.division].name:g.division)+' · '+t('divtab.general'), status:g.status, color:STATUS_COLOR[g.status] });
       }
@@ -9096,6 +9107,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(window.LovaDB){ if(taskDetailCtx.isGeneral) LovaDB.updateGeneralTask(tk); else LovaDB.updateProjectTask(tk); }
     if(s==='done' && !wasDone) celebrateBurst(evt ? evt.currentTarget : null);
     renderTaskDetail();
+    refreshAllTaskViews();
   }
   function respondAssignment(decision){
     var tk = getTaskDetailRef();
@@ -9130,7 +9142,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   function openPersonalTasksScreen(){ showScreen('personaltasks'); }
   function renderPersonalTasksScreen(){
-    var mine = getMyPersonalTasks();
+    var mineAll = getMyPersonalTasks();
+    var personalDone = mineAll.filter(function(m){ return m.task.status==='done'; });
+    var mine = mineAll.filter(function(m){ return m.task.status!=='done'; });
     var groupCount = Object.keys(mine.reduce(function(a,m){ a[m.groupKey]=1; return a; },{})).length;
     document.getElementById('personalTasksSub').textContent = t('mytasks.subCount').replace('{n}', mine.length).replace('{g}', groupCount);
     var byGroup = {};
@@ -9149,7 +9163,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       }).join('');
       return '<div class="mytasks-group-title">'+escapeHtml(group[0].groupTitle)+'</div>' + rows;
     }).join('');
-    document.getElementById('personalTasksContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyTasks')+'</span></div>';
+    var personalDoneHtml = doneSectionHtml('personal', personalDone.length, personalDone.map(function(m){ return taskRowHtml(m,{editable:true, returnScreen:'personaltasks'}); }).join(''));
+    document.getElementById('personalTasksContainer').innerHTML = (html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+(personalDone.length ? t('tasks.allDone') : t('empty.noMyTasks'))+'</span></div>') + personalDoneHtml;
     hydrateIcons(document.getElementById('personalTasksContainer'));
   }
 
@@ -9163,13 +9178,16 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   }
   var upnextSortable = null;
   function renderUpNextScreen(){
-    var mine = getMyTasks(true).filter(function(m){ return m.task.zone==='upnext'; });
-    mine = sortTaskList(mine, upnextSortMode);
+    var upnextAll = getMyTasks(true).filter(function(m){ return m.task.zone==='upnext'; });
+    var upnextDone = upnextAll.filter(function(m){ return m.task.status==='done'; });
+    var mine = sortTaskList(upnextAll.filter(function(m){ return m.task.status!=='done'; }), upnextSortMode);
     var reorderable = upnextSortMode==='default';
     document.getElementById('upnextSub').textContent = t('upnext.subCount').replace('{n}', mine.length);
     document.getElementById('upnextContainer').innerHTML = mine.map(function(m,i){ return taskRowHtml(m,{editable:false, returnScreen:'upnext', reorderable:reorderable, isFirst:i===0, isLast:i===mine.length-1}); }).join('') ||
       '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('empty.noMyTasks')+'</span></div>';
     hydrateIcons(document.getElementById('upnextContainer'));
+    var upnextDoneEl = document.getElementById('upnextDone');
+    if(upnextDoneEl){ upnextDoneEl.innerHTML = doneSectionHtml('upnext', upnextDone.length, upnextDone.map(function(m){ return taskRowHtml(m,{editable:false, returnScreen:'upnext'}); }).join('')); hydrateIcons(upnextDoneEl); }
     if(upnextSortable){ upnextSortable.destroy(); upnextSortable = null; }
     if(reorderable && mine.length>1){
       upnextSortable = new Sortable(document.getElementById('upnextContainer'), {
@@ -9460,10 +9478,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var m = s.task;
     if(m.isGeneral){
       var g = generalTasks.find(function(x){ return x.id===m.task.id; });
-      if(g){ g.status='done'; g.completedAt = todayISO(); }
+      if(g){ g.status='done'; g.completedAt = todayISO(); if(window.LovaDB) LovaDB.updateGeneralTask(g); }
     } else {
       var p = projects.find(function(x){ return x.id===m.projectId; });
-      if(p) p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){ if(tk.id===m.task.id){ tk.status='done'; tk.completedAt=todayISO(); } }); });
+      if(p) p.phases.forEach(function(ph){ ph.tasks.forEach(function(tk){ if(tk.id===m.task.id){ tk.status='done'; tk.completedAt=todayISO(); if(window.LovaDB) LovaDB.updateProjectTask(tk); } }); });
     }
     celebrateBurst(null);
     exitPomodoro();
@@ -10056,6 +10074,37 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     showToast(t('delegate.toast'));
   }
   var todayTaskSortable = null;
+  /* ---- shared collapsed "Selesai" archive section (used by Today, Up Next, Personal, project phases) ---- */
+  var doneSectionOpen = {};
+  function toggleDoneSection(key){
+    doneSectionOpen[key] = !doneSectionOpen[key];
+    var list = document.getElementById('doneList-' + key);
+    var chev = document.getElementById('doneChev-' + key);
+    if(list) list.style.display = doneSectionOpen[key] ? 'block' : 'none';
+    if(chev) chev.style.transform = doneSectionOpen[key] ? 'rotate(180deg)' : '';
+  }
+  function doneSectionHtml(key, count, rowsHtml){
+    if(!count) return '';
+    var open = !!doneSectionOpen[key];
+    return '<div class="today-ritual-section-title done-section-toggle" data-key="' + key + '" style="cursor:pointer;justify-content:space-between;" onclick="toggleDoneSection(this.dataset.key)">' +
+        '<span>' + t('focuszone.doneSection').replace('{n}', count) + '</span>' +
+        '<i class="ti ti-chevron-down" id="doneChev-' + key + '" style="transition:transform .15s ease;' + (open ? 'transform:rotate(180deg);' : '') + '"></i>' +
+      '</div>' +
+      '<div id="doneList-' + key + '" style="display:' + (open ? 'block' : 'none') + ';">' + rowsHtml + '</div>';
+  }
+
+  /* One call that refreshes every view derived from task status, so capacity %, Today, Up Next,
+     Focus Zone, My Tasks, phases and the team list never show a finished task as still open. */
+  function refreshAllTaskViews(){
+    ['renderPhases', 'renderTodayFromProjects', 'renderDashGlance', 'renderFocusZoneScreen', 'renderUpNextScreen',
+     'renderMyTasksScreen', 'renderPersonalTasksScreen', 'renderGeneralTaskList', 'renderProjectList', 'renderTeamList'
+    ].forEach(function(name){
+      var fn = window[name];
+      if(typeof fn !== 'function') return;
+      try { fn(); } catch(e){ console.error('refreshAllTaskViews:' + name, e); }
+    });
+  }
+
   function renderTodayFromProjects(){
     var mine = getMyTasks(true);
     var zoneOrder = {focus:0, upnext:1, later:2};
@@ -10077,10 +10126,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var personalProjN = projects.filter(function(p){ return p.division==='personal'; }).length;
     document.getElementById('personalProjCount').textContent = personalProjN;
 
-    var todayOnly = mine.filter(function(m){ return m.task.zone==='focus' || m.task.zone==='upnext'; });
+    var todayAll = mine.filter(function(m){ return m.task.zone==='focus' || m.task.zone==='upnext'; });
+    var todayDone = todayAll.filter(function(m){ return m.task.status==='done'; });
+    var todayOnly = todayAll.filter(function(m){ return m.task.status!=='done'; });
     var focusList = todayOnly.filter(function(m){ return m.task.zone==='focus'; });
     var upnextList = todayOnly.filter(function(m){ return m.task.zone==='upnext'; });
-    var html = todayOnly.map(function(m){
+    var buildTodayRow = function(m){
       var tk = m.task;
       var isDone = tk.status==='done';
       var iconCls = STATUS_ICON[tk.status] || 'ti-clock';
@@ -10101,10 +10152,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         '<div class="list-body"><div class="list-title'+(isDone?' done':'')+'">'+escapeHtml(tk.name)+'</div><div class="list-sub">via '+escapeHtml(m.groupTitle)+' · '+(m.role==='pic'?'PIC':'Membantu')+assignedByTag+pendingBadge+'</div></div>' +
         '<div class="list-time">'+statusLabel(tk.status)+'</div>' +
       '</div>';
-    }).join('');
-    var emptyMsg = mine.length===0 ? t('empty.noMyTasks') : t('empty.noFocusToday');
+    };
+    var html = todayOnly.map(buildTodayRow).join('');
+    var emptyMsg = mine.length===0 ? t('empty.noMyTasks') : (todayDone.length ? t('today.allDone') : t('empty.noFocusToday'));
     document.getElementById('todayTaskList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+emptyMsg+'</span></div>';
     hydrateIcons(document.getElementById('todayTaskList'));
+    var todayDoneEl = document.getElementById('todayTaskDone');
+    if(todayDoneEl){ todayDoneEl.innerHTML = doneSectionHtml('today', todayDone.length, todayDone.map(buildTodayRow).join('')); hydrateIcons(todayDoneEl); }
     if(todayTaskSortable){ todayTaskSortable.destroy(); todayTaskSortable = null; }
     if(todayOnly.length>1){
       todayTaskSortable = new Sortable(document.getElementById('todayTaskList'), {
@@ -10706,6 +10760,10 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "form.picSekunder": {id:"PIC Sekunder (opsional)", en:"Secondary PIC (optional)"}, "form.choosePicSekunder": {id:"Pilih PIC sekunder…", en:"Choose secondary PIC…"},
     "divtab.projects": {id:"Project", en:"Projects"}, "divtab.general": {id:"Task Umum", en:"General Tasks"},
     "general.new": {id:"Task cepat", en:"Quick task"},
+    "capacity.warnAssigned": {id:"Peringatan: {name} sudah di {pct}% kapasitas minggu ini{over}. Tetap ditugaskan, pertimbangkan membagi beban.", en:"Heads up: {name} is already at {pct}% capacity this week{over}. Assigned anyway, consider sharing the load."},
+    "capacity.overHours": {id:" (sekitar {h} jam melebihi)", en:" (about {h}h over)"},
+    "tasks.allDone": {id:"Semua tugas sudah selesai", en:"All tasks are done"},
+    "today.allDone": {id:"Semua tugas hari ini sudah selesai", en:"Everything for today is done"},
     "db.saveFailed": {id:"Perubahan belum tersimpan. Cek koneksi, lalu muat ulang halaman.", en:"Your change was not saved. Check your connection, then reload."},
     "a11y.skip": {id:"Lewati ke konten utama", en:"Skip to main content"},
     "bizhealth.overdue": {id:"{n} terlambat", en:"{n} overdue"},
