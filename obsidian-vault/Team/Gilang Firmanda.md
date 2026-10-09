@@ -39,4 +39,8 @@
 - [[Cek notulensi terkait scope of work]]
 - [[Sertifikat Batch 2]]
 - [[Sertifikat Batch 1 (6b072c)]]
+- [[Buat Proposal Project PT. Masmindo]]
+- [[Bikin proposal training groundprobe]]
+- [[Bikin proposal training PT. Timah]]
 - [[Bayar tagihan]]
+- [[Isi webinar back analysis]]
