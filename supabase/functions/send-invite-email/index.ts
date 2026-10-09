@@ -14,6 +14,9 @@ const FROM_ADDRESS = 'LOVA <onboarding@resend.dev>'
 // to the Resend account's own verified address until a real domain
 // (e.g. lenusa.id) is verified at resend.com/domains.
 
+const DEFAULT_APP_ORIGIN = 'https://lova-lenusa.netlify.app'
+const ALLOWED_APP_ORIGINS = [DEFAULT_APP_ORIGIN, 'http://localhost:8888', 'http://localhost:3000']
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -44,6 +47,7 @@ Deno.serve(async (req) => {
       .maybeSingle()
     if (!invite) return json({ error: 'invite not found' }, 404)
     if (invite.accepted_at) return json({ error: 'invite already accepted' }, 409)
+    if (invite.expires_at && new Date(invite.expires_at) < new Date()) return json({ error: 'invite expired' }, 410)
 
     const { data: callerProfile } = await supabase.from('profiles').select('org_id, name').eq('id', caller.id).maybeSingle()
     if (!callerProfile || callerProfile.org_id !== invite.org_id) {
@@ -68,12 +72,15 @@ Deno.serve(async (req) => {
 
     const orgName = (invite as any).organizations?.name || 'LOVA'
     const roleLabel: Record<string, string> = { owner: 'Business Owner', manager: 'Manager', staff: 'Staff', finance_admin: 'Finance Admin' }
-    const link = `${appUrl || 'https://lova-lenusa.netlify.app'}/auth.html?invite=${inviteToken}`
+    // SECURITY: appUrl comes from the client; only trust known app origins so
+    // the emailed link can never point at an attacker-controlled site.
+    const baseUrl = ALLOWED_APP_ORIGINS.includes(appUrl) ? appUrl : DEFAULT_APP_ORIGIN
+    const link = `${baseUrl}/auth.html?invite=${encodeURIComponent(inviteToken)}`
     const html = `
       <p>Halo,</p>
       <p><b>${escapeHtml(callerProfile.name)}</b> mengundang kamu bergabung ke <b>${escapeHtml(orgName)}</b> di LOVA, sebagai <b>${roleLabel[invite.role] || invite.role}</b>.</p>
-      <p><a href="${link}">Terima undangan &amp; buat akun</a></p>
-      <p style="color:#8A9490;font-size:12px;">Kalau tombol di atas tidak berfungsi, salin link ini: ${link}</p>
+      <p><a href="${escapeHtml(link)}">Terima undangan &amp; buat akun</a></p>
+      <p style="color:#8A9490;font-size:12px;">Kalau tombol di atas tidak berfungsi, salin link ini: ${escapeHtml(link)}</p>
     `
 
     const resendResp = await fetch('https://api.resend.com/emails', {

@@ -4584,7 +4584,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
   function populateGtProjectSelect(selected, divisionKey){
     var sel = document.getElementById('gtProject');
     var inDiv = projects.filter(function(p){ return !p.inactive && p.division===divisionKey; });
-    sel.innerHTML = '<option value="">—</option>' + inDiv.map(function(p){ return '<option value="'+p.id+'">'+p.title+'</option>'; }).join('');
+    sel.innerHTML = '<option value="">—</option>' + inDiv.map(function(p){ return '<option value="'+p.id+'">'+escapeHtml(p.title)+'</option>'; }).join('');
     sel.value = inDiv.some(function(p){ return p.id===selected; }) ? selected : '';
   }
   function onGtDivisionChange(){
@@ -6023,8 +6023,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       var whenLabel = days===1 ? t('missed.oneDayAgo') : t('missed.daysAgo').replace('{n}', days);
       var clickAction = item.isGeneral ? ("closeModal('kpiOverdueModal'); openDivision('"+item.divisionKey+"','kpirollup'); switchDivTab('general');") : ("closeModal('kpiOverdueModal'); openProject('"+item.projectId+"','kpirollup');");
       return '<div class="missed-task-row" style="cursor:pointer;" onclick="'+clickAction+'">' +
-        '<div class="missed-task-name">'+item.name+'</div>' +
-        '<div class="missed-task-meta">'+item.pic+' · via '+item.via+' · '+whenLabel+'</div>' +
+        '<div class="missed-task-name">'+escapeHtml(item.name)+'</div>' +
+        '<div class="missed-task-meta">'+escapeHtml(item.pic)+' · via '+escapeHtml(item.via)+' · '+whenLabel+'</div>' +
       '</div>';
     }).join('');
     document.getElementById('kpiOverdueModalList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('missed.empty')+'</span></div>';
@@ -6259,7 +6259,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     return parts;
   }
   function notebookLinkTagsHtml(n){
-    return notebookLinkLabel(n).map(function(l){ return '<span class="notebook-link-tag" onclick="event.stopPropagation(); '+l.action+'">'+l.label+'</span>'; }).join('');
+    return notebookLinkLabel(n).map(function(l){ return '<span class="notebook-link-tag" onclick="event.stopPropagation(); '+l.action+'">'+escapeHtml(l.label)+'</span>'; }).join('');
   }
   function renderNotebookScreen(){
     var authorF = document.getElementById('nbFilterAuthor').value;
@@ -8530,13 +8530,13 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
         return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-mood" style="color:'+lvl.color+';">'+e.pct+'% · '+lvl.label+'</div></div>';
       }
       if(e.type==='emotion'){
-        return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-note">'+e.question+(e.answer?' — '+e.answer:'')+'</div>'+(e.note?'<div class="journal-entry-note">'+e.note+'</div>':'')+'</div>';
+        return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-note">'+escapeHtml(e.question)+(e.answer?' — '+escapeHtml(e.answer):'')+'</div>'+(e.note?'<div class="journal-entry-note">'+escapeHtml(e.note)+'</div>':'')+'</div>';
       }
       if(e.type==='obstacle'){
         var tags = (e.categories||[]).map(function(c){ return '<span class="journal-entry-tag">'+c+'</span>'; }).join('');
-        return '<div class="journal-entry-row" '+rowStyle+'>'+top+(e.note?'<div class="journal-entry-note">'+e.note+'</div>':'')+(tags?'<div class="journal-entry-tags">'+tags+'</div>':'')+'</div>';
+        return '<div class="journal-entry-row" '+rowStyle+'>'+top+(e.note?'<div class="journal-entry-note">'+escapeHtml(e.note)+'</div>':'')+(tags?'<div class="journal-entry-tags">'+tags+'</div>':'')+'</div>';
       }
-      return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-note">'+e.note+'</div></div>';
+      return '<div class="journal-entry-row" '+rowStyle+'>'+top+'<div class="journal-entry-note">'+escapeHtml(e.note)+'</div></div>';
     }).join('');
     document.getElementById('journalHistoryList').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('journal.empty')+'</span></div>';
   }
@@ -9474,7 +9474,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
           '<span class="general-priority-badge priority-tinggi" style="background:var(--purple-tint);color:var(--purple-deep);">'+t('konsekuensi.cat.'+k.category)+'</span>' +
           '<span style="font-size:11px;color:var(--stone);">'+t('konsekuensi.scope.'+k.scope)+' · '+konsekuensiScopeLabel(k)+'</span>' +
         '</div>' +
-        '<div style="font-size:13px;color:var(--ink);line-height:1.5;">'+k.text+'</div>' +
+        '<div style="font-size:13px;color:var(--ink);line-height:1.5;">'+escapeHtml(k.text)+'</div>' +
       '</div>';
     }).join('');
     document.getElementById('konsekuensiContainer').innerHTML = html || '<div class="empty-note"><i class="ti ti-clipboard-list"></i><span>'+t('konsekuensi.empty')+'</span></div>';
@@ -11053,7 +11053,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
      the offline demo (local-only, resets on reload). That is
      tracked as the next follow-up pass, not an oversight.
 ============================================================ -->
-<script src="https://unpkg.com/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous"></script>
 <script>
 (function(){
   var SUPABASE_URL = 'https://nysgvqcnwgcaimnghcau.supabase.co';
