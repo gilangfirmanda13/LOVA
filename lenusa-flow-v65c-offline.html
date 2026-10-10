@@ -3500,7 +3500,9 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(p.division==='personal' || p.inactive) return;
       p.phases.forEach(function(ph){
         ph.tasks.forEach(function(tk){
-          if(tk.status==='done') return;
+          // done = finished; review = the PIC has handed it in and is waiting on someone else,
+          // so neither should use up the PIC's weekly capacity (revisi still does: work is back with them).
+          if(tk.status==='done' || tk.status==='review') return;
           // Prefer the task's own estimated duration when the assigner set one -- it's a
           // far more accurate per-task figure than applying the whole project's effort
           // bucket uniformly to every task in it.
@@ -3511,7 +3513,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       });
     });
     generalTasks.forEach(function(g){
-      if(g.division==='personal' || g.status==='done' || g.pic!==name) return;
+      if(g.division==='personal' || g.status==='done' || g.status==='review' || g.pic!==name) return;
       hours += g.duration!=null ? g.duration : (GENERAL_TASK_PRIORITY_HOURS[g.priority] || GENERAL_TASK_PRIORITY_HOURS.sedang);
     });
     return Math.round(hours);
@@ -5431,12 +5433,12 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
       if(p.deadline===dateStr){ items.push({type:'project', title:p.title+' · deadline', division:p.division, color:CAL_TYPE_COLOR.project, source:'projectDeadline', projectId:p.id}); }
       p.phases.forEach(function(ph){
         ph.tasks.forEach(function(tk){
-          if(tk.deadline===dateStr && tk.status!=='done'){ items.push({type:'project', title:tk.name, division:p.division, color:CAL_TYPE_COLOR.project, source:'task', projectId:p.id, phaseId:ph.id, taskId:tk.id}); }
+          if(tk.deadline===dateStr){ items.push({type:'project', title:tk.name, division:p.division, color:CAL_TYPE_COLOR.project, source:'task', projectId:p.id, phaseId:ph.id, taskId:tk.id}); }
         });
       });
     });
     generalTasks.forEach(function(g){
-      if(g.deadline===dateStr && g.status!=='done'){ items.push({type:'project', title:g.name, division:g.division, color:CAL_TYPE_COLOR.project, source:'generalTask', taskId:g.id}); }
+      if(g.deadline===dateStr){ items.push({type:'project', title:g.name, division:g.division, color:CAL_TYPE_COLOR.project, source:'generalTask', taskId:g.id}); }
     });
     rituals.forEach(function(r){
       if(r.days.indexOf(dayKey)>-1){ items.push({type:'ritual', title:r.title, divisions:r.divisions, color:CAL_TYPE_COLOR.ritual, time:r.startTime, endTime:r.endTime, source:'ritual', ritualId:r.id}); }
