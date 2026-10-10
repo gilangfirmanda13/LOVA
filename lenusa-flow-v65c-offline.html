@@ -1439,6 +1439,9 @@
     #moreGridWellbeing, .section-head:has(+ #moreGridWellbeing){ display:none; }
     #screen-team > .page > .back-btn, #screen-journal > .page > .back-btn{ display:none; }
   }
+
+  .gt-more-toggle{ display:flex; align-items:center; justify-content:center; gap:6px; width:100%; min-height:44px; margin:4px 0 10px; padding:10px; border-radius:12px; border:1px dashed var(--glass-border); background:transparent; color:var(--teal-ink); font-weight:600; font-size:13px; cursor:pointer; }
+  .gt-more-toggle:hover{ background:var(--teal-tint); }
 </style>
 </head>
 <body>
@@ -3043,13 +3046,8 @@
       <div class="assignee-picker-trigger" id="gtPicTrigger" onclick="openAssigneePopover(event,'generalPic')"><span class="assignee-placeholder">Pilih PIC…</span></div>
     </div>
     <div class="form-error" id="gtPicError" data-i18n="form.picUtamaError">PIC utama wajib dipilih.</div>
-    <div class="form-row" id="gtSecondaryRow"><label class="form-label" data-i18n="form.picSekunder">PIC Sekunder (opsional)</label>
-      <div class="assignee-picker-trigger" id="gtSecondaryTrigger" onclick="openAssigneePopover(event,'generalSecondary')"><span class="assignee-placeholder">Pilih PIC sekunder…</span></div>
-    </div>
-    <div class="form-row"><label class="form-label" data-i18n="general.linkedProject">Terkait Project (opsional)</label>
-      <select class="form-select" id="gtProject" onchange="onGtProjectChange()"><option value="">—</option></select>
-    </div>
-    <div class="form-row"><label class="form-label" data-i18n="general.client">Nama Klien (opsional)</label><input class="form-input" id="gtClient" placeholder="cth. PT Klien Sejahtera"></div>
+    <div class="form-row"><label class="form-label" data-i18n="general.deadline">Deadline</label><input class="form-input" type="date" id="gtDeadline"></div>
+    <div class="form-error" id="gtDateError" data-i18n="form.dateError">Deadline tidak boleh sebelum tanggal mulai.</div>
     <div class="form-row"><label class="form-label" data-i18n="form.priority">Prioritas</label>
       <select class="form-select" id="gtPriority">
         <option value="tinggi" data-i18n="priority.tinggi">Tinggi</option>
@@ -3057,16 +3055,6 @@
         <option value="rendah" data-i18n="priority.rendah">Rendah</option>
       </select>
     </div>
-    <div class="form-grid-2">
-      <div class="form-row"><label class="form-label" data-i18n="form.startOpt">Tanggal Mulai (opsional)</label><input class="form-input" type="date" id="gtStart"></div>
-      <div class="form-row"><label class="form-label" data-i18n="form.startTimeOpt">Jam Mulai (opsional)</label><input class="form-input" type="time" id="gtStartTime"></div>
-    </div>
-    <div class="form-grid-2">
-      <div class="form-row"><label class="form-label" data-i18n="general.deadline">Deadline (opsional)</label><input class="form-input" type="date" id="gtDeadline"></div>
-      <div class="form-row"><label class="form-label" data-i18n="form.endTimeOpt">Jam Berakhir (opsional)</label><input class="form-input" type="time" id="gtEndTime"></div>
-    </div>
-    <div class="form-error" id="gtDateError" data-i18n="form.dateError">Deadline tidak boleh sebelum tanggal mulai.</div>
-    <div class="form-row"><label class="form-label" data-i18n="form.duration">Estimasi Durasi (jam, opsional)</label><input class="form-input" type="number" min="0" step="0.5" id="gtDuration" placeholder="cth. 4"></div>
     <div class="form-row" id="gtStatusRow" style="display:none;"><label class="form-label" data-i18n="form.status">Status</label>
       <select class="form-select" id="gtStatus">
         <option value="todo" data-i18n="status.todo">Belum Dikerjakan</option>
@@ -3076,10 +3064,26 @@
         <option value="done" data-i18n="status.done">Selesai</option>
       </select>
     </div>
+    <button type="button" class="gt-more-toggle" id="gtMoreToggle" aria-expanded="false" aria-controls="gtAdvanced" onclick="toggleGtAdvanced()"><span data-i18n="general.moreOptions">Opsi lainnya</span><i class="ti ti-chevron-down" style="transition:transform .15s ease;"></i></button>
+    <div id="gtAdvanced" style="display:none;">
+    <div class="form-row" id="gtSecondaryRow"><label class="form-label" data-i18n="form.picSekunder">PIC Sekunder (opsional)</label>
+      <div class="assignee-picker-trigger" id="gtSecondaryTrigger" onclick="openAssigneePopover(event,'generalSecondary')"><span class="assignee-placeholder">Pilih PIC sekunder…</span></div>
+    </div>
+    <div class="form-row"><label class="form-label" data-i18n="general.linkedProject">Terkait Project (opsional)</label>
+      <select class="form-select" id="gtProject" onchange="onGtProjectChange()"><option value="">—</option></select>
+    </div>
+    <div class="form-row"><label class="form-label" data-i18n="general.client">Nama Klien (opsional)</label><input class="form-input" id="gtClient" placeholder="cth. PT Klien Sejahtera"></div>
+    <div class="form-grid-2">
+      <div class="form-row"><label class="form-label" data-i18n="form.startOpt">Tanggal Mulai (opsional)</label><input class="form-input" type="date" id="gtStart"></div>
+      <div class="form-row"><label class="form-label" data-i18n="form.startTimeOpt">Jam Mulai (opsional)</label><input class="form-input" type="time" id="gtStartTime"></div>
+    </div>
+    <div class="form-row"><label class="form-label" data-i18n="form.endTimeOpt">Jam Berakhir (opsional)</label><input class="form-input" type="time" id="gtEndTime"></div>
+    <div class="form-row"><label class="form-label" data-i18n="form.duration">Estimasi Durasi (jam, opsional)</label><input class="form-input" type="number" min="0" step="0.5" id="gtDuration" placeholder="cth. 4"></div>
     <div class="form-row"><label class="form-label" data-i18n="form.zone">Prioritas Hari Ini</label>
       <div class="loc-type-row" id="gtZoneRow"></div>
     </div>
     <div class="form-row"><label class="form-label" data-i18n="form.rincian">Rincian (opsional)</label><textarea class="form-textarea" id="gtNotes" rows="4" placeholder="Detail lengkap task ini… ketik @ untuk mention" oninput="handleMentionInput('gtNotes')"></textarea></div>
+    </div>
     <button class="modal-submit" onclick="submitNewGeneralTask()" id="newGeneralTaskSubmitBtn" data-i18n="general.submit">Tambah Task</button>
     <button class="quiz-retake-btn" id="generalTaskDeleteBtn" style="display:none;color:var(--revisi);" onclick="deleteGeneralTaskFromEditModal()" data-i18n="general.deleteBtn">Hapus Task Ini</button>
   </div>
@@ -4676,6 +4680,21 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     var p = projects.find(function(x){ return x.id===pid; });
     if(p && p.client && !clientEl.value.trim()) clientEl.value = p.client;
   }
+  /* Quick task: 5 core fields are always visible; the rest sit behind "Opsi lainnya". */
+  function setGtAdvanced(open){
+    var box = document.getElementById('gtAdvanced'), btn = document.getElementById('gtMoreToggle');
+    if(!box || !btn) return;
+    box.style.display = open ? 'block' : 'none';
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.querySelector('span').textContent = t(open ? 'general.fewerOptions' : 'general.moreOptions');
+    btn.querySelector('i').style.transform = open ? 'rotate(180deg)' : '';
+  }
+  function toggleGtAdvanced(){ setGtAdvanced(document.getElementById('gtAdvanced').style.display === 'none'); }
+  function gtAdvancedHasValues(){
+    return !!(formGeneralSecondary.length || document.getElementById('gtProject').value || document.getElementById('gtClient').value.trim() ||
+      document.getElementById('gtStart').value || document.getElementById('gtStartTime').value || document.getElementById('gtEndTime').value ||
+      document.getElementById('gtDuration').value || document.getElementById('gtNotes').value.trim() || gtSelectedZone !== 'later');
+  }
   function openNewGeneralTaskModal(){
     editingGeneralTaskId = null;
     document.getElementById('newGeneralTaskModalTitle').textContent = t('general.modalTitle');
@@ -4702,6 +4721,11 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtDateError').classList.remove('active');
     populateGtDivisionSelect(currentDivision);
     onGtDivisionChange();
+    if(document.getElementById('gtDivision').value !== 'personal'){
+      formGeneralPic = CURRENT_USER_NAME;
+      document.getElementById('gtPicTrigger').innerHTML = '<span class="assignee-chip"><span class="mini-avatar">'+initials(CURRENT_USER_NAME)+'</span>'+escapeHtml(CURRENT_USER_NAME)+'</span>';
+    }
+    setGtAdvanced(false);
     openModal('newGeneralTaskModal');
   }
   function openEditGeneralTaskModal(id){
@@ -4735,6 +4759,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     document.getElementById('gtPicError').classList.remove('active');
     document.getElementById('gtDateError').classList.remove('active');
     document.getElementById('gtPicRow').style.display = isPersonal ? 'none' : '';
+    setGtAdvanced(gtAdvancedHasValues());
     openModal('newGeneralTaskModal');
   }
   function selectGtZone(k){ gtSelectedZone = k; renderTaskZoneButtons('gtZoneRow', gtSelectedZone, 'selectGtZone'); }
@@ -4749,7 +4774,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     if(!isPersonal && !formGeneralPic){ document.getElementById('gtPicError').classList.add('active'); return; }
     var startDate = document.getElementById('gtStart').value;
     var deadlineDate = document.getElementById('gtDeadline').value;
-    if((!isPersonal && !deadlineDate) || (startDate && deadlineDate && deadlineDate < startDate)){ document.getElementById('gtDateError').classList.add('active'); return; }
+    if((!isPersonal && !deadlineDate) || (startDate && deadlineDate && deadlineDate < startDate)){ document.getElementById('gtDateError').classList.add('active'); if(startDate) setGtAdvanced(true); return; }
     var picFinal = isPersonal ? CURRENT_USER_NAME : formGeneralPic;
     var secondaryFinal = formGeneralSecondary.slice();
     var projectIdFinal = document.getElementById('gtProject').value || null;
@@ -6475,6 +6500,7 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     openNewGeneralTaskModal();
     document.getElementById('gtName').value = n.title;
     document.getElementById('gtNotes').value = n.content;
+    setGtAdvanced(true);
     showToast(t('notebook.makeTaskToast'));
   }
   async function openNotebookAsGoogle(id){
@@ -10766,6 +10792,8 @@ var ICONS = {"trending-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\
     "capacity.overHours": {id:" (sekitar {h} jam melebihi)", en:" (about {h}h over)"},
     "tasks.allDone": {id:"Semua tugas sudah selesai", en:"All tasks are done"},
     "today.allDone": {id:"Semua tugas hari ini sudah selesai", en:"Everything for today is done"},
+    "general.moreOptions": {id:"Opsi lainnya", en:"More options"},
+    "general.fewerOptions": {id:"Sembunyikan opsi lainnya", en:"Hide more options"},
     "db.saveFailed": {id:"Perubahan belum tersimpan. Cek koneksi, lalu muat ulang halaman.", en:"Your change was not saved. Check your connection, then reload."},
     "a11y.skip": {id:"Lewati ke konten utama", en:"Skip to main content"},
     "bizhealth.overdue": {id:"{n} terlambat", en:"{n} overdue"},
