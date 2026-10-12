@@ -25,6 +25,7 @@
 - [[Infografis - Rencana Konten Media Sosial]]
 - [[Update Booklet - Materi Marketing Litologi 2027]]
 - [[In-House Sertifikasi - PT. BA]]
+- [[Mining Geotechnics Training]]
 
 ## Tasks
 - [[desain]]
@@ -109,6 +110,8 @@
 - [[Desain Konten 3]]
 - [[Review Konten 3]]
 - [[Posting Konten 5]]
+- [[Desain Mining Geotechnics Training]]
+- [[Review Mining Geotechnics Training]]
 - [[Proposal Project - PSD]]
 - [[Sertifikat Diklat]]
 - [[Poster Online Training]]
