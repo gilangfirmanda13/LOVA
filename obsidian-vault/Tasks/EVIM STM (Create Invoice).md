@@ -2,6 +2,6 @@
 
 **Assigned to:** [[Kalista]]
 **Divisi:** [[Ruang Personal]]
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-10-09
 

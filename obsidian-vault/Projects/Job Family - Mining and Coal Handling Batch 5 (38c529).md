@@ -1,6 +1,6 @@
 # Job Family - Mining and Coal Handling Batch 5
 
-**Klien:** Learning & Development Division
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** tinggi · **Effort:** medium

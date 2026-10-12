@@ -3,7 +3,7 @@
 **Assigned to:** [[Sindy]]
 **Project:** [[Diklat Sertifikasi PTS PTL]]
 **Phase:** Desain
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-23
 
 ## Catatan

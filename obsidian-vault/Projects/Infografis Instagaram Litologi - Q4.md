@@ -1,6 +1,6 @@
 # Infografis Instagaram Litologi - Q4
 
-**Klien:** Learning & Development Division
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** extreme

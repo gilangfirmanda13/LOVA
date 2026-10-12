@@ -2,6 +2,6 @@
 
 **Assigned to:** [[Jamalism]]
 **Divisi:** [[Creative Team]]
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-09-22
 

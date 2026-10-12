@@ -1,6 +1,6 @@
-# ghfghf
+# Update Booklet - Materi Marketing Litologi 2027
 
-**Klien:** gfdgdfgdfgfd
+**Klien:** LND
 **Divisi:** [[Creative Team]]
 **Owner:** [[Arya]]
 **Prioritas:** sedang · **Effort:** medium
@@ -8,7 +8,9 @@
 **Mulai:** - · **Deadline:** -
 
 ## Tasks
-_Belum ada task_
+- [[Update Booklet Public Training]]
+- [[Update Booklet Diklat Sertifikasi]]
+- [[Event Calender]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

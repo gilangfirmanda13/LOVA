@@ -3,6 +3,6 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Event Calender - Training]]
 **Phase:** Desain Layout Event Calender
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-24
 
