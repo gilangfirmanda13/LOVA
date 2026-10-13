@@ -3,7 +3,7 @@
 **Assigned to:** [[Hilda]]
 **Project:** [[Booklet 2027]]
 **Phase:** Diklat dan Sertifikasi
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-09-14
 
 ## Catatan

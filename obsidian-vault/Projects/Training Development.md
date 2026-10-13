@@ -8,9 +8,9 @@
 **Mulai:** 2026-09-11 · **Deadline:** -
 
 ## Tasks
-- [[Competitor Benchmark]]
 - [[Identifikasi Training Gap]]
 - [[Industry Trend]]
+- [[Competitor Benchmark]]
 - [[Market Research]]
 - [[Training QAQC]]
 - [[Database Trainer]]
