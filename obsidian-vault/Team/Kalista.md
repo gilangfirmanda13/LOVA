@@ -24,6 +24,6 @@
 - [[Daftar Ulang Tender]]
 - [[Perhitungan dan QTN PT Endaprosindo & Mitrasoft]]
 - [[Infokan mengenai Bupot ke Grup Admin]]
-- [[Re-Tender PT Timah]]
 - [[Pembayar Dinas PU ke Seequent]]
+- [[Re-Tender PT Timah]]
 - [[Hydrogeological Interpretation, Monitoring & Step Drawdown]]
