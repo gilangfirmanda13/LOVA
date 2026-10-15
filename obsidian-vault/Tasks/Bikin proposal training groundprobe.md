@@ -2,6 +2,6 @@
 
 **Assigned to:** [[Gilang Firmanda]]
 **Divisi:** [[Ruang Personal]]
-**Status:** Review
+**Status:** Selesai
 **Deadline:** -
 
