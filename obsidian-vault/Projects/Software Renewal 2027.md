@@ -17,6 +17,7 @@
 - [[PT Meares Soputan Mining]]
 - [[PT Citra Lampia Mandiri]]
 - [[PT Trimegah Bangun Persada]]
+- [[Send QTN PT Riung Mitra Lestari]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

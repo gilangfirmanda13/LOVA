@@ -8,6 +8,7 @@
 - [[Proposal Project OPD & IPD Geotechnical Review]]
 - [[Marketing RAB 2027]]
 - [[Geotechnical Review]]
+- [[Software Renewal 2027]]
 
 ## Tasks
 - [[Kirim proposal ke PT. Bukit Asam, Tbk]]
@@ -16,6 +17,7 @@
 - [[Kirim proposal ke Yola]]
 - [[Kirim proposal ke klien]]
 - [[FU Cold Account PIC for 35 Companies]]
+- [[Send QTN PT Riung Mitra Lestari]]
 - [[Summarize untuk jawaban dari kuisioner GDMS]]
 - [[CRM PBD]]
 - [[Discount Req VMF J Resource]]
