@@ -2,6 +2,6 @@
 
 **Assigned to:** [[Gilang Firmanda]]
 **Divisi:** [[Ruang Personal]]
-**Status:** Sedang Dikerjakan
+**Status:** Revisi
 **Deadline:** 2026-10-19
 

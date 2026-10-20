@@ -27,7 +27,7 @@
 - [[Timeline demo mdp]]
 - [[Sheduling Demo MDP]]
 - [[Undangan untuk demo klien]]
-- [[Banner (7d2725)]]
+- [[Banner]]
 - [[Database Lead]]
 - [[diskusi perihal MC-ing diklat sertifikasi di jam 0230pm]]
 - [[Infografis diklat sertifikasi 2026]]

@@ -15,6 +15,9 @@
 - [[Target 1 (15 PIC)]]
 - [[Target 2 (15 PIC)]]
 - [[Cari PIC terkait Target 178 account]]
+- [[chat by email perusahaan terkait]]
+- [[koneksi by linked]]
+- [[chat by wa pic]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

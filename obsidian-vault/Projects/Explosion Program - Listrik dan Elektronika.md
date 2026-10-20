@@ -8,9 +8,14 @@
 **Mulai:** 2026-09-09 · **Deadline:** 2026-10-09
 
 ## Tasks
-- [[Mekanikal Mentenance]]
-- [[Occupational Safety Management]]
 - [[Pengerjaan Tamplate Report (410e4a)]]
+- [[Report - Mechanical Maintenance]]
+- [[Report - Occupational Safety Management]]
+- [[Report - Electrical Maintenance & Installation]]
+- [[Report - Electrical, Control & Automation Design]]
+- [[Report - Electronics & Instrument Maintenance & Installation]]
+- [[Report - Maintenance Plan & Control]]
+- [[Report - Reliability Centered Maintenance]]
 
 ## Deskripsi
 Link Deskripsi: 

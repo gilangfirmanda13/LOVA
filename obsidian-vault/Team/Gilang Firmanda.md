@@ -50,3 +50,4 @@
 - [[Bikin proposal training PT. Timah]]
 - [[Benahin laporan PT. BIB]]
 - [[Isi webinar back analysis]]
+- [[Buat proposal PT. MIP]]

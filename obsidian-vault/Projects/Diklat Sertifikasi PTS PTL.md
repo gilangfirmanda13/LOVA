@@ -8,7 +8,7 @@
 **Mulai:** 2026-09-14 · **Deadline:** 2026-10-09
 
 ## Tasks
-- [[Banner (7d2725)]]
+- [[Banner]]
 
 ## Deskripsi
 Inhouse sertfikasi BIB

@@ -9,7 +9,12 @@
 
 ## Tasks
 - [[Pengerjaan Tamplate Report]]
-- [[Mechanical Fabrication Material]]
+- [[Report - Pneumatic & Hydraulic Management]]
+- [[Report - Mechanical Fabrication]]
+- [[Report - Operational Safety Management]]
+- [[Report - Mechanical Maintenance (f86f18)]]
+- [[Report - Mechanical Design]]
+- [[Report - Occupational Safety Management (9edce4)]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
