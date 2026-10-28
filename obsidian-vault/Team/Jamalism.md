@@ -31,6 +31,7 @@
 - [[Explosion Program - Safety, Health & Environment Batch 1]]
 - [[Explosion Program - Mining and Coal Handling Batch 5]]
 - [[Explosion Program - Mining and Coal Handling Batch 3]]
+- [[International Mining Technical Excellence Program (IMTEP) 2027]]
 
 ## Tasks
 - [[Desain Konten 6]]
@@ -245,10 +246,13 @@
 - [[Report - Mining Operations (850b1a)]]
 - [[Report - Coal Beneficiation Knowledge (f8e916)]]
 - [[Report - Mining Operations Plan & Evaluation (61e81d)]]
+- [[Desain Ukuran Story]]
+- [[Desain Ukuran Square]]
 - [[Report - Dewatering & Drainage Management (2b84b4)]]
 - [[Report - Occupational Safety Management (717cc4)]]
 - [[Report - Operational Safety Management (278184)]]
 - [[Report - Coal Handling and Processing Management (240f07)]]
+- [[Desain Ukuran Feed]]
 - [[Poster - Booklet Online Training]]
 - [[Booklet Public Training - LND]]
 - [[Event Calender - LND]]

@@ -10,6 +10,9 @@
 ## Tasks
 - [[Pembuatan proposal kegiatan]]
 - [[Pembuatan poster kegiatan]]
+- [[Desain Ukuran Story]]
+- [[Desain Ukuran Square]]
+- [[Desain Ukuran Feed]]
 
 ## Deskripsi
 _Tidak ada deskripsi_
