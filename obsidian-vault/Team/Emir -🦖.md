@@ -30,7 +30,7 @@
 - [[Persiapan Materi & Banner Diklat Batch 1]]
 - [[diskusi bersama tim training untuk request-nya perihal booklet 2027 dan promotion inhouse training]]
 - [[Persiapan Materi & Banner Diklat Batch 2 (5fd8c2)]]
-- [[Persiapan Materi Sertifikasi Batch 1 (25c11a)]]
+- [[Persiapan Materi Sertifikasi Batch 1]]
 - [[FU bu alice - bu aini - bu helda PTBA]]
 - [[sop alur training development]]
 - [[Report q3]]

@@ -14,9 +14,8 @@
 
 ## Tasks
 - [[Brajnstorm]]
-- [[Persiapan Materi Sertifikasi Batch 1]]
-- [[Demo MDP - ITM Group]]
 - [[Persiapan Materi & Banner Diklat Batch 2]]
+- [[Demo MDP - ITM Group]]
 - [[kirim.email (Introduction to Groundwater Modeling for Open Pit Mining)]]
 - [[Demo MDP - PT GAM]]
 - [[Demo MDP - PT Kutai Energi]]
@@ -31,6 +30,7 @@
 - [[Database Lead]]
 - [[diskusi perihal MC-ing diklat sertifikasi di jam 0230pm]]
 - [[Infografis diklat sertifikasi 2026]]
+- [[Persiapan Materi Sertifikasi Batch 1 (e327b6)]]
 - [[Review Portofolio Peserta Sertifikasi Geoteknik]]
 - [[Riset Skema Sertifikasi Baru]]
 - [[Assist Sertifikasi 18-19 Sept]]

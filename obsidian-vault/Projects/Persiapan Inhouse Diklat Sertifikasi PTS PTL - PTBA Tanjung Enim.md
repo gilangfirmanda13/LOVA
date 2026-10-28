@@ -11,7 +11,7 @@
 - [[Persiapan Materi & Banner Diklat Batch 1 (b9d3e7)]]
 - [[Persiapan Materi & Banner Diklat Batch 2 (5fd8c2)]]
 - [[Sertifikat Batch 1]]
-- [[Persiapan Materi Sertifikasi Batch 1 (25c11a)]]
+- [[Persiapan Materi Sertifikasi Batch 1]]
 - [[Persiapan Materi Sertifikasi Batch 2]]
 - [[Sertifikat Batch 2]]
 

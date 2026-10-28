@@ -9,8 +9,8 @@
 
 ## Tasks
 - [[Persiapan Materi & Banner Diklat Batch 2]]
-- [[Persiapan Materi Sertifikasi Batch 1]]
 - [[Sertifikat Batch 1 (6b072c)]]
+- [[Persiapan Materi Sertifikasi Batch 1 (e327b6)]]
 - [[Persiapan Materi & Banner Diklat Batch 1]]
 
 ## Deskripsi
