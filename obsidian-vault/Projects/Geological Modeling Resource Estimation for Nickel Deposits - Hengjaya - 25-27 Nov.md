@@ -1,4 +1,4 @@
-# Leapfrog/Implicit Modelling and Geostatistic - Hengjaya - 25-27 Nov
+# Geological Modeling Resource Estimation for Nickel Deposits - Hengjaya - 25-27 Nov
 
 **Klien:** LND
 **Divisi:** [[Creative Team]]
@@ -9,8 +9,8 @@
 
 ## Tasks
 - [[ID Card (2e3939)]]
-- [[Sertifikat (37f44a)]]
 - [[BG Zoom (0ad18d)]]
+- [[Sertifikat (37f44a)]]
 - [[PPT Opening (d18d4c)]]
 - [[Banner G Form (906587)]]
 - [[Banner (9dcc07)]]
