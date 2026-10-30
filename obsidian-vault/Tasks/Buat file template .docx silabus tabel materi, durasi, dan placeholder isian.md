@@ -3,6 +3,6 @@
 **Assigned to:** [[Arya]]
 **Project:** [[Template Word Company]]
 **Phase:** Phase 2 - Template Silabus
-**Status:** Belum Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-10-25
 

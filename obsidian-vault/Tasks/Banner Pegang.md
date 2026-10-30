@@ -3,7 +3,7 @@
 **Assigned to:** [[Jamalism]]
 **Project:** [[Persiapan Inhouse Diklat Sertifikasi PTS PTL - PT BIB Site Angsana]]
 **Phase:** Pembuatan Banner (perhatikan urutan logo)
-**Status:** Sedang Dikerjakan
+**Status:** Selesai
 **Deadline:** 2026-10-10
 
 ## Catatan

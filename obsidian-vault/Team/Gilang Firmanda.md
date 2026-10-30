@@ -5,6 +5,7 @@
 **Peran:** owner
 
 ## Projects
+- [[Pembuatan Calender 2027]]
 - [[Proposal Project OPD & IPD Geotechnical Review]]
 - [[Booklet 2027]]
 - [[Geotechnical Review]]
@@ -13,6 +14,8 @@
 - [[Persiapan Inhouse Diklat Sertifikasi Reklamasi - PTBA Tanjung Enim]]
 
 ## Tasks
+- [[Riset konsep & tema kalender 2027]]
+- [[Desain layout & ilustrasi kalender 2027]]
 - [[Buat metode penelitian terbaik di proposal]]
 - [[Brajnstorm]]
 - [[Drafting via Claude]]
@@ -30,6 +33,7 @@
 - [[Layouting]]
 - [[Kirim proposal ke Yola]]
 - [[Sertifikat Batch 1]]
+- [[Finalisasi, revisi & cetakexport kalender 2027]]
 - [[Buat In-scope & Out-scope]]
 - [[Brainstorm apa yang dibutuhkan untuk membangun MHTI]]
 - [[Deliverable]]

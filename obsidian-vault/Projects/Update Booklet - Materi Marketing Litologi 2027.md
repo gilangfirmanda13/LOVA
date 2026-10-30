@@ -9,8 +9,8 @@
 
 ## Tasks
 - [[Update Booklet Public Training]]
-- [[Event Calender]]
 - [[Update Booklet Diklat Sertifikasi]]
+- [[Event Calender]]
 
 ## Deskripsi
 _Tidak ada deskripsi_

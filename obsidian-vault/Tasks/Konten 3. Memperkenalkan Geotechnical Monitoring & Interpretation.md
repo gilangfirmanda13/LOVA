@@ -3,6 +3,6 @@
 **Assigned to:** [[Jamalism]]
 **Project:** [[Infografis - Rencana Konten Media Sosial]]
 **Phase:** Infografis
-**Status:** Review
+**Status:** Selesai
 **Deadline:** 2026-10-05
 
